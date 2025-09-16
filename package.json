@@ -35,5 +35,8 @@
     "overrides": {
       "@types/node": "^24.5.0"
     }
+  },
+  "dependencies": {
+    "wrangler": "^4.37.1"
   }
 }

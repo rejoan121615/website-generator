@@ -52,9 +52,12 @@ export async function deploy({
   // check if the project exists or create a new one
 
   try {
-    const existingProjectRes = await client.pages.projects.get(modifiedProjectName, {
-      account_id: cfId,
-    });
+    const existingProjectRes = await client.pages.projects.get(
+      modifiedProjectName,
+      {
+        account_id: cfId,
+      }
+    );
 
     console.log("Project already exists. Using the existing project...");
     const { id, name, domains, subdomain } = existingProjectRes;
@@ -63,7 +66,6 @@ export async function deploy({
       `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","not-available"\n`
     );
   } catch (error) {
-
     console.log("Project not found, Creating new project...");
 
     try {
@@ -92,38 +94,50 @@ export async function deploy({
   try {
     console.log("Started uploading source code to the project...");
     // upload source code to the project
-    const staticWebsitePath = path.join(turboRepoRoot, "apps", projectName, "dist");
-    const wranglerPath = path.resolve(turboRepoRoot, 'node_modules', '.bin', 'wrangler');
-    const command = `node "${wranglerPath}" pages deploy "${staticWebsitePath}" --project-name=${modifiedProjectName} --branch=${branchName} --commit-dirty=true`;
-    execSync(
-      command,
-      {
+    const staticWebsitePath = path.join(
+      turboRepoRoot,
+      "apps",
+      projectName,
+      "dist"
+    );
+    const command = `wrangler pages deploy "${staticWebsitePath}" --project-name ${modifiedProjectName} --branch ${branchName} --commit-dirty=true`;
+    try {
+      execSync(command, {
         stdio: "inherit",
         env: {
           ...process.env, // Inherit other environment variables from the parent process
           CLOUDFLARE_API_TOKEN: cfToken,
           CLOUDFLARE_ACCOUNT_ID: cfId,
         },
-      }
-    );
+      });
+    } catch (error) {
+      console.log("Project upload failed:", error);
+      process.exit(1);
+    }
 
     // get the project details again to get the assigned domain
     client.pages.projects
-      .get(projectName, {
+      .get(modifiedProjectName, {
         account_id: cfId,
       })
       .then(async (projectDetails) => {
-        const { id, name, domains, subdomain, latest_deployment } =
-          projectDetails;
+        try {
+          const { id, name, domains, subdomain, latest_deployment } =
+            projectDetails;
+          await fs.outputFile(
+            deploymentReportFilePath,
+            `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","${latest_deployment?.url ?? ""}"\n`
+          );
+
+          console.log("Deployment report file updated with latest domain...");
+        } catch (error) {
+          console.log("Error writing latest published domain to file:", error);
+        }
+      })
+      .catch((error) => {
         console.log(
-          "Project deployed successfully. url =>",
-          latest_deployment?.url
+          "Error fetching project details, writing new published domain failed"
         );
-        await fs.outputFile(
-          deploymentReportFilePath,
-          `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","${latest_deployment?.url ?? ""}"\n`
-        );
-        console.log("Deployment report file updated with latest domain...");
       });
   } catch (error) {
     console.log("Error uploading source code:", error);
