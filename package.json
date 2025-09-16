@@ -18,6 +18,7 @@
     "output:packages": "turbo run output --filter=\"./packages/*\"",
     "site:build": "pnpm --workspace apps/website run build",
     "site:deploy": "turbo run deploy --filter=\"./apps/*\"",
+    "site:remove": "turbo run remove --filter=\"./apps/*\"",
     "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps && pnpm run site:deploy"
   },
   "devDependencies": {

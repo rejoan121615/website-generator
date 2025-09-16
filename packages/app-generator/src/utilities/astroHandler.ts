@@ -57,7 +57,7 @@ function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
     scripts: {
       build: "astro build",
       deploy: "node ./cloudflare/deploy.js",
-      // deploy: `npx cf-deploy ${process.env.CLOUDFLARE_API_TOKEN} ${process.env.CLOUDFLARE_ACCOUNT_ID} ${projectName} dist ${process.env.GITHUB_USERNAME} ${process.env.GITHUB_REPOSITORY} ${process.env.DEPLOYMENT_BRANCH}`,
+      remove: "node ./cloudflare/remove.js"
     },
     dependencies: {
       "@repo/basefrontend": "workspace:*",

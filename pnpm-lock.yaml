@@ -40,7 +40,31 @@ importers:
         specifier: ^5.13.7
         version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
 
+  apps/austin-hvac.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
+
   apps/dallas-junk.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
+
+  apps/dallas-pest.com:
     dependencies:
       '@repo/basefrontend':
         specifier: workspace:*
@@ -64,7 +88,43 @@ importers:
         specifier: ^5.13.7
         version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
 
+  apps/houston-roofing.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
+
   apps/rejoan-test.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
+
+  apps/superb-landscapes.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@24.5.0)(rollup@4.50.2)(typescript@5.9.2)
+
+  apps/tree-experts.com:
     dependencies:
       '@repo/basefrontend':
         specifier: workspace:*

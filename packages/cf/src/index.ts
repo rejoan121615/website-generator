@@ -141,5 +141,42 @@ export async function deploy({
       });
   } catch (error) {
     console.log("Error uploading source code:", error);
+
+  }
+}
+
+/**
+ * Delete a Cloudflare Pages project and all its deployments.
+ * @param cfToken Cloudflare API token
+ * @param cfId Cloudflare account ID
+ * @param projectName Project name (unsanitized)
+ */
+export async function deleteProject({
+  cfToken,
+  cfId,
+  projectName,
+}: {
+  cfToken: string;
+  cfId: string;
+  projectName: string;
+}) {
+  const client = new Cloudflare({ apiToken: cfToken });
+  const modifiedProjectName = projectName
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "")
+    .replace(/--+/g, "-");
+
+  console.log(`Attempting to delete project: ${modifiedProjectName}`);
+  try {
+    // Delete the project (this also deletes all deployments)
+    await client.pages.projects.delete(modifiedProjectName, {
+      account_id: cfId,
+    });
+    console.log(`Project '${modifiedProjectName}' deleted successfully.`);
+  } catch (error) {
+    console.error(`Failed to delete project '${modifiedProjectName}':`, error);
+    throw error;
   }
 }

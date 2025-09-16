@@ -24,6 +24,12 @@
     "site:deploy" : {
       
     },
+    "site:remove" : {
+      "cache": false
+    },
+    "remove": {
+      "cache": false
+    },
     "compile": {
       "cache": false
     },
