@@ -3,14 +3,16 @@ import fs from "fs-extra";
 import path from "path";
 import type { CsvRowDataType } from "../types/DataType.js";
 import { PageOptionsTYPE } from "../types/AstroHandler.js";
+import { fileURLToPath } from 'url';
 
-export function astroProjectBuilder(outputDir: string, data: CsvRowDataType) {
+
+export function astroProjectBuilder(turboRepoRoot: string, data: CsvRowDataType) {
   const { domain } = data;
 
-  tsConfigFileBuilder(domain);
-  packageJsonFileBuilder(domain);
-  astroConfigFileBuilder(domain);
-  srcDataHandler(data);
+  tsConfigFileBuilder(domain, turboRepoRoot);
+  packageJsonFileBuilder(domain, turboRepoRoot);
+  astroConfigFileBuilder(domain, turboRepoRoot);
+  srcDataHandler(data, turboRepoRoot);
 
   // const pagePath = path.join(process.cwd(), 'src', 'pages', 'index.astro');
   // let pageContent = fs.readFileSync(pagePath, 'utf-8');
@@ -19,7 +21,7 @@ export function astroProjectBuilder(outputDir: string, data: CsvRowDataType) {
 }
 
 // ts config file builder
-function tsConfigFileBuilder(domain: string) {
+function tsConfigFileBuilder(domain: string, turboRepoRoot: string) {
   const tsConfigFileContent = {
     extends: "astro/tsconfigs/strict",
     compilerOptions: {
@@ -39,10 +41,10 @@ function tsConfigFileBuilder(domain: string) {
 
   // create ts config file
   const tsConFilePath = path.join(
-    process.cwd(),
-    "apps",
-    domain,
-    "tsconfig.json"
+   turboRepoRoot,
+   "apps",
+   domain,
+   "tsconfig.json"
   );
   fs.createFileSync(tsConFilePath);
   fs.writeFileSync(tsConFilePath, JSON.stringify(tsConfigFileContent, null, 2));
@@ -54,7 +56,7 @@ function tsConfigFileBuilder(domain: string) {
 // [projectName, outputDir, repoOwner, repoName]
 
 // json config file builder
-function packageJsonFileBuilder(domain: string) {
+function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
 
   // Sanitize domain to create a valid project name
   let projectName = domain
@@ -86,7 +88,7 @@ function packageJsonFileBuilder(domain: string) {
 
   // create package.json file
   const packageJsonFilePath = path.join(
-    process.cwd(),
+    turboRepoRoot,
     "apps",
     domain,
     "package.json"
@@ -101,10 +103,10 @@ function packageJsonFileBuilder(domain: string) {
 }
 
 // astro config file builder
-function astroConfigFileBuilder(domain: string) {
+function astroConfigFileBuilder(domain: string, turboRepoRoot: string) {
   // create package.json file
   const packageJsonFilePath = path.join(
-    process.cwd(),
+    turboRepoRoot,
     "apps",
     domain,
     "astro.config.mjs"
@@ -125,12 +127,12 @@ export default defineConfig({
 }
 
 // src folder handler
-async function srcDataHandler(data: CsvRowDataType) {
+async function srcDataHandler(data: CsvRowDataType, turboRepoRoot: string) {
   const { domain, service_niche, main_city, phone } = data;
 
   // read component file from baseFrontend package and build new component file
   const componentFilePath = path.join(
-    process.cwd(),
+    turboRepoRoot,
     "packages",
     "baseFrontend",
     "src",
@@ -139,7 +141,7 @@ async function srcDataHandler(data: CsvRowDataType) {
   );
 
   const componentDestPath = path.join(
-    process.cwd(),
+    turboRepoRoot,
     "apps",
     data.domain,
     "src",
@@ -157,7 +159,7 @@ async function srcDataHandler(data: CsvRowDataType) {
 
   // read page file , give props and build new page file
   const pageFilePath = path.join(
-    process.cwd(),
+    turboRepoRoot,
     "packages",
     "baseFrontend",
     "src",
@@ -165,7 +167,7 @@ async function srcDataHandler(data: CsvRowDataType) {
     "index.astro"
   );
   const pageDestPath = path.join(
-    process.cwd(),
+    turboRepoRoot,
     "apps",
     data.domain,
     "src",

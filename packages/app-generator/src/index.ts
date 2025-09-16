@@ -4,10 +4,18 @@ import { parse } from 'csv-parse';
 import { folderCreator } from './utilities/folderCreator.js';
 import type { CsvRowDataType } from './types/DataType.js';
 import { astroProjectBuilder } from './utilities/astroHandler.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const turboRepoRoot = path.resolve(__dirname, '../../../');
 
 
-const csvFilePath = path.join(process.cwd(), 'data', 'websites.csv');
-const outputDir = path.join(process.cwd(), 'apps');
+const csvFilePath = path.join(turboRepoRoot, 'data', 'websites.csv');
+const outputDir = path.join(turboRepoRoot, 'apps');
+
+console.log('output dir ----------- ', outputDir)
+console.log('csv dir ----------- ', csvFilePath)
 
 // create output dir if not exists
 fs.ensureDirSync(outputDir);
@@ -25,7 +33,7 @@ parser.on('data', async (row : CsvRowDataType ) => {
     const { domain } = row;
     // create folder 
     folderCreator(outputDir, domain);
-    astroProjectBuilder(outputDir, row);
+    astroProjectBuilder(turboRepoRoot, row);
 });
 
 
