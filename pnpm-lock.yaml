@@ -21,6 +21,45 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  apps/austin-detailing.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@22.15.3)(rollup@4.50.2)(typescript@5.9.2)
+    devDependencies:
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+
+  apps/dallas-junk.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@22.15.3)(rollup@4.50.2)(typescript@5.9.2)
+    devDependencies:
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+
+  apps/home-inspection-pro.com:
+    dependencies:
+      '@repo/basefrontend':
+        specifier: workspace:*
+        version: link:../../packages/baseFrontend
+      astro:
+        specifier: ^5.13.7
+        version: 5.13.7(@types/node@22.15.3)(rollup@4.50.2)(typescript@5.9.2)
+    devDependencies:
+      '@repo/cf':
+        specifier: workspace:*
+        version: link:../../packages/cf
+
   packages/app-generator:
     dependencies:
       '@repo/basefrontend':

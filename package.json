@@ -19,7 +19,7 @@
     "site:generate": "",
     "site:build": "pnpm --workspace apps/website run build",
     "site:deploy": "pnpm --workspace apps/website run deploy",
-    "generate": "pnpm run generate:run & pnpm run apps:build & pnpm run apps:deploy"
+    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps"
   },
   "devDependencies": {
     "pnpm": "^10.16.1",

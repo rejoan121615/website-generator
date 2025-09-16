@@ -75,14 +75,15 @@ function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
       deploy: `npx cf-deploy ${process.env.CLOUDFLARE_API_TOKEN} ${process.env.CLOUDFLARE_ACCOUNT_ID} ${projectName} dist ${process.env.GITHUB_USERNAME} ${process.env.GITHUB_REPOSITORY} ${process.env.DEPLOYMENT_BRANCH}`,
     },
     dependencies: {
-      "@repo/basefrontend": "*",
+      "@repo/basefrontend": "workspace:*",
+      "astro": "^5.13.7"
     },
     imports: {
       BaseLayout: "@repo/basefrontend/layout",
       Content: "@repo/basefrontend/content",
     },
     devDependencies: {
-      "@repo/cloudflaredeploy": "*",
+      "@repo/cf": "workspace:*"
     },
   };
 
