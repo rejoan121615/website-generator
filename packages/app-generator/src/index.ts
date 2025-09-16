@@ -1,21 +1,21 @@
+import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs-extra';
 import { parse } from 'csv-parse';
 import { folderCreator } from './utilities/folderCreator.js';
 import type { CsvRowDataType } from './types/DataType.js';
 import { astroProjectBuilder } from './utilities/astroHandler.js';
+import { cloudFlareScriptBuilder } from './utilities/cloudflareHandler.js';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const turboRepoRoot = path.resolve(__dirname, '../../../');
 
+dotenv.config({ path: path.resolve(turboRepoRoot, '.env') });
 
 const csvFilePath = path.join(turboRepoRoot, 'data', 'websites.csv');
 const outputDir = path.join(turboRepoRoot, 'apps');
-
-console.log('output dir ----------- ', outputDir)
-console.log('csv dir ----------- ', csvFilePath)
 
 // create output dir if not exists
 fs.ensureDirSync(outputDir);
@@ -34,6 +34,7 @@ parser.on('data', async (row : CsvRowDataType ) => {
     // create folder 
     folderCreator(outputDir, domain);
     astroProjectBuilder(turboRepoRoot, row);
+    cloudFlareScriptBuilder(turboRepoRoot, row);
 });
 
 

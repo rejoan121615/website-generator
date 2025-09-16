@@ -11,9 +11,10 @@ export function folderCreator(outputDir: string, domain: string) {
   // create folder inside build-output folder with domain name
   try {
     fs.ensureDirSync(path.join(outputDir, domain));
-    console.log(`Directory created for domain: ${domain}`);
+    console.log(`----------------------------------------------`);
+    console.log(`Folder Created for : ${domain}`);
   } catch (err) {
-    console.error(`Failed to create directory for domain "${domain}":`, err);
+    console.error(`Failed to create folder for domain "${domain}":`, err);
   }
 }
 

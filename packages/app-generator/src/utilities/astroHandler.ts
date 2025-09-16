@@ -1,23 +1,18 @@
-import 'dotenv/config'
 import fs from "fs-extra";
 import path from "path";
 import type { CsvRowDataType } from "../types/DataType.js";
 import { PageOptionsTYPE } from "../types/AstroHandler.js";
-import { fileURLToPath } from 'url';
 
-
-export function astroProjectBuilder(turboRepoRoot: string, data: CsvRowDataType) {
+export function astroProjectBuilder(
+  turboRepoRoot: string,
+  data: CsvRowDataType
+) {
   const { domain } = data;
 
   tsConfigFileBuilder(domain, turboRepoRoot);
   packageJsonFileBuilder(domain, turboRepoRoot);
   astroConfigFileBuilder(domain, turboRepoRoot);
   srcDataHandler(data, turboRepoRoot);
-
-  // const pagePath = path.join(process.cwd(), 'src', 'pages', 'index.astro');
-  // let pageContent = fs.readFileSync(pagePath, 'utf-8');
-
-  // console.log('Original Page Content:', pageContent);
 }
 
 // ts config file builder
@@ -41,49 +36,37 @@ function tsConfigFileBuilder(domain: string, turboRepoRoot: string) {
 
   // create ts config file
   const tsConFilePath = path.join(
-   turboRepoRoot,
-   "apps",
-   domain,
-   "tsconfig.json"
+    turboRepoRoot,
+    "apps",
+    domain,
+    "tsconfig.json"
   );
   fs.createFileSync(tsConFilePath);
   fs.writeFileSync(tsConFilePath, JSON.stringify(tsConfigFileContent, null, 2));
 
-  console.log(`Successfully created tsconfig.json for domain: ${domain}`);
+  console.log(`tsconfig.json created successfully ...`);
 }
-
-
-// [projectName, outputDir, repoOwner, repoName]
 
 // json config file builder
 function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
-
   // Sanitize domain to create a valid project name
-  let projectName = domain
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, '-')        // Replace invalid chars with dash
-    .replace(/^-+/, '')                  // Remove leading dashes
-    .replace(/-+$/, '')                  // Remove trailing dashes
-    .replace(/--+/g, '-');               // Replace multiple dashes with single dash
-
   const packageJsonFileContent = {
     name: domain,
     type: "module",
     version: "0.0.1",
     scripts: {
       build: "astro build",
-      deploy: `npx cf-deploy ${process.env.CLOUDFLARE_API_TOKEN} ${process.env.CLOUDFLARE_ACCOUNT_ID} ${projectName} dist ${process.env.GITHUB_USERNAME} ${process.env.GITHUB_REPOSITORY} ${process.env.DEPLOYMENT_BRANCH}`,
+      deploy: "node ./cloudflare/deploy.js",
+      // deploy: `npx cf-deploy ${process.env.CLOUDFLARE_API_TOKEN} ${process.env.CLOUDFLARE_ACCOUNT_ID} ${projectName} dist ${process.env.GITHUB_USERNAME} ${process.env.GITHUB_REPOSITORY} ${process.env.DEPLOYMENT_BRANCH}`,
     },
     dependencies: {
       "@repo/basefrontend": "workspace:*",
-      "astro": "^5.13.7"
+      "@repo/cf": "workspace:*",
+      astro: "^5.13.7",
     },
     imports: {
       BaseLayout: "@repo/basefrontend/layout",
       Content: "@repo/basefrontend/content",
-    },
-    devDependencies: {
-      "@repo/cf": "workspace:*"
     },
   };
 
@@ -100,7 +83,7 @@ function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
     JSON.stringify(packageJsonFileContent, null, 2)
   );
 
-  console.log(`Successfully created package.json for domain: ${domain}`);
+  console.log(`package.json created successfully ...`);
 }
 
 // astro config file builder
@@ -124,7 +107,7 @@ export default defineConfig({
 });`
   );
 
-  console.log(`Successfully created astro.config.mjs for domain: ${domain}`);
+  console.log(`astro.config.mjs created successfully ...`);
 }
 
 // src folder handler
@@ -156,7 +139,6 @@ async function srcDataHandler(data: CsvRowDataType, turboRepoRoot: string) {
   await fs.ensureFile(componentDestPath);
 
   fs.copyFileSync(componentFilePath, componentDestPath);
-  console.log("Copied Content.astro to", componentDestPath);
 
   // read page file , give props and build new page file
   const pageFilePath = path.join(
@@ -198,7 +180,7 @@ async function srcDataHandler(data: CsvRowDataType, turboRepoRoot: string) {
   });
 
   await fs.writeFile(pageDestPath, newPageContent);
-  console.log("Created index.astro to", pageDestPath);
+  console.log(" Astro app created successfully ... ");
 }
 
 // Example usage in your generator script

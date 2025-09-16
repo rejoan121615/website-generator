@@ -1,41 +1,34 @@
-#!/usr/bin/env node
-
-import "dotenv/config";
 import Cloudflare from "cloudflare";
 import fs from "fs-extra";
 import path from "path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "url";
 
-const [
-  CLOUDFLARE_API_TOKEN,
-  CLOUDFLARE_ACCOUNT_ID,
+export async function deploy({
+  cfToken,
+  cfId,
   projectName,
+  branchName,
   outputDir,
-  githubUserName,
-  githubRepoName,
-  githubDeploymentBranchName,
-] = process.argv.slice(2);
+}: {
+  cfToken: string;
+  cfId: string;
+  projectName: string;
+  branchName: string;
+  outputDir: string;
+}) {
+  const client = new Cloudflare({
+    apiToken: cfToken,
+  });
 
-if (
-  !CLOUDFLARE_API_TOKEN ||
-  !CLOUDFLARE_ACCOUNT_ID ||
-  !projectName ||
-  !outputDir ||
-  !githubUserName ||
-  !githubRepoName ||
-  !githubDeploymentBranchName
-) {
-  console.log("Missing deployment parameters. Deployment failed.");
-  process.exit(1);
-}
-
-const client = new Cloudflare({
-  apiToken: CLOUDFLARE_API_TOKEN,
-});
-
-(async () => {
   console.log("Starting deployment........... for project:", projectName);
+
+  const modifiedProjectName = projectName
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "")
+    .replace(/--+/g, "-");
 
   // delete old csv file if exists
   const __filename = fileURLToPath(import.meta.url);
@@ -48,7 +41,7 @@ const client = new Cloudflare({
     projectName,
     "deployment_data.csv"
   );
-  console.log("Deployment report file path:", deploymentReportFilePath);
+
   try {
     await fs.ensureFile(deploymentReportFilePath);
     await fs.outputFile(deploymentReportFilePath, ``);
@@ -59,31 +52,29 @@ const client = new Cloudflare({
   // check if the project exists or create a new one
 
   try {
-    const existingProjectRes = await client.pages.projects.get(projectName, {
-      account_id: CLOUDFLARE_ACCOUNT_ID,
+    const existingProjectRes = await client.pages.projects.get(modifiedProjectName, {
+      account_id: cfId,
     });
+
+    console.log("Project already exists. Using the existing project...");
     const { id, name, domains, subdomain } = existingProjectRes;
     await fs.outputFile(
       deploymentReportFilePath,
       `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","not-available"\n`
     );
-    console.log("Project already exists. Using the existing project...");
   } catch (error) {
-    const { errors } = error as {
-      errors: Array<{ code: number; message: string }>;
-    };
-    console.log(errors[0]?.message);
-    console.log("Creating new project...");
+
+    console.log("Project not found, Creating new project...");
 
     try {
       // ceate new project
       const newProjectRes = await client.pages.projects.create({
-        name: projectName,
-        account_id: CLOUDFLARE_ACCOUNT_ID,
-        production_branch: githubDeploymentBranchName,
+        name: modifiedProjectName,
+        account_id: cfId,
+        production_branch: branchName,
       });
 
-      console.log("New project created successfully.");
+      console.log("New project created successfully...");
 
       // store this project data inside csv file
       const { id, name, domains, subdomain } = newProjectRes;
@@ -101,15 +92,17 @@ const client = new Cloudflare({
   try {
     console.log("Started uploading source code to the project...");
     // upload source code to the project
-    const staticWebsitePath = path.join(process.cwd(), outputDir);
+    const staticWebsitePath = path.join(turboRepoRoot, "apps", projectName, "dist");
+    const wranglerPath = path.resolve(turboRepoRoot, 'node_modules', '.bin', 'wrangler');
+    const command = `node "${wranglerPath}" pages deploy "${staticWebsitePath}" --project-name=${modifiedProjectName} --branch=${branchName} --commit-dirty=true`;
     execSync(
-      `wrangler pages deploy "${staticWebsitePath}" --project-name ${projectName} --branch ${githubDeploymentBranchName} --commit-dirty=true`,
+      command,
       {
         stdio: "inherit",
         env: {
           ...process.env, // Inherit other environment variables from the parent process
-          CLOUDFLARE_API_TOKEN: CLOUDFLARE_API_TOKEN,
-          CLOUDFLARE_ACCOUNT_ID: CLOUDFLARE_ACCOUNT_ID,
+          CLOUDFLARE_API_TOKEN: cfToken,
+          CLOUDFLARE_ACCOUNT_ID: cfId,
         },
       }
     );
@@ -117,7 +110,7 @@ const client = new Cloudflare({
     // get the project details again to get the assigned domain
     client.pages.projects
       .get(projectName, {
-        account_id: CLOUDFLARE_ACCOUNT_ID,
+        account_id: cfId,
       })
       .then(async (projectDetails) => {
         const { id, name, domains, subdomain, latest_deployment } =
@@ -126,13 +119,13 @@ const client = new Cloudflare({
           "Project deployed successfully. url =>",
           latest_deployment?.url
         );
-        console.log("Updating deployment report file with current domain...");
         await fs.outputFile(
           deploymentReportFilePath,
           `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","${latest_deployment?.url ?? ""}"\n`
         );
+        console.log("Deployment report file updated with latest domain...");
       });
   } catch (error) {
     console.log("Error uploading source code:", error);
   }
-})();
+}

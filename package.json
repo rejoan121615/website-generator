@@ -16,10 +16,9 @@
     "dev:packages": "turbo run dev --filter=\"./packages/*\"",
     "output": "turbo output",
     "output:packages": "turbo run output --filter=\"./packages/*\"",
-    "site:generate": "",
     "site:build": "pnpm --workspace apps/website run build",
-    "site:deploy": "pnpm --workspace apps/website run deploy",
-    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps"
+    "site:deploy": "turbo run deploy --filter=\"./apps/*\"",
+    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps && pnpm run site:deploy"
   },
   "devDependencies": {
     "pnpm": "^10.16.1",
@@ -31,5 +30,10 @@
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=10.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/node": "^24.5.0"
+    }
   }
 }

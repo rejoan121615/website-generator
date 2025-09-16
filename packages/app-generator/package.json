@@ -1,7 +1,7 @@
 {
   "name": "@repo/app-generator",
   "author": "Mohd Rejoan",
-  "description": "Cloudflare static pages deployment CLI",
+  "description": "Monirepo package to generate Astro based static website",
   "version": "1.0.0",
   "private": true,
   "main": "./dist/index.js",

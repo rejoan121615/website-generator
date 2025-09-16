@@ -21,7 +21,13 @@
         "dist/**"
       ]
     },
+    "site:deploy" : {
+      
+    },
     "compile": {
+      "cache": false
+    },
+    "deploy": {
       "cache": false
     }
   }

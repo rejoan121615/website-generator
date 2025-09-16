@@ -16,8 +16,7 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/fs-extra": "^11.0.4",
-    "typescript": "5.9.2",
-    "wrangler": "^4.37.0"
+    "typescript": "5.9.2"
   },
   "exports": {
     ".": {
@@ -25,11 +24,9 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "bin": {
-    "cf": "./dist/index.js"
-  },
   "dependencies": {
     "cloudflare": "^5.1.0",
-    "fs-extra": "^11.3.2"
+    "fs-extra": "^11.3.2",
+    "wrangler": "^4.37.1"
   }
 }
