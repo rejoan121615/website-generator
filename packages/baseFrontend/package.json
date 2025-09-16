@@ -1,0 +1,19 @@
+{
+  "name": "@repo/basefrontend",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.13.7"
+  },
+  "exports" : {
+    "./header": "./src/components/Header.astro",
+    "./content": "./src/components/Content.astro",
+    "./footer": "./src/components/Footer.astro",
+    "./layout": "./src/layouts/BaseLayout.astro"
+  }
+}

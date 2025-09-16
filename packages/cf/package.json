@@ -1,0 +1,35 @@
+{
+  "name": "@repo/cf",
+  "author": "Mohd Rejoan",
+  "description": "Cloudflare static pages deployment CLI",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc -p .",
+    "compile": "tsc -p . --watch",
+    "output": "nodemon ./dist/index.js"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/fs-extra": "^11.0.4",
+    "typescript": "5.9.2",
+    "wrangler": "^4.37.0"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "cf": "./dist/index.js"
+  },
+  "dependencies": {
+    "cloudflare": "^5.1.0",
+    "fs-extra": "^11.3.2"
+  }
+}

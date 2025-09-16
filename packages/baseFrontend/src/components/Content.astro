@@ -1,0 +1,21 @@
+---
+const { domain, service_niche, main_city, phone } = Astro.props;
+---
+
+<div
+  class="d-flex align-items-center justify-content-center min-vh-100 bg-light"
+>
+  <div class="card" style="width: 18rem;">
+    <img
+      src="https://placehold.co/600x400"
+      class="card-img-top"
+      alt="Company Logo"
+    />
+    <div class="card-body">
+      <h5 class="card-text mb-2">Domain: {domain} </h5>
+      <p class="card-text mb-2">Service: {service_niche}</p>
+      <p class="card-text mb-2">City: {main_city}</p>
+      <p class="card-text">Phone: {phone}</p>
+    </div>
+  </div>
+</div>

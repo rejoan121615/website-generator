@@ -16,6 +16,10 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "build:packages": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     }
   }
 }
