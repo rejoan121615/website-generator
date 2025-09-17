@@ -130,18 +130,21 @@ export async function deploy({
           );
 
           console.log("Deployment report file updated with latest domain...");
+          process.exit(0);
         } catch (error) {
           console.log("Error writing latest published domain to file:", error);
+          process.exit(1);
         }
       })
       .catch((error) => {
         console.log(
           "Error fetching project details, writing new published domain failed"
         );
+        process.exit(1);
       });
   } catch (error) {
     console.log("Error uploading source code:", error);
-
+    process.exit(1);
   }
 }
 

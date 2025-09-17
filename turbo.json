@@ -34,7 +34,8 @@
       "cache": false
     },
     "deploy": {
-      "cache": false
+      "cache": false,
+      "outputs": ["reports/deploy/**"]
     }
   }
 }
