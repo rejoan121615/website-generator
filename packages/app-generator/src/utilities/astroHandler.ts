@@ -56,6 +56,7 @@ function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
     version: "0.0.1",
     scripts: {
       build: "astro build",
+      preview: "astro preview",
       deploy: "node ./cloudflare/deploy.js",
       remove: "node ./cloudflare/remove.js"
     },

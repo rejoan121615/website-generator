@@ -24,6 +24,12 @@
     "site:deploy" : {
       
     },
+    "preview": {
+      "cache": false
+    },
+    "site:preview": {
+      "cache": false
+    },
     "site:remove" : {
       "cache": false
     },
