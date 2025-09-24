@@ -1,0 +1,287 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import Card from "../../components/ui/Card.astro";
+import { Image } from "astro:assets";
+
+import seoImg from "../../assets/pics/celing.jpg";
+import ceiling from "../../assets/pics/pexels-danita-white-2147858101-33921996.jpg"
+import icon1 from "../../assets/icon1.svg";
+import icon2 from "../../assets/icon2.svg";
+import icon3 from "../../assets/icon3.svg";
+import icon4 from "../../assets/icon4.svg";
+
+const faqItems = [
+  {
+    question: "Why is professional ceiling fan installation important?",
+    answer: "Professional installation ensures your ceiling fan operates safely and efficiently. Our certified electricians handle everything from secure mounting to proper electrical connections, preventing potential hazards and ensuring optimal performance for years to come."
+  },
+  {
+    question: "How long does a typical ceiling fan installation take?",
+    answer: "Most standard ceiling fan installations are completed within 2-3 hours. However, this timeframe may vary depending on your ceiling type, existing wiring, and whether additional supports are needed for secure mounting."
+  },
+  {
+    question: "Do you provide the ceiling fan or should I purchase one?",
+    answer: "We offer both options! You can choose from our selection of high-quality, energy-efficient ceiling fans, or we can install a fan you've already purchased. Our team will ensure it's compatible with your space and electrical system."
+  },
+  {
+    question: "Can you install ceiling fans in rooms without existing fixtures?",
+    answer: "Yes, we can install ceiling fans in rooms without existing fixtures. This process requires running new wiring and potentially cutting a new opening in the ceiling, which our experienced electricians handle with minimal disruption to your home."
+  },
+  {
+    question: "Do you offer a warranty on your installation work?",
+    answer: "Absolutely! All our ceiling fan installations come with a 2-year workmanship guarantee. We stand behind the quality of our work and ensure every installation meets the highest safety standards and regulations."
+  }
+];
+
+const process = [
+  {
+    title: "Initial Assessment",
+    description: "We evaluate your space, ceiling type, and existing electrical setup to determine the best installation approach for your needs.",
+    icon: icon1
+  },
+  {
+    title: "Fixture Preparation",
+    description: "Our electricians prepare the mounting location, ensuring proper support and safe electrical connections for your new ceiling fan.",
+    icon: icon2
+  },
+  {
+    title: "Professional Installation",
+    description: "We carefully install your chosen ceiling fan, ensuring perfect balance, secure mounting, and optimal operation for maximum airflow.",
+    icon: icon3
+  },
+  {
+    title: "Testing & Demonstration",
+    description: "We thoroughly test your new ceiling fan, explain its features and operation, and ensure you're completely satisfied with the results.",
+    icon: icon4
+  }
+];
+---
+
+<MainLayout 
+  title="Ceiling Fan Installation | CR9 Electrician Croydon" 
+  description="Professional ceiling fan installation services in Croydon. Our certified electricians provide safe, efficient installation with a 2-year guarantee. Book your service today!"
+>
+  <div class="py-16 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
+    <!-- Hero Section -->
+    <div class="grid md:grid-cols-2 gap-12 items-center mb-24">
+      <div>
+        <h1 class="mb-6 text-4xl font-medium leading-none tracking-tight md:text-5xl lg:text-6xl">Ceiling Fan Installation Services</h1>
+        <p class="mb-8 text-lg font-normal">
+          Stay cool and improve air circulation with professional ceiling fan installation by CR9 Electrician Croydon. Our certified electricians ensure safe, efficient installation with a focus on quality and customer satisfaction.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 bg-green text-dark rounded-2xl hover:bg-dark hover:text-white transition-all font-medium text-lg">
+            Call Us To Book
+          </a>
+          <a href="#process" class="inline-flex items-center justify-center px-8 py-4 bg-gray text-dark rounded-2xl hover:bg-dark hover:text-white transition-all font-medium text-lg">
+            Our Process
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="bg-green rounded-[45px] p-1 md:p-2 relative z-10">
+          <Image src={seoImg} alt="Ceiling Fan Installation" class="w-full h-auto rounded-[35px]" />
+        </div>
+        <div class="absolute top-8 left-8 right-8 bottom-8 bg-dark rounded-[45px] -z-10"></div>
+      </div>
+    </div>
+    
+    <!-- Services Overview -->
+    <div class="mb-24">
+      <h2 class="mb-12 text-3xl font-medium text-center">Our Ceiling Fan Services</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Card>
+          <div class="p-8">
+            <h3 class="text-xl font-medium mb-4">Standard Installation</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Replacing existing light fixtures</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Secure mounting and balancing</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Wiring and switch installation</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Testing and safety checks</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Demonstration of operation</span>
+              </li>
+            </ul>
+          </div>
+        </Card>
+        
+        <Card>
+          <div class="p-8">
+            <h3 class="text-xl font-medium mb-4">New Installation</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Installation in rooms without existing fixtures</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>New wiring and circuit installation</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Ceiling reinforcement if needed</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Wall switch and control installation</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Clean, minimal-disruption approach</span>
+              </li>
+            </ul>
+          </div>
+        </Card>
+        
+        <Card>
+          <div class="p-8">
+            <h3 class="text-xl font-medium mb-4">Maintenance & Repair</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Wobble correction and balancing</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Noise diagnosis and repair</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Switch and control replacement</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Motor repair or replacement</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Blade replacement and cleaning</span>
+              </li>
+            </ul>
+          </div>
+        </Card>
+      </div>
+    </div>
+    
+    <!-- Process Section -->
+    <div class="mb-24" id="process">
+      <h2 class="mb-12 text-3xl font-medium text-center">Our Installation Process</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {process.map((step, index) => (
+          <div class="bg-gray rounded-2xl p-8 relative">
+            <div class="absolute -top-6 left-8 bg-dark text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-medium">
+              {index + 1}
+            </div>
+            <div class="mb-4">
+              <Image src={step.icon} alt={step.title} class="h-12 w-auto" />
+            </div>
+            <h3 class="text-xl font-medium mb-4">{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="mb-24">
+      <h2 class="mb-12 text-3xl font-medium text-center">Frequently Asked Questions</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        {faqItems.map(item => (
+          <Card>
+            <div class="p-8">
+              <h3 class="text-xl font-medium mb-4">{item.question}</h3>
+              <p>{item.answer}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Contact Section -->
+    <div id="contact">
+      <Card>
+        <div class="p-8 md:p-12 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl font-medium mb-6">Ready to install your ceiling fan?</h2>
+            <p class="mb-6">
+              Contact CR9 Electrician Croydon for professional ceiling fan installation services. We serve all of Croydon and surrounding areas with prompt, reliable service.
+            </p>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Certified, licensed electricians</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>2-year installation guarantee</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Same-day service available</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Free estimates for all services</span>
+              </li>
+            </ul>
+          </div>
+          <div class=" rounded-2xl p-8">
+            <Image src={ceiling} alt="Ceiling Fan Installation" class="w-full h-auto rounded-[35px]" />
+
+          </div>
+        </div>
+      </Card>
+    </div>
+  </div>
+</MainLayout>

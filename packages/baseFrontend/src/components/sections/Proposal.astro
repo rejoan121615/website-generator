@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+import Card from "../ui/Card.astro";
+import Section from "./Section.astro";
+import c7 from "../../assets/pics/Electrician-1.webp";
+
+import propImg from "../../assets/pics/proposal-pic.png";
+---
+
+<Section>
+  <Card>
+    <div
+      class="flex bg-[#F3F3F3] rounded-[45px] p-[60px] relative mt-[123px] mb-[100px]"
+    >
+      <div class="w-full md:w-[100%] flex flex-col gap-[26px]">
+        <h1 class="text-4xl font-bold">Croydon Electricians</h1>
+        <p>
+          Our electricians are available 24 hours a day, 7 days a week to handle any situation, including electrical test inspections, diagnostics, fault identification, and more. They are completely certified to perform all forms of domestic and commercial electrical work, from a new plug outlet to a complete or partial rewiring of your home, in a professional and timely manner.
+
+          Any electrical work on your home must be done by a licensed electrician. To satisfy installation and safety laws, all CR9 Electrician Croydon electricians are NICEIC approved and work to British Standard BS 7671.
+          
+          Our electricians make every effort to cause the least amount of interruption possible and to leave your property clean and tidy after their visit.
+        </p>
+        <button class="btn-primary md:w-[20%]">Call us now</button>
+      </div>
+ 
+    </div>
+  </Card>
+  <Card>
+    
+    <div class="p-8 md:p-12 grid md:grid-cols-2 gap-12 items-center">
+      <div class=" rounded-2xl p-8">
+        <Image
+        src={c7}
+        alt={"alt"}
+        class="h-[300px] w-auto sm:h-auto sm:w-4/4 object-cover"
+      />
+      </div>
+      <div>
+        <h2 class="text-3xl font-medium mb-6">Electrical installation service</h2>
+        <p class="mb-6">
+          Our Electricians are qualified to install many kinds of electrical installations such as
+        </p>
+        <ul class="space-y-3 mb-8">
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Electrical Relocations</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Data Center Electrics</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Electrical Generator Installations</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Audio and Visual</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Data Cabling</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>PON Networks</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Electric Cooker Installation</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>Lights and Switches</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </Card>
+</Section>

@@ -1,0 +1,33 @@
+---
+import AccordionItem from "./AccordionItem.astro";
+
+const content = [
+{
+  index: 1,
+  title: "What is the best way to discover a good electrician in Croydon?",
+  description: "Word of mouth is a powerful tool. Asking around is the first step in locating a good electrician Ask to see their electrical qualifications. Get at least three quotes from different electricians."
+},
+{
+  index: 2,
+  title: "How much does an electrician in the Croydon cost?",
+  description: "We discovered that the average hourly wage in the UK is around £80 per hour, albeit this can vary significantly around the country, with London and the south-east being the most expensive."
+},
+{
+  index: 3,
+  title: "What are the requirements for an electrician?",
+  description: "This varies wildly based on the job being completed but in general a basic of three- to four-year apprenticeship and possesses a Level 3 technical and vocational qualification or a Level 3 Diploma."
+}
+];
+---
+
+{
+  content.map((item) => {
+    return (
+      <AccordionItem
+        index={item.index}
+        title={item.title}
+        description={item.description}
+      />
+    );
+  })
+}

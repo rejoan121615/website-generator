@@ -1,0 +1,23 @@
+---
+import Section from "./Section.astro";
+import { Image } from "astro:assets";
+import HeroIlust from "./pexels-aizat-ramlan-1291546-9679179.jpg";
+---
+
+<Section id="home">
+<div class="relative flex flex-col md:flex-row items-center" id="hero">
+    <div class="order-1 md:order-1 row items-center py-5 md:w-6/12 md:pb-20 md:pt-10">
+        <div class="text-left space-y-3">
+            <h1 class="text-5xl font-medium leading-none md:text-6xl text-center md:text-left">Certified Local Electrician In <br/>Croydon</h1>
+            <p class="mt-6 mb-8 text-lg font-normal leading-7 sm:mb-12 text-center md:text-left md:pr-12">Call us 24/7 for fast, reliable electrical service—whether you need a general electrician or urgent emergency assistance. Our experienced team is ready to handle most electrical issues quickly, safely, and efficiently, ensuring your home or business is back to normal in no time.</p>
+            <div class="w-full justify-center md:justify-start items-center inline-flex">
+                <a href="https://github.com/manulthanura/Positivus" target="_blank" class="px-8 py-5 hover:bg-white rounded-2xl text-center text-white hover:text-black border text-xl font-normal leading-7" style="background-color: #f47629;">Call 020 3519 9989
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="order-2 md:order-2 flex items-center py-5 md:w-6/12 md:pb-20 md:pt-10">
+        <Image src={HeroIlust} alt="Hero Ilustration" loading="eager" style={{height:"600px"}} />
+    </div>
+</div>
+</Section>

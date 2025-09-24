@@ -2,15 +2,15 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs-extra';
 import { parse } from 'csv-parse';
-import { folderCreator } from './utilities/folderCreator.js';
+import { folderCreator } from './modules/folder-creator.js';
 import type { CsvRowDataType } from './types/DataType.js';
-import { astroProjectBuilder } from './utilities/astroHandler.js';
-import { cloudFlareScriptBuilder } from './utilities/cloudflareHandler.js';
-import { fileURLToPath } from 'url';
+import { cloudFlareScriptBuilder } from './modules/cloudflare-script-builder.js';
+import { getRootDir } from './utilities/path-solver.js';    
+import { astroProjectBuilder } from './modules/app-builder.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const turboRepoRoot = path.resolve(__dirname, '../../../');
+
+
+const turboRepoRoot = getRootDir('../../../../');
 
 dotenv.config({ path: path.resolve(turboRepoRoot, '.env') });
 
@@ -30,11 +30,7 @@ const parser = csvStream.pipe(parse({
 }));
 
 parser.on('data', async (row : CsvRowDataType ) => {
-    const { domain } = row;
-    // create folder 
-    folderCreator(outputDir, domain);
-    astroProjectBuilder(turboRepoRoot, row);
-    cloudFlareScriptBuilder(turboRepoRoot, row);
+    astroProjectBuilder(row);
 });
 
 

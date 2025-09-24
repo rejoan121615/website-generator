@@ -1,0 +1,45 @@
+[
+    {
+      "index": 1,
+      "name": "David Miller",
+      "role": "Homeowner in South Wales",
+      "comment":
+        "We called their team for an emergency power outage late at night. They arrived quickly, fixed the issue, and ensured everything was safe before leaving. Professional, friendly, and reliable service!"
+    },
+    {
+      "index": 2,
+      "name": "Emily Roberts",
+      "role": "Small Business Owner",
+      "comment":
+        "They rewired our office and installed new lighting perfectly. The job was completed on time, with great attention to detail and clear communication throughout the process."
+    },
+    {
+      "index": 3,
+      "name": "James Carter",
+      "role": "Restaurant Manager",
+      "comment":
+        "Our kitchen needed urgent electrical repairs. Their electricians were fast, efficient, and incredibly professional. We were back to business the same day!"
+    },
+    {
+      "index": 4,
+      "name": "Sarah Williams",
+      "role": "Landlord",
+      "comment":
+        "From upgrading our rental properties to routine inspections, their team has always delivered excellent work. Dependable, courteous, and competitively priced."
+    },
+    {
+      "index": 5,
+      "name": "Mark Thompson",
+      "role": "Construction Project Lead",
+      "comment":
+        "We hired them for a full electrical installation on a new build. Everything was completed to the highest standards, and they kept us informed every step of the way."
+    },
+    {
+      "index": 6,
+      "name": "Rachel Evans",
+      "role": "Home Renovator",
+      "comment":
+        "They installed new outdoor lighting and updated our circuit breaker. The results were flawless, and the team made the whole process stress-free."
+    }
+  ]
+  

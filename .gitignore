@@ -29,6 +29,8 @@ dist
 demos/
 apps/
 reports/
+electrical-main/
+baseFrontendOld/
 
 
 # Debug
