@@ -2,14 +2,16 @@
 import Form from "../ui/Form.astro";
 import SectionTitle from "../ui/SectionTitle.astro";
 import Section from "./Section.astro";
+
+const sectionTitle = "{Contact Us|Get in Touch|Reach Out}";
+const description = "{Connect with Us|Reach out to us|Get in touch}: Let's Discuss Your {Electrical|Power} Needs";
 ---
 
 <Section id="contact">
   <div class="mb-[140px] relative">
     <SectionTitle
-      sectionTitle="Contact Us"
-      description="Connect with Us: Let's Discuss Your Electrical Needs"
+      sectionTitle={sectionTitle}
+      description={description}
     />
-
   </div>
 </Section>

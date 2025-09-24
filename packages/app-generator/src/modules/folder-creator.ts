@@ -7,7 +7,7 @@ export async function folderCreator( data : {domain: string}) {
 
   const { domain } = data;
 
-  const outputDir = path.join(getRootDir(), 'apps');
+  const outputDir = path.join(getRootDir('../../../'), 'apps');
 
     if (!domain && !outputDir) {
         console.warn('Skipping creation of directory with missing domain');

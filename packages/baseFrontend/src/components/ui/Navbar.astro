@@ -2,11 +2,9 @@
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
 const menuitems = [
-  { href: '/', label: 'About us' },
-  { href: '/', label: 'Services' },
-  { href: '/', label: 'Use Cases' },
-  { href: '/', label: 'Pricing' },
-  { href: '/', label: 'Blog'},
+  { href: '/about', label: 'About us' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/services', label: 'Services' },
 ];
 
 const navButton = { href: 'https://github.com/manulthanura/Positivus', label: 'Contact Us' };
@@ -62,7 +60,7 @@ const navButton = { href: 'https://github.com/manulthanura/Positivus', label: 'C
 
       <div>
         <div class="hidden lg:flex items-center gap-4">
-          <a class="px-9 py-5 rounded-2xl border border-zinc-900 bg-white hover:bg-black text-black hover:text-white inline-flex" >
+          <a class="px-9 py-5 rounded-2xl border border-zinc-900 bg-white cursor-pointer hover:bg-black text-black hover:text-white inline-flex" >
             <h2 class="text-center text-xl font-normal leading-7">{navButton.label}</h2>
           </a>
         </div>

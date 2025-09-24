@@ -10,53 +10,53 @@ import c4 from "../../assets/pics/floor.webp";
 import c5 from "../../assets/pics/car.webp";
 import c6 from "../../assets/pics/emergency.webp";
 import c8 from "../../assets/pics/pexels-shkrabaanthony-4981802.jpg";
-
 import Card from "../ui/Card.astro";
+
 const cards = [
   {
     index: 1,
-    titleTop: "Ceiling Fan",
-    titleBottom: "Installation",
+    titleTop: "{Ceiling|Overhead} Fan",
+    titleBottom: "{Installation|Setup}",
     img: c1,
     alt: "SEO",
     link: "/services/seo",
   },
   {
     index: 2,
-    titleTop: "Electrical",
-    titleBottom: "Rewire",
+    titleTop: "{Electrical|Wiring} Rewire",
+    titleBottom: "{Service|Upgrade}",
     img: c2,
     alt: "SEO",
     link: "/services/seo",
   },
   {
     index: 3,
-    titleTop: "Electric Cooker",
-    titleBottom: "Installation",
+    titleTop: "{Electric|Induction} Cooker",
+    titleBottom: "{Installation|Setup}",
     img: c3,
     alt: "SEO",
     link: "/services/seo",
   },
   {
     index: 1,
-    titleTop: "Electric Under Floor",
-    titleBottom: "Heating Installation",
+    titleTop: "{Electric|Underfloor} Heating",
+    titleBottom: "{Installation|Setup}",
     img: c4,
     alt: "SEO",
     link: "/services/seo",
   },
   {
     index: 2,
-    titleTop: "Electrical Vehicle",
-    titleBottom: "Home Charger",
+    titleTop: "{Electrical|Vehicle} Charger",
+    titleBottom: "{Installation|Setup}",
     img: c5,
     alt: "SEO",
     link: "/services/seo",
   },
   {
     index: 3,
-    titleTop: "Emergency",
-    titleBottom: "Electricians",
+    titleTop: "{Emergency|Urgent} Electricians",
+    titleBottom: "{Available|On Call}",
     img: c6,
     alt: "SEO",
     link: "/services/seo",
@@ -64,7 +64,26 @@ const cards = [
 ];
 
 const description =
-  "At CR9, we provide a full range of reliable services to keep your home or business running safely and efficiently. From quick repairs and emergency call-outs to complete installations and upgrades, our expert electricians are ready to handle all your electrical needs with professionalism and care.";
+  "{At|Here at} CR9, we provide a {full range|comprehensive suite} of reliable services to keep your {home|property|business} running {safely|securely} and efficiently. From {quick repairs|fast fixes} and {emergency call-outs|urgent assistance} to {complete installations|full setups} and upgrades, our expert electricians are ready to handle all your electrical needs with {professionalism|expertise} and care.";
+
+const additionalContent = {
+  heading:
+    "{Our|The} Electrical Engineer Will Take {Good|Excellent} Care of You",
+  paragraph:
+    "Our engineers are {professional|highly skilled} and {experienced|proficient} in all aspects of Electrical work.",
+  items: [
+    "Landlord Electrical Certificates",
+    "Electrical rewiring",
+    "Smoke and Fire Alarms",
+    "New light installations",
+    "PAT Testing",
+    "Periodic Electrical Inspections",
+    "Electrical Fault Finding",
+    "Door Entry Systems",
+    "EV Car Charging Port Installations",
+    "EICR Electrical Installation Condition Report",
+  ],
+};
 ---
 
 <Section id="services">
@@ -88,83 +107,37 @@ const description =
   <Card>
     <div class="p-8 md:p-12 grid md:grid-cols-2 gap-12 items-center">
       <div>
-        <h2 class="text-4xl font-bold mb-6">Our Electrical Engineer Will Take Good Care of You</h2>
-        <p class="mb-6">
-          Our engineers are professional and skilled in all aspects of Electrical work.
-        </p>
+        <h2 class="text-4xl font-bold mb-6">{additionalContent.heading}</h2>
+        <p class="mb-6">{additionalContent.paragraph}</p>
         <ul class="space-y-3 mb-8">
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>Landlord Electrical Certificates</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>Electrical rewiring</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>Smoke and Fire Alarms</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>New light installations</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>PAT Testing</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>Periodic Electrical Inspections</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>Electrical Fault Finding</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>Door Entry Systems</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>EV Car Charging Port Installations</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="mr-2 w-5 h-5 mt-1 text-[#f47629]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <span>EICR Electrical Installation Condition Report</span>
-          </li>
+          {
+            additionalContent.items.map((item) => (
+              <li class="flex items-start">
+                <svg
+                  class="mr-2 w-5 h-5 mt-1 text-[#f47629]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>{item}</span>
+              </li>
+            ))
+          }
         </ul>
       </div>
-      <div class=" rounded-2xl p-8">
+      <div class="rounded-2xl p-8">
         <Image
-        src={c8}
-        alt={"alt"}
-        class="h-[300px] w-auto sm:h-auto sm:w-4/4 object-cover"
-      />
+          src={c8}
+          alt={"alt"}
+          class="h-[300px] w-auto sm:h-auto sm:w-4/4 object-cover"
+        />
       </div>
     </div>
   </Card>
-</div>
-</div>
-
 </Section>

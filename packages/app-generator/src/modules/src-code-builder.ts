@@ -10,9 +10,9 @@ const turboRepoRoot = getRootDir('../../../../');
 
 // src folder handler
 export async function srcCodeBuilder(data: CsvRowDataType) {
-    // appPageBuilder(data, turboRepoRoot);
-    console.log(" Source code builder called ... ");
-    console.log(turboRepoRoot);
+    // this function will build src code  for now, let's just copy src code we will implement spintext later
+    
+
 }
 
 // src folder handler

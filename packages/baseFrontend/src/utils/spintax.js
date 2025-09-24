@@ -1,0 +1,1 @@
+// Removed the parseSpintax function as per the code change suggestion.

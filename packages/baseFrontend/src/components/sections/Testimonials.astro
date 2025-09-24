@@ -2,13 +2,16 @@
 import SectionTitle from "../ui/SectionTitle.astro";
 import SwiperSlider from "../ui/SwiperSlider.astro";
 import Section from "./Section.astro";
+
+const sectionTitle = "{Testimonials|Client Feedback|Customer Reviews}";
+const description = "{Hear from|Read about} Our {Satisfied|Happy} Clients: {Learn More about|Discover} Our Services";
 ---
 
 <Section id="testimonials">
   <div class="mt-20">
     <SectionTitle
-      sectionTitle="Testimonials"
-      description="Hear from Our Satisfied Clients: Read Our Testimonials to Learn More about Our Services"
+      sectionTitle={sectionTitle}
+      description={description}
     />
     <div class="rounded-[45px] bg-dark mb-[150px] text-gray">
       <SwiperSlider />
