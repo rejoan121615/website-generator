@@ -27,11 +27,12 @@ export function astroProjectBuilder(
   srcCodeBuilder(data);
 
   // create cloudflare scripts like deploy and remove
-  cloudFlareScriptBuilder(turboRepoRoot, data);
+  // cloudFlareScriptBuilder(turboRepoRoot, data);
+
 
   // create necessary scripts like tsconfig, package.json, astro.config.mjs
-  tsConfigFileBuilder(domain, turboRepoRoot);
-  packageJsonFileBuilder(domain, turboRepoRoot);
-  astroConfigFileBuilder(domain, turboRepoRoot);
+  // tsConfigFileBuilder(domain, turboRepoRoot);
+  // packageJsonFileBuilder(domain, turboRepoRoot);
+  // astroConfigFileBuilder(domain, turboRepoRoot);
 
 }
