@@ -17,8 +17,8 @@ import Card from "../components/ui/Card.astro";
                 priceData.map((item) => (
                 <Card isUnderline={true}>
                 <div class="flex flex-col p-6 mx-auto max-w-lg text-center">
-                    <h3 class="mb-4 text-2xl font-semibold">{item.title}</h3>
-                    <p class="font-light text-gray-500 sm:text-lg">{item.description}</p>
+                    <h3 class="mb-4 text-2xl font-semibold">[[Basic|Standard|Premium]] Plan</h3>
+                    <p class="font-light text-gray-500 sm:text-lg">[[Affordable|Cost-effective|Value-packed]] pricing for your needs.</p>
                     <div class="flex justify-center items-baseline my-8">
                         <span class="mr-2 text-5xl font-extrabold">${item.price}</span>
                         <span class="text-gray-500">/month</span>

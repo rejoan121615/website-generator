@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs-extra";
 import { CsvRowDataType } from "../types/DataType.js";
 import { getRootDir } from "../utilities/path-solver.js";
+import { spintaxHandler } from "./spintax-handler.js";
 
 const turboRepoRoot = getRootDir("../../../../");
 
@@ -20,11 +21,7 @@ export async function srcCodeBuilder(data: CsvRowDataType) {
     await fs.readdir(baseFrontendPath, { recursive: true, encoding: "utf8" })
   ).filter((item) => {
     const segments = item.split(path.sep);
-    return (
-      !segments.includes("node_modules") &&
-      !segments.includes(".astro") &&
-      !item.endsWith(".astro")
-    );
+    return !segments.includes("node_modules") && !segments.includes(".astro");
   });
 
   for (const item of items) {
@@ -35,10 +32,13 @@ export async function srcCodeBuilder(data: CsvRowDataType) {
     if (stat.isDirectory()) {
       await fs.ensureDir(destPath);
     } else if (stat.isFile()) {
-      await fs.copyFile(srcPath, destPath);
-      console.log(`Copied: ${srcPath} -> ${destPath}`);
-    } else {
-      console.log(`Ignored: ${srcPath}`);
+      if (item.endsWith(".astro")) {
+        // process astro file with spintax handler
+        await spintaxHandler(srcPath);
+      } else {
+        // process none astro file normally
+        await fs.copyFile(srcPath, destPath);
+      }
     }
   }
 
