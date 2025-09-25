@@ -3,10 +3,11 @@ import path from "path";
 import type { CsvRowDataType } from "../types/DataType.js";
 import { PageOptionsTYPE } from "../types/AstroHandler.js";
 
-
-
 // ts config file builder
-export async function tsConfigFileBuilder(domain: string, turboRepoRoot: string) {
+export async function tsConfigFileBuilder(
+  domain: string,
+  turboRepoRoot: string
+) {
   const tsConfigFileContent = {
     extends: "astro/tsconfigs/strict",
     compilerOptions: {
@@ -38,47 +39,31 @@ export async function tsConfigFileBuilder(domain: string, turboRepoRoot: string)
 }
 
 // json config file builder
-export async function packageJsonFileBuilder(domain: string, turboRepoRoot: string) {
-  // Sanitize domain to create a valid project name
-  const packageJsonFileContent = {
-    name: domain,
-    type: "module",
-    version: "0.0.1",
-    scripts: {
-      build: "astro build",
-      preview: "astro preview",
-      deploy: "node ./cloudflare/deploy.js",
-      remove: "node ./cloudflare/remove.js"
-    },
-    dependencies: {
-      "@repo/basefrontend": "workspace:*",
-      "@repo/cf": "workspace:*",
-      astro: "^5.13.7",
-    },
-    imports: {
-      BaseLayout: "@repo/basefrontend/layout",
-      Content: "@repo/basefrontend/content",
-    },
-  };
+export async function packageJsonFileBuilder(
+  domain: string,
+  srcPath: string,
+  destPath: string
+) {
+  try {
+    // Sanitize domain to create a valid project name
+    const jsonContent = JSON.parse(await fs.readFile(srcPath, "utf-8"));
+    // replace name field
+    jsonContent.name = domain;
+    jsonContent.scripts.build = "astro build";
+    await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
+    console.log(`package.json created successfully ...`);
+  } catch (error) {
+    console.error(`Error processing package.json for domain: ${domain}`, error);
+    process.exit(1);
+  }
 
-  // create package.json file
-  const packageJsonFilePath = path.join(
-    turboRepoRoot,
-    "apps",
-    domain,
-    "package.json"
-  );
-  fs.createFileSync(packageJsonFilePath);
-  fs.writeFileSync(
-    packageJsonFilePath,
-    JSON.stringify(packageJsonFileContent, null, 2)
-  );
-
-  console.log(`package.json created successfully ...`);
 }
 
 // astro config file builder
-export async function astroConfigFileBuilder(domain: string, turboRepoRoot: string) {
+export async function astroConfigFileBuilder(
+  domain: string,
+  turboRepoRoot: string
+) {
   // create package.json file
   const packageJsonFilePath = path.join(
     turboRepoRoot,

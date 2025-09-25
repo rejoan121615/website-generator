@@ -34,19 +34,19 @@ function parseSpintax(input: string, depth: number = 0): string {
   });
 }
 
-export async function spintaxHandler(input: string): Promise<void> {
+export async function spintaxHandler(inputPath: string, outputPath: string): Promise<void> {
   try {
     // Read the file content
-    const fileContent = await fs.readFile(input, "utf-8");
+    const fileContent = await fs.readFile(inputPath, "utf-8");
 
     // Parse spintax in the file content
     const parsedContent = parseSpintax(fileContent);
 
-    // Write the parsed content back to the file
-    // await fs.writeFile(input, parsedContent, 'utf-8');
+    // Write the parsed content into the destination file
+    await fs.writeFile(outputPath, parsedContent, 'utf-8');
 
-    console.log(`Spintax resolved and written for file: ${input}`);
+    console.log(`Spintax resolved and written for file: ${inputPath}`);
   } catch (error) {
-    console.error(`Error processing spintax for file: ${input}`, error);
+    console.error(`Error processing spintax for file: ${inputPath}`, error);
   }
 }
