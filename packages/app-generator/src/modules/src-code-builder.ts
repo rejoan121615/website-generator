@@ -35,7 +35,7 @@ export async function srcCodeBuilder(data: CsvRowDataType) {
     } else if (stat.isFile()) {
       if (item.endsWith(".astro")) {
         // process astro file with spintax handler
-        await spintaxHandler(srcPath, destPath);
+        await spintaxHandler({domain: data.domain, inputPath: srcPath, outputPath: destPath});
       } else if (item.endsWith("package.json")) {
         // process package.json file
         packageJsonFileBuilder( data.domain, srcPath, destPath)
