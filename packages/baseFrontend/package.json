@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "static": "astro build",
-    "astro": "astro"
+    "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
