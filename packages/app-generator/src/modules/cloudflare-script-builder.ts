@@ -27,9 +27,9 @@ import { deploy } from "@repo/cf";
 deploy({
   cfToken: "${process.env.CLOUDFLARE_API_TOKEN}",
   cfId: "${process.env.CLOUDFLARE_ACCOUNT_ID}",
-  projectName: "${domain}",
-  branchName: "${process.env.DEPLOYMENT_BRANCH}",
-  outputDir: "${process.env.GITHUB_REPOSITORY}",
+  projectName: "${domain.replaceAll(/\./g, "-")}",
+  domainName: "${domain}",
+  branchName: "${process.env.DEPLOYMENT_BRANCH}"
 });
 `;
     await fs.writeFile(deployScriptPath, deployScriptContent);
@@ -51,7 +51,7 @@ import { deleteProject } from "@repo/cf";
 deleteProject({
   cfToken: "${process.env.CLOUDFLARE_API_TOKEN}",
   cfId: "${process.env.CLOUDFLARE_ACCOUNT_ID}",
-  projectName: "${domain}",
+  projectName: "${domain.replaceAll(/\./g, "-")}",
 });
 `;
     await fs.writeFile(removeScriptPath, removeScriptContent);

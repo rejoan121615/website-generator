@@ -50,6 +50,8 @@ export async function packageJsonFileBuilder(
     // replace name field
     jsonContent.name = domain;
     jsonContent.scripts.build = "astro build";
+    jsonContent.scripts.deploy = "node ./cloudflare/deploy.js";
+    jsonContent.scripts.remove = "node ./cloudflare/remove.js";
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
     console.log(`package.json created successfully ...`);
   } catch (error) {

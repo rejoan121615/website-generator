@@ -8,27 +8,20 @@ export async function deploy({
   cfToken,
   cfId,
   projectName,
-  branchName,
-  outputDir,
+  domainName,
+  branchName
 }: {
   cfToken: string;
   cfId: string;
   projectName: string;
+  domainName: string;
   branchName: string;
-  outputDir: string;
 }) {
   const client = new Cloudflare({
     apiToken: cfToken,
   });
 
-  console.log("Starting deployment........... for project:", projectName);
-
-  const modifiedProjectName = projectName
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "")
-    .replace(/--+/g, "-");
+  console.log("Starting deployment........... for project:", domainName);
 
   // delete old csv file if exists
   const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +31,7 @@ export async function deploy({
     turboRepoRoot,
     "reports",
     "deploy",
-    projectName,
+    domainName,
     "deployment_data.csv"
   );
 
@@ -52,12 +45,10 @@ export async function deploy({
   // check if the project exists or create a new one
 
   try {
-    const existingProjectRes = await client.pages.projects.get(
-      modifiedProjectName,
-      {
-        account_id: cfId,
-      }
-    );
+    console.log("Checking if project already exists...", projectName);
+    const existingProjectRes = await client.pages.projects.get(projectName, {
+      account_id: cfId,
+    });
 
     console.log("Project already exists. Using the existing project...");
     const { id, name, domains, subdomain } = existingProjectRes;
@@ -71,7 +62,7 @@ export async function deploy({
     try {
       // ceate new project
       const newProjectRes = await client.pages.projects.create({
-        name: modifiedProjectName,
+        name: projectName,
         account_id: cfId,
         production_branch: branchName,
       });
@@ -97,10 +88,10 @@ export async function deploy({
     const staticWebsitePath = path.join(
       turboRepoRoot,
       "apps",
-      projectName,
+      domainName,
       "dist"
     );
-    const command = `wrangler pages deploy "${staticWebsitePath}" --project-name ${modifiedProjectName} --branch ${branchName} --commit-dirty=true`;
+    const command = `wrangler pages deploy "${staticWebsitePath}" --project-name ${projectName} --branch ${branchName} --commit-dirty=true`;
     try {
       execSync(command, {
         stdio: "inherit",
@@ -117,7 +108,7 @@ export async function deploy({
 
     // get the project details again to get the assigned domain
     client.pages.projects
-      .get(modifiedProjectName, {
+      .get(projectName, {
         account_id: cfId,
       })
       .then(async (projectDetails) => {
@@ -164,22 +155,16 @@ export async function deleteProject({
   projectName: string;
 }) {
   const client = new Cloudflare({ apiToken: cfToken });
-  const modifiedProjectName = projectName
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "")
-    .replace(/--+/g, "-");
 
-  console.log(`Attempting to delete project: ${modifiedProjectName}`);
+  console.log(`Attempting to delete project: ${projectName}`);
   try {
     // Delete the project (this also deletes all deployments)
-    await client.pages.projects.delete(modifiedProjectName, {
+    await client.pages.projects.delete(projectName, {
       account_id: cfId,
     });
-    console.log(`Project '${modifiedProjectName}' deleted successfully.`);
+    console.log(`Project '${projectName}' deleted successfully.`);
   } catch (error) {
-    console.error(`Failed to delete project '${modifiedProjectName}':`, error);
+    console.error(`Failed to delete project '${projectName}':`, error);
     throw error;
   }
 }

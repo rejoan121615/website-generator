@@ -26,8 +26,8 @@ export function astroProjectBuilder(
   // create src folder and files
   srcCodeBuilder(data);
 
-  // create cloudflare scripts like deploy and remove
-  // cloudFlareScriptBuilder(turboRepoRoot, data);
+  // create cloudflare scripts such as deploy and remove
+  cloudFlareScriptBuilder(turboRepoRoot, data);
 
 
   // create necessary scripts like tsconfig, package.json, astro.config.mjs
