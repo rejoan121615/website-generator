@@ -7,7 +7,7 @@ type Choice = { value: string; weight: number };
 
 // Function to parse spintax strings with optional weights and nested support
 function parseSpintax ({ domain, fileContent, depth = 0, inputPath }: { domain: string; fileContent: string; depth?: number; inputPath: string }): string {
-  if (depth > 3) {
+  if (depth > 5) {
     throw new Error("Maximum spintax nesting depth exceeded");
   }
 
@@ -16,39 +16,50 @@ function parseSpintax ({ domain, fileContent, depth = 0, inputPath }: { domain: 
   // Initialize the seeded random number generator
   const rng = seedrandom(domain);
 
-  return fileContent.replace(spintaxRegex, (match: string, options: string): string => {
-    const choices: Choice[] = options.split("|").map((choice: string) => {
-      const [value, weight] = choice.split("~");
-      return { value, weight: parseFloat(weight) || 1 }; // Default weight is 1
-    });
+  let processedContent = fileContent;
+  let previousContent = ""; // To check if content changed
 
-    // Fallback for empty choices
-    if (choices.length === 0) {
-      return ""; // Return an empty string if no choices are available
-    }
+  // Keep processing until no more spintax patterns are found or no changes occur
+  while (processedContent !== previousContent) {
+    previousContent = processedContent; // Store content before replacement
 
-    const totalWeight = choices.reduce(
-      (sum: number, choice: Choice) => sum + choice.weight,
-      0
-    );
+    processedContent = processedContent.replace(spintaxRegex, (match: string, options: string): string => {
+      const choices: Choice[] = options.split("|").map((choice: string) => {
+        const [value, weight] = choice.split("~");
+        return { value, weight: parseFloat(weight) || 1 };
+      });
 
-    const rngValue = rng();
-
-    console.log(`Domain => ${domain} InputPath => ${inputPath} RNG Value => ${rngValue} `);
-
-    let random = rngValue * totalWeight; // Use the seeded RNG instead of Math.random()
-
-
-    for (const choice of choices) {
-      if (random < choice.weight) {
-        // Recursively resolve nested spintax
-        return parseSpintax({ domain, fileContent: choice.value, depth: depth + 1 , inputPath });
+      // Fallback for empty choices
+      if (choices.length === 0) {
+        return ""; // Return an empty string if no choices are available
       }
-      random -= choice.weight;
-    }
 
-    return parseSpintax({ domain, fileContent: choices[0].value, inputPath }); // Fallback to the first choice
-  });
+      const totalWeight = choices.reduce(
+        (sum: number, choice: Choice) => sum + choice.weight,
+        0
+      );
+
+      const rngValue = rng();
+
+      console.log(`Domain => ${domain} InputPath => ${inputPath} RNG Value => ${rngValue} ` );
+
+      let random = rngValue * totalWeight; // Use the seeded RNG instead of Math.random()
+
+
+      for (const choice of choices) {
+        if (random < choice.weight) {
+          // Recursively resolve nested spintax
+          return parseSpintax({ domain, fileContent: choice.value, depth: depth + 1 , inputPath });
+        }
+        random -= choice.weight;
+      }
+
+      // Fallback to the first choice, also recursively parse it
+      return parseSpintax({ domain, fileContent: choices[0].value, depth: depth + 1, inputPath });
+    });
+  }
+
+  return processedContent;
 }
 
 // Function to parse token strings

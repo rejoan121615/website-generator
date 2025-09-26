@@ -20,7 +20,7 @@
     "site:deploy": "turbo run deploy --filter=\"./apps/*\"",
     "site:remove": "turbo run remove --filter=\"./apps/*\"",
     "site:preview": "turbo run preview --filter=\"./apps/*\"",
-    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps && pnpm run site:deploy"
+    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps && pnpm run site:preview"
   },
   "devDependencies": {
     "pnpm": "^10.16.1",
