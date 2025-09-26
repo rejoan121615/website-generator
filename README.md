@@ -24,14 +24,17 @@ ANOTHER_SECRET=your_secret_here
 - Make sure all required variables are filled in before proceeding.
 - If you are unsure about any value, contact your project administrator.
 
-### 2. Install Dependencies
+### 2. Create `websites.csv`
+Create a file named `websites.csv` inside the `data` folder (`data/websites.csv`). Copy the data from `data/sample-data.csv` and paste it into `websites.csv`. Ensure the data follows CSV conventions.
+
+### 3. Install Dependencies
 First, install all dependencies using pnpm:
 
 ```bash
 pnpm install
 ```
 
-### 3. Generate and Deploy Websites
+### 4. Generate and Deploy Websites
 To generate and deploy the websites, run the following command:
 
 ```bash
@@ -46,13 +49,13 @@ This single command will handle all the necessary steps:
 - Deploy the final sites to Cloudflare.
 
 
-### 4. Update Website Data
+### 5. Update Website Data
 The websites are generated based on the data in `data/websites.csv`. To add or update sites, edit this file and re-run `pnpm run generate`.
 
-### 5. Deployment Reports
+### 6. Deployment Reports
 All deployment reports are saved in the `reports/deploy` directory. You can find details about each deployment there.
 
-### 6. Delete Deployed Sites
+### 7. Delete Deployed Sites
 To delete the project from cloudflare just run `pnpm run site:remove`
 
 ---
