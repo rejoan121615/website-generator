@@ -1,12 +1,12 @@
 import fs from "fs-extra";
-import path from "path";
 import seedrandom from "seedrandom";
+import { CsvRowDataType } from "../types/DataType.js";
 
 
 type Choice = { value: string; weight: number };
 
 // Function to parse spintax strings with optional weights and nested support
-function parseSpintax({ domain, fileContent, depth = 0, inputPath }: { domain: string; fileContent: string; depth?: number; inputPath: string }): string {
+function parseSpintax ({ domain, fileContent, depth = 0, inputPath }: { domain: string; fileContent: string; depth?: number; inputPath: string }): string {
   if (depth > 3) {
     throw new Error("Maximum spintax nesting depth exceeded");
   }
@@ -51,12 +51,26 @@ function parseSpintax({ domain, fileContent, depth = 0, inputPath }: { domain: s
   });
 }
 
-export async function spintaxHandler({
-  domain,
+// Function to parse token strings
+function parseTokens ({ csvData, fileContent, inputPath }: { csvData: CsvRowDataType; fileContent: string; inputPath: string }) : string {
+  const tokenRegex = /\{\{(.*?)\}\}/g;
+
+  return fileContent.replace(tokenRegex, (match: string, token: string): string => {
+    if (token in csvData) {
+      return csvData[token as keyof CsvRowDataType]; // Replace token with corresponding CSV data
+    } else {
+      console.warn(`Token ${token} not found in CSV data for file => ${inputPath}`);
+      return match; // Leave the token as is if not found
+    }
+  });
+}
+
+export async function spintaxAndTokenHandler({
+  csvData,
   inputPath,
   outputPath,
 }: {
-  domain: string;
+  csvData: CsvRowDataType;
   inputPath: string;
   outputPath: string;
 }): Promise<void> {
@@ -65,10 +79,14 @@ export async function spintaxHandler({
     const fileContent = await fs.readFile(inputPath, "utf-8");
 
     // Parse spintax in the file content
-    const parsedContent = parseSpintax({ fileContent, domain, inputPath});
+    const contentAfterSpintax = parseSpintax({ fileContent, domain: csvData.domain, inputPath});
+
+    // parse tokens in the file content 
+    const contentAfterTokens = parseTokens({ fileContent: contentAfterSpintax, inputPath, csvData });
+     
 
     // Write the parsed content into the destination file
-    await fs.writeFile(outputPath, parsedContent, "utf-8");
+    await fs.writeFile(outputPath, contentAfterTokens, "utf-8");
 
     console.log(`Spintax resolved and written for file: ${inputPath}`);
   } catch (error) {

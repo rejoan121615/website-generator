@@ -28,7 +28,7 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
-  apps/austin-detailing.com:
+  apps/austindetailing.com:
     dependencies:
       '@astrojs/check':
         specifier: ^0.9.4
@@ -64,7 +64,7 @@ importers:
         specifier: ^5.4.5
         version: 5.9.2
 
-  apps/dallas-junk.com:
+  apps/dallasjunk.com:
     dependencies:
       '@astrojs/check':
         specifier: ^0.9.4
@@ -100,7 +100,7 @@ importers:
         specifier: ^5.4.5
         version: 5.9.2
 
-  apps/home-inspection-pro.com:
+  apps/homeinspectionpro.com:
     dependencies:
       '@astrojs/check':
         specifier: ^0.9.4
@@ -202,15 +202,6 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.9.2
-
-  packages/baseFrontendOld:
-    dependencies:
-      '@repo/cf':
-        specifier: workspace:*
-        version: link:../cf
-      astro:
-        specifier: ^5.13.7
-        version: 5.13.10(@types/node@24.5.2)(@vercel/functions@2.2.13)(jiti@1.21.7)(rollup@4.52.2)(typescript@5.9.2)(yaml@2.8.1)
 
   packages/cf:
     dependencies:
