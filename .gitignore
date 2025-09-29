@@ -33,6 +33,8 @@ electrical-main/
 baseFrontendOld/
 requirement.md
 data/requirement.csv
+data/websites.csv
+pnpm-lock.yaml
 
 
 # Debug

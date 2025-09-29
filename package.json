@@ -16,11 +16,12 @@
     "dev:packages": "turbo run dev --filter=\"./packages/*\"",
     "output": "turbo output",
     "output:packages": "turbo run output --filter=\"./packages/*\"",
-    "site:build": "pnpm --workspace apps/website run build",
+    "site:build": "turbo run build --filter=\"./apps/*\"",
     "site:deploy": "turbo run deploy --filter=\"./apps/*\"",
     "site:remove": "turbo run remove --filter=\"./apps/*\"",
     "site:preview": "turbo run preview --filter=\"./apps/*\"",
-    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run build:apps && pnpm run site:deploy"
+    "site:generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run site:build",
+    "generate": "pnpm run site:generate"
   },
   "devDependencies": {
     "pnpm": "^10.16.1",

@@ -34,28 +34,42 @@ First, install all dependencies using pnpm:
 pnpm install
 ```
 
-### 4. Generate and Deploy Websites
-To generate and deploy the websites, run the following command:
+### 4. Generate Websites
+To generate the websites, run the following command:
 
 ```bash
 pnpm run generate
 ```
 
-This single command will handle all the necessary steps:
+This command will handle all the necessary steps:
 - Build the required packages.
 - Generate the website applications based on `data/websites.csv`.
 - Install dependencies for the newly created applications.
 - Build the applications.
-- Deploy the final sites to Cloudflare.
 
+### 5. Deploy Websites
+To deploy the generated websites to Cloudflare, run:
 
-### 5. Update Website Data
+```bash
+pnpm run site:deploy
+```
+
+### 6. Preview Websites Locally
+To preview the generated websites locally, run:
+
+```bash
+pnpm run site:preview
+```
+
+After running this command, you can click on the URL that appears (usually something like `http://localhost:3000`). On the left side, you'll see a list of all generated sites. You can navigate through the sites using the up/down arrow keys on your keyboard.
+
+### 7. Update Website Data
 The websites are generated based on the data in `data/websites.csv`. To add or update sites, edit this file and re-run `pnpm run generate`.
 
-### 6. Deployment Reports
+### 8. Deployment Reports
 All deployment reports are saved in the `reports/deploy` directory. You can find details about each deployment there.
 
-### 7. Delete Deployed Sites
+### 9. Delete Deployed Sites
 To delete the project from cloudflare just run `pnpm run site:remove`
 
 ---
