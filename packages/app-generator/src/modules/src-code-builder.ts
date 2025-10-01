@@ -4,6 +4,7 @@ import { CsvRowDataType } from "../types/DataType.js";
 import { getRootDir } from "../utilities/path-solver.js";
 import { spintaxAndTokenHandler } from "./spintax-handler.js";
 import { packageJsonFileBuilder } from "./app-scripts-builder.js";
+import { jsonLdBuilder } from "./Jsonld-builder.js";
 
 const turboRepoRoot = getRootDir("../../../../");
 
@@ -39,7 +40,9 @@ export async function srcCodeBuilder(data: CsvRowDataType) {
     if (stat.isDirectory()) {
       await fs.ensureDir(destPath);
     } else if (stat.isFile()) {
-      if (item.endsWith(".astro")) {
+      if (item.endsWith('Seo.astro')) {
+        await jsonLdBuilder({csvRowData: data, destPath, srcPath})
+      } else if (item.endsWith(".astro")) {
         // process astro file with spintax handler
         await spintaxAndTokenHandler({
           csvData : data,

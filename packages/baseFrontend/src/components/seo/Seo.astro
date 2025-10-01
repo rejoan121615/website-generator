@@ -65,4 +65,7 @@ const jsonLD = jsonLDGenerator({
 {robots && <meta name="robots" content="noindex, nofollow" />}
 
 <!-- JSON LD -->
-<Fragment set:html={jsonLD} />
+<!-- <Fragment set:html={jsonLD} /> -->
+
+<!-- JSON-LD Placeholder - This gets replaced during build -->
+{"{{ ldSchemaData }}"}

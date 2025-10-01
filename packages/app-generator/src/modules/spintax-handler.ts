@@ -41,8 +41,6 @@ function parseSpintax ({ domain, fileContent, depth = 0, inputPath }: { domain: 
 
       const rngValue = rng();
 
-      console.log(`Domain => ${domain} InputPath => ${inputPath} RNG Value => ${rngValue} ` );
-
       let random = rngValue * totalWeight; // Use the seeded RNG instead of Math.random()
 
 
@@ -98,8 +96,6 @@ export async function spintaxAndTokenHandler({
 
     // Write the parsed content into the destination file
     await fs.writeFile(outputPath, contentAfterTokens, "utf-8");
-
-    console.log(`Spintax resolved and written for file: ${inputPath}`);
   } catch (error) {
     console.error(`Error processing spintax for file: ${inputPath}`, error);
   }

@@ -1,18 +1,40 @@
 
+
+export interface JsonLdAddressType {
+	"@type": "PostalAddress";
+	streetAddress: string;
+	addressLocality: string;
+	addressRegion: string;
+	addressCountry: string;
+}
+
+export interface JsonLdDataType {
+	"@context": string;
+	"@type": string;
+	"@id": string;
+	name: string;
+	description: string;
+	slogan: string;
+	url: string;
+	logo: string;
+	image: string[];
+	address: JsonLdAddressType;
+	telephone: string;
+	email: string;
+}
+
 export type CsvRowDataType = {
 	domain: string;
-	service_niche: string;
-	main_city: string;
-	state_short: string;
+	name: string;
+	address: string;
 	phone: string;
+	email: string;
 	meta_title: string;
 	meta_description: string;
-	hero_header: string;
-	hero_paragraph: string;
-	about_title: string;
-	about_paragraph: string;
-	spintax_hero_title: string;
-	spintax_about_text: string;
+	logo: string;
+	hero_image: string;
+	gallery_1: string;
+	gallery_2: string;
 };
 
 
