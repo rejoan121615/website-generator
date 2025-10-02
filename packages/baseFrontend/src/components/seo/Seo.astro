@@ -8,8 +8,6 @@ type Props = {
   // Url is automatic
   // Robots are optional
   // Frontmatter triggers a CMS post type
-  title: string;
-  description: string;
   url: string;
   image?: { src: string; alt: string };
   robots?: boolean;
@@ -17,8 +15,6 @@ type Props = {
 };
 
 const {
-  title,
-  description,
   url = Astro.url,
   image,
   frontmatter,
@@ -31,6 +27,11 @@ const jsonLD = jsonLDGenerator({
   post: frontmatter,
   url,
 });
+
+const title: string = "";
+const description: string = "";
+
+
 ---
 
 <!-- SEO -->

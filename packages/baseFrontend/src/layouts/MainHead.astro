@@ -19,8 +19,6 @@ const { title, description, image, frontmatter, robots } = Astro.props;
   <meta name="description" content={description} />
 
   <Seo
-    {title}
-    {description}
     url={Astro.url.toString()}
     {image}
     {frontmatter}
