@@ -1,29 +1,71 @@
 ---
 import Section from "./Section.astro";
 import { Image } from "astro:assets";
-import HeroIlust from "./pexels-aizat-ramlan-1291546-9679179.jpg";
 
-const heroTitle = "[[Highly Certified|Top-Rated|Experienced & Skilled]] Local Electrician In <br/>[[Croydon Area|[[Central London|[[North Surrey|[[West Kent|[[East Essex|South Essex]]]]]]]]]]";
-const heroDescription = 
-  "Call us 24/7 for [[fast|reliable|efficient]] electrical service—whether you need a [[general electrician|licensed professional]] or urgent emergency assistance. Our [[experienced|skilled|certified]] team is ready to handle most electrical issues [[quickly|promptly]], safely, and efficiently, ensuring your home or business is back to normal in no time."
-;
+import certifiedElectrician from "./hero-images/certified-electrician-working.jpg";
+import circuitBreakerBoxMaintenance from "./hero-images/circuit-breaker-box-maintenance.jpg";
+import circuitBreakerSafety from "./hero-images/circuit-breaker-electrical-safety.jpg";
+import commercialElectricalService from "./hero-images/commercial-electrical-panel-service.jpg";
+import electricalCircuitInstallation from "./hero-images/electrical-circuit-breaker-installation.jpg";
+import electricalMaintenanceBox from "./hero-images/electrical-maintenance-circuit-box.jpg";
+import electricalPanelUpgrade from "./hero-images/electrical-panel-upgrade-service.jpg";
+import electricalSafetyInspection from "./hero-images/electrical-safety-inspection-service.jpg";
+import electricalSystemInspection from "./hero-images/electrical-system-inspection-work.jpg";
+import electricalTechnicianTesting from "./hero-images/electrical-technician-breaker-testing.jpg";
+import electricalWiringPanel from "./hero-images/electrical-wiring-breaker-panel.jpg";
+import electricianWorkingPanel from "./hero-images/electrician-working-circuit-breaker-panel.jpg";
+import industrialElectricalRepair from "./hero-images/industrial-electrical-repair-work.jpg";
+import professionalCircuitRepair from "./hero-images/professional-circuit-breaker-repair.jpg";
+import professionalElectrician from "./hero-images/professional-electrician-panel-repair.jpg";
+import residentialElectricalUpgrade from "./hero-images/residential-electrical-panel-upgrade.jpg";
+
+
+const heroTitle =
+  "[[Highly Certified|Top-Rated|Experienced & Skilled]] Local Electrician In <br/>[[Croydon Area|[[Central London|[[North Surrey|[[West Kent|[[East Essex|South Essex]]]]]]]]]]";
+const heroDescription =
+  "Call us 24/7 for [[fast|reliable|efficient]] electrical service—whether you need a [[general electrician|licensed professional]] or urgent emergency assistance. Our [[experienced|skilled|certified]] team is ready to handle most electrical issues [[quickly|promptly]], safely, and efficiently, ensuring your home or business is back to normal in no time.";
 const callToAction = "[[Call|Contact|Reach out to]] {{phone}}";
+
+const heroImageSpintax : ImageMetadata = `[[certifiedElectrician|circuitBreakerBoxMaintenance|circuitBreakerSafety|commercialElectricalService|electricalCircuitInstallation|electricalMaintenanceBox|electricalPanelUpgrade|electricalSafetyInspection|electricalSystemInspection|electricalTechnicianTesting|electricalWiringPanel|electricianWorkingPanel|industrialElectricalRepair|professionalCircuitRepair|professionalElectrician|residentialElectricalUpgrade]]`
 ---
 
 <Section id="home">
-<div class="relative flex flex-col md:flex-row items-center" id="hero">
-    <div class="order-1 md:order-1 row items-center py-5 md:w-6/12 md:pb-20 md:pt-10">
-        <div class="text-left space-y-3">
-            <h1 class="text-5xl font-medium leading-none md:text-6xl text-center md:text-left" set:html={heroTitle}></h1>
-            <p class="mt-6 mb-8 text-lg font-normal leading-7 sm:mb-12 text-center md:text-left md:pr-12">{heroDescription}</p>
-            <div class="w-full justify-center md:justify-start items-center inline-flex">
-                <a href="https://github.com/manulthanura/Positivus" target="_blank" class="px-8 py-5 hover:bg-white rounded-2xl text-center text-white hover:text-black border text-xl font-normal leading-7" style="background-color: #f47629;">{callToAction}
-                </a>
-            </div>
+  <div class="relative flex flex-col md:flex-row items-center" id="hero">
+    <div
+      class="order-1 md:order-1 row items-center py-5 md:w-6/12 md:pb-20 md:pt-10"
+    >
+      <div class="text-left space-y-3">
+        <h1
+          class="text-5xl font-medium leading-none md:text-6xl text-center md:text-left"
+          set:html={heroTitle}
+        />
+        <p
+          class="mt-6 mb-8 text-lg font-normal leading-7 sm:mb-12 text-center md:text-left md:pr-12"
+        >
+          {heroDescription}
+        </p>
+        <div
+          class="w-full justify-center md:justify-start items-center inline-flex"
+        >
+          <a
+            href="https://github.com/manulthanura/Positivus"
+            target="_blank"
+            class="px-8 py-5 hover:bg-white rounded-2xl text-center text-white hover:text-black border text-xl font-normal leading-7"
+            style="background-color: #f47629;"
+            >{callToAction}
+          </a>
         </div>
+      </div>
     </div>
-    <div class="order-2 md:order-2 flex items-center py-5 md:w-6/12 md:pb-20 md:pt-10">
-        <Image src={HeroIlust} alt="Hero Ilustration" loading="eager" style={{height:"600px"}} />
+    <div
+      class="order-2 md:order-2 flex items-center py-5 md:w-6/12 md:pb-20 md:pt-10"
+    >
+      <Image
+        src={heroImageSpintax}
+        alt="{{ }} Ilustration"
+        loading="eager"
+        style={{ height: "600px" }}
+      />
     </div>
-</div>
+  </div>
 </Section>
