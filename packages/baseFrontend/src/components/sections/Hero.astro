@@ -1,6 +1,8 @@
 ---
 import Section from "./Section.astro";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
+
+
 
 import certifiedElectrician from "./hero-images/certified-electrician-working.jpg";
 import circuitBreakerBoxMaintenance from "./hero-images/circuit-breaker-box-maintenance.jpg";
@@ -26,11 +28,15 @@ const heroDescription =
   "Call us 24/7 for [[fast|reliable|efficient]] electrical service—whether you need a [[general electrician|licensed professional]] or urgent emergency assistance. Our [[experienced|skilled|certified]] team is ready to handle most electrical issues [[quickly|promptly]], safely, and efficiently, ensuring your home or business is back to normal in no time.";
 const callToAction = "[[Call|Contact|Reach out to]] {{phone}}";
 
-const heroImageSpintax : ImageMetadata = `[[certifiedElectrician|circuitBreakerBoxMaintenance|circuitBreakerSafety|commercialElectricalService|electricalCircuitInstallation|electricalMaintenanceBox|electricalPanelUpgrade|electricalSafetyInspection|electricalSystemInspection|electricalTechnicianTesting|electricalWiringPanel|electricianWorkingPanel|industrialElectricalRepair|professionalCircuitRepair|professionalElectrician|residentialElectricalUpgrade]]`
+const heroImageSpintax = await getImage({
+  src: `[[certifiedElectrician|circuitBreakerBoxMaintenance|circuitBreakerSafety|commercialElectricalService|electricalCircuitInstallation|electricalMaintenanceBox|electricalPanelUpgrade|electricalSafetyInspection|electricalSystemInspection|electricalTechnicianTesting|electricalWiringPanel|electricianWorkingPanel|industrialElectricalRepair|professionalCircuitRepair|professionalElectrician|residentialElectricalUpgrade|circuitBreakerBoxMaintenance]]`,
+  format: 'webp'
+})
+
+
 ---
 
-<Section id="home">
-  <div class="relative flex flex-col md:flex-row items-center" id="hero">
+<Section id="home">  <div class="relative flex flex-col md:flex-row items-center" id="hero">
     <div
       class="order-1 md:order-1 row items-center py-5 md:w-6/12 md:pb-20 md:pt-10"
     >
@@ -61,7 +67,7 @@ const heroImageSpintax : ImageMetadata = `[[certifiedElectrician|circuitBreakerB
       class="order-2 md:order-2 flex items-center py-5 md:w-6/12 md:pb-20 md:pt-10"
     >
       <Image
-        src={heroImageSpintax}
+        src={heroImageSpintax.src}
         alt="{{ }} Ilustration"
         loading="eager"
         style={{ height: "600px" }}
