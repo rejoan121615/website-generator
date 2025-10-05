@@ -2,7 +2,20 @@
 import { Image } from "astro:assets";
 import Card from "../ui/Card.astro";
 import Section from "./Section.astro";
-import c7 from "../../assets/pics/Electrician-1.webp";
+
+// proposal section image imports
+import ProposalBulbSet from '../../assets/proposal-section/electrician-bulbset.jpg';
+import ProposalInstall from '../../assets/proposal-section/electrician-install.jpg';
+import ProposalSolarCloseup from '../../assets/proposal-section/electrician-solar-closeup.jpg';
+import ProposalSolar from '../../assets/proposal-section/electrician-solar.jpg';
+import ProposalSolderIron from '../../assets/proposal-section/electrician-solder-iron.jpg';
+import ProposalTools from '../../assets/proposal-section/electrician-tools.jpg';
+import ProposalWithGear from '../../assets/proposal-section/electrician-with-gear.jpg';
+import ProposalWithPlus from '../../assets/proposal-section/electrician-with-plus.jpg';
+import ProposalWithSafety from '../../assets/proposal-section/electrician-with-safety.jpg';
+import ProposalWorkingDesk from '../../assets/proposal-section/electrician-working-desk.jpg';
+import ProposalWorkingWithDrill from '../../assets/proposal-section/electrician-working-with-drill.jpg';
+import ProposalWorking from '../../assets/proposal-section/electrician-working.jpg';
 
 import propImg from "../../assets/pics/proposal-pic.png";
 
@@ -43,8 +56,8 @@ const additionalContent = {
     <div class="p-8 md:p-12 grid md:grid-cols-2 gap-12 items-center">
       <div class="rounded-2xl p-8">
         <Image
-          src={c7}
-          alt={"alt"}
+          src={[[ProposalBulbSet|ProposalInstall|ProposalSolarCloseup|ProposalSolar|ProposalSolderIron|ProposalTools|ProposalWithGear|ProposalWithPlus|ProposalWithSafety|ProposalWorkingDesk|ProposalWorkingWithDrill|ProposalWorking]]}
+            alt="[[Electrician at work|Electrical installation|Professional electrician|Electrician using tools|Electrician with safety gear|Electrician performing inspection|Electrician fixing wiring|Electrician installing equipment|Electrician with drill|Electrician at desk|Electrician with bulb set|Electrician with solar panel]]"
           class="h-[300px] w-auto sm:h-auto sm:w-4/4 object-cover"
         />
       </div>

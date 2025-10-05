@@ -3,12 +3,86 @@ import SectionTitle from "../ui/SectionTitle.astro";
 import ServiceCard from "../ui/ServiceCard.astro";
 import Section from "./Section.astro";
 import { Image } from "astro:assets";
-import c1 from "../../assets/pics/celing.jpg";
-import c2 from "../../assets/pics/rewire.webp";
-import c3 from "../../assets/pics/cook.webp";
-import c4 from "../../assets/pics/floor.webp";
-import c5 from "../../assets/pics/car.webp";
-import c6 from "../../assets/pics/emergency.webp";
+
+
+// Electric Cooker images
+import CookerInstallation from '../../assets/electric-cooker/cooker-installation.jpeg';
+import CookerFinish from '../../assets/electric-cooker/cooker-kinstall-finish.jpeg';
+import CookerRepair from '../../assets/electric-cooker/cooker-repair.jpeg';
+import CookerWiringOneHand from '../../assets/electric-cooker/cooker-wiring-onehand.webp';
+import CookerWiringTwoHand from '../../assets/electric-cooker/cooker-wiring-towhand.jpg';
+import CookerWithKitchen from '../../assets/electric-cooker/cooker-with-kitchen.jpeg';
+import ElectricianCookerInstallation from '../../assets/electric-cooker/electrician-cooker-installation.webp';
+import ElectricianCookerRepair from '../../assets/electric-cooker/electrician-cooker-repair.jpeg';
+
+// Electric Wiring images
+import WiringInstallation from '../../assets/electric-wiring/elec-wiring-installation.jpeg';
+import FloorWiring from '../../assets/electric-wiring/floor-wiring.jpg';
+import WallWiringInstall from '../../assets/electric-wiring/wall-wiring-install.jpeg';
+import WallWiringWebp from '../../assets/electric-wiring/wall-wiring.webp';
+import WiringBoxCloseup from '../../assets/electric-wiring/wiring-box-closeup.jpeg';
+import WiringWithScrew from '../../assets/electric-wiring/wiring-with-screw.jpeg';
+
+// Electrical Charger images
+import ChargerInstallation from '../../assets/electrical-charger/charger-installation.jpg';
+import ChargerCloseup from '../../assets/electrical-charger/closeup-electrician.webp';
+import ChargerConversation from '../../assets/electrical-charger/conversation-with-charger.jpeg';
+import ElectricCharger from '../../assets/electrical-charger/electric-charger.jpeg';
+import ElectricalChargerPng from '../../assets/electrical-charger/electrical-charger.png';
+import ElectricianTestingCharger from '../../assets/electrical-charger/electrician-testing-charger.jpeg';
+import ElectricianWithCharger from '../../assets/electrical-charger/electrician-with-charger.jpeg';
+import TeslaCharger from '../../assets/electrical-charger/tesla-charger.jpeg';
+
+// Electrical Fan images
+import AdjustFan from '../../assets/electrical-fan/adjust-fan.jpg';
+import FanCloseup from '../../assets/electrical-fan/fan-closeup.jpg';
+import KitchenFan from '../../assets/electrical-fan/kitchen-fan.jpg';
+import OldFan from '../../assets/electrical-fan/old-fan.jpg';
+import SmallFanNoBg from '../../assets/electrical-fan/small-fan-nobg.jpg';
+import SmallFan from '../../assets/electrical-fan/small-fan.jpg';
+import TableFanNoBg from '../../assets/electrical-fan/table-fan-nobg.jpg';
+import TableFan from '../../assets/electrical-fan/table-fan.jpg';
+
+// Underfloor Heating images
+import ElectricianHeatingWiring from '../../assets/underfloor-heating/electrician-heating-wiring.jpeg';
+import ElectricianHeating from '../../assets/underfloor-heating/electrician-heating.jpeg';
+import ElectricianInstallationWall from '../../assets/underfloor-heating/electrician-installation-wall.webp';
+import HeatingCloseup from '../../assets/underfloor-heating/heating-closeup.jpeg';
+import HeatingFloorSetup from '../../assets/underfloor-heating/heating-floor-setup.jpeg';
+import HeatingFloor from '../../assets/underfloor-heating/heating-floor.jpeg';
+import HeatingInstall from '../../assets/underfloor-heating/heating-install.jpg';
+import HeatingWiring from '../../assets/underfloor-heating/heating-wiring.jpeg';
+import UnderfloorHeatingWebp from '../../assets/underfloor-heating/underfloor-heating.webp';
+
+// Urgent Electricians images
+import ElectricianWorking from '../../assets/urgent-electricians/electrician-working.jpeg';
+import WallCloseupMiter from '../../assets/urgent-electricians/wall-closeup-miter.jpeg';
+import WallCloseup from '../../assets/urgent-electricians/wall-closeup.jpeg';
+import WallMainSwitchCloseup from '../../assets/urgent-electricians/wall-main-switch-closeup.jpeg';
+import WallWiringService from '../../assets/urgent-electricians/wall-wiring-service.jpeg';
+import WallWithCharger from '../../assets/urgent-electricians/wall-with-charger.jpeg';
+import WallWithVoltageMiter from '../../assets/urgent-electricians/wall-with-voltagemiter.jpeg';
+
+
+// Electrician images (only those still in the folder)
+import DrillCloseup from '../../assets/electrician/drill-closeup.jpg';
+import DrillMachineOneHand from '../../assets/electrician/drill-machine-onehand.jpg';
+import DrillingCloseup from '../../assets/electrician/drilling-closeup.jpg';
+import ElectricBulb from '../../assets/electrician/electric-bulb.jpg';
+import ElectricWire from '../../assets/electrician/electric-wire.jpg';
+import ElectricianBulb from '../../assets/electrician/electrician-bulb.jpg';
+import ElectricianCloseup from '../../assets/electrician/electrician-closeup.jpg';
+import ElectricianMonitor from '../../assets/electrician/electrician-monitor.jpg';
+import IronCloseup from '../../assets/electrician/iron-closeup.jpg';
+import IronWithWire from '../../assets/electrician/iron-with-wire.jpg';
+import SocketOnWall from '../../assets/electrician/socket-onwall.jpg';
+import WallWireInstall from '../../assets/electrician/wall-wire-install.jpg';
+import WallWire from '../../assets/electrician/wall-wire.jpg';
+ 
+
+
+
+
 import c8 from "../../assets/pics/pexels-shkrabaanthony-4981802.jpg";
 import Card from "../ui/Card.astro";
 
@@ -17,7 +91,7 @@ const cards = [
     index: 1,
     titleTop: "[[Ceiling|Overhead]] Fan",
     titleBottom: "[[Installation|Setup]]",
-    img: c1,
+    img: [[ CookerInstallation|CookerFinish|CookerRepair|CookerWiringOneHand|CookerWiringTwoHand|CookerWithKitchen|ElectricianCookerInstallation|ElectricianCookerRepair| ]],
     alt: "SEO",
     link: "/services/seo",
   },
@@ -25,7 +99,7 @@ const cards = [
     index: 2,
     titleTop: "[[Electrical|Wiring]] Rewire",
     titleBottom: "[[Service|Upgrade]]",
-    img: c2,
+    img: [[WiringInstallation|FloorWiring|WallWiringInstall|WallWiringWebp|WiringBoxCloseup|WiringWithScrew]],
     alt: "SEO",
     link: "/services/seo",
   },
@@ -33,7 +107,7 @@ const cards = [
     index: 3,
     titleTop: "[[Electric|Induction]] Cooker",
     titleBottom: "[[Installation|Setup]]",
-    img: c3,
+    img: [[ChargerInstallation|ChargerCloseup|ChargerConversation|ElectricCharger|ElectricalChargerPng|ElectricianTestingCharger|ElectricianWithCharger|TeslaCharger|]],
     alt: "SEO",
     link: "/services/seo",
   },
@@ -41,7 +115,7 @@ const cards = [
     index: 1,
     titleTop: "[[Electric|Underfloor]] Heating",
     titleBottom: "[[Installation|Setup]]",
-    img: c4,
+    img: [[AdjustFan|FanCloseup|KitchenFan|OldFan|SmallFanNoBg|SmallFan|TableFanNoBg|TableFan]],
     alt: "SEO",
     link: "/services/seo",
   },
@@ -49,7 +123,7 @@ const cards = [
     index: 2,
     titleTop: "[[Electrical|Vehicle]] Charger",
     titleBottom: "[[Installation|Setup]]",
-    img: c5,
+    img: [[ElectricianHeatingWiring|ElectricianHeating|ElectricianInstallationWall|HeatingCloseup|HeatingFloorSetup|HeatingFloor|HeatingInstall|HeatingWiring|UnderfloorHeatingWebp]],
     alt: "SEO",
     link: "/services/seo",
   },
@@ -57,7 +131,7 @@ const cards = [
     index: 3,
     titleTop: "[[Emergency|Urgent]] Electricians",
     titleBottom: "[[Available|On Call]]",
-    img: c6,
+    img: [[ElectricianWorking|WallCloseupMiter|WallCloseup|WallMainSwitchCloseup|WallWiringService|WallWithCharger|WallWithVoltageMiter]],
     alt: "SEO",
     link: "/services/seo",
   },
@@ -133,8 +207,8 @@ const additionalContent = {
       </div>
       <div class="rounded-2xl p-8">
         <Image
-          src={c8}
-          alt={"alt"}
+          src={[[DrillCloseup|DrillMachineOneHand|DrillingCloseup|ElectricBulb|ElectricWire|ElectricianBulb|ElectricianCloseup|ElectricianMonitor|IronCloseup|IronWithWire|SocketOnWall|WallWireInstall|WallWire]]}
+            alt={"[[Electrician|Engineer]] [[working|operating|installing]] [[heater|heating system|electrical device]] [[image|photo|picture]]"}
           class="h-[300px] w-auto sm:h-auto sm:w-4/4 object-cover"
         />
       </div>
