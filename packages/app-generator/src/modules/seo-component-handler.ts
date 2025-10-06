@@ -28,7 +28,6 @@ export async function SeoComponentHandler({
 
 
   // parse address
-  console.log('Address string --------------------- ', address);
   const { street, city, country, state }: CsvAddressType = JSON.parse(address);
 
 

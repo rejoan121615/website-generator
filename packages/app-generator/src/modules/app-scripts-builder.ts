@@ -54,9 +54,6 @@ export async function packageJsonFileBuilder(
     jsonContent.scripts.deploy = "node ./cloudflare/deploy.js";
     jsonContent.scripts.remove = "node ./cloudflare/remove.js";
 
-    console.log("package.json file output path ", destPath);
-
-
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
     console.log(`package.json created successfully ...`);
   } catch (error) {

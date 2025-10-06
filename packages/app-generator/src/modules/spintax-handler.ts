@@ -3,6 +3,7 @@ import seedrandom from "seedrandom";
 import { CsvAddressType, CsvRowDataType } from "../types/DataType.js";
 import sharp from "sharp";
 import path from "path";
+import { getRootDir } from "../utilities/path-solver.js";
 
 type Choice = { value: string; weight: number };
 
@@ -281,11 +282,11 @@ function parseTokens({
       if (token in csvData) {
         if (token === 'address') {
           const { street, city, state, country } : CsvAddressType = JSON.parse(csvData[token as keyof CsvRowDataType]);
-
-          
-          return `${street}, ${city}, ${state}, ${country}`; // Replace token with corresponding CSV data
+          return `${street}, ${city}, ${state}, ${country}`;
+        } else if (token === 'logo_url') {
+          return `/logo/${csvData[token as keyof CsvRowDataType]}`; 
         } else {
-          return csvData[token as keyof CsvRowDataType]; // Replace token with corresponding CSV data
+          return csvData[token as keyof CsvRowDataType]; 
         }
       } else {
         console.warn(
