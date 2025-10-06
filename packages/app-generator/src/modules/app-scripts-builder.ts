@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
-import type { CsvRowDataType } from "../types/DataType.js";
+import type { CsvAddressType, CsvRowDataType } from "../types/DataType.js";
 import { PageOptionsTYPE } from "../types/AstroHandler.js";
 
 // ts config file builder
@@ -46,44 +46,79 @@ export async function packageJsonFileBuilder(
 ) {
   try {
     // Sanitize domain to create a valid project name
+    console.log("Domain received for package.json processing: ", domain);
     const jsonContent = JSON.parse(await fs.readFile(srcPath, "utf-8"));
     // replace name field
     jsonContent.name = domain;
     jsonContent.scripts.build = "astro build";
     jsonContent.scripts.deploy = "node ./cloudflare/deploy.js";
     jsonContent.scripts.remove = "node ./cloudflare/remove.js";
+
+    console.log("package.json file output path ", destPath);
+
+
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
     console.log(`package.json created successfully ...`);
   } catch (error) {
     console.error(`Error processing package.json for domain: ${domain}`, error);
     process.exit(1);
   }
-
 }
 
 // astro config file builder
-export async function astroConfigFileBuilder(
-  domain: string,
-  turboRepoRoot: string
-) {
-  // create package.json file
-  const packageJsonFilePath = path.join(
-    turboRepoRoot,
-    "apps",
-    domain,
-    "astro.config.mjs"
-  );
-  fs.createFileSync(packageJsonFilePath);
-  fs.writeFileSync(
-    packageJsonFilePath,
-    `// @ts-check
-import { defineConfig } from 'astro/config';
+export async function astroConfigFileBuilder({
+  csvData,
+  srcPath,
+  destPath,
+}: {
+  csvData: CsvRowDataType;
+  srcPath: string;
+  destPath: string;
+}) {
+  // parse address
+  const { address, service_name } = csvData;
+  const { city }: CsvAddressType = JSON.parse(address);
 
-// https://astro.build/config
-export default defineConfig({
-    outDir: 'dist'
-});`
+  const serviceNameText = service_name.replaceAll(" ", "-").toLowerCase();
+
+  // read astro config file
+  const astroConfigFileContent = await fs.readFile(srcPath, "utf-8");
+
+  // Extract the config object from astroConfigFileContent
+  const configMatch = astroConfigFileContent.match(
+    /defineConfig\s*\(\s*({[\s\S]*})\s*\)\s*;/
   );
 
-  console.log(`astro.config.mjs created successfully ...`);
+  if (configMatch) {
+    const astroConfigObject = configMatch[1].toString().trim();
+
+    const newConfig = astroConfigObject.replace(
+      /{/,
+      `{\n  
+      vite: {
+        build: {
+          rollupOptions: {
+            output: {
+              assetFileNames: (assetInfo) => {
+                const service = "electronics"; // hardcoded service
+                const city = "dhaka"; // hardcoded city
+
+                const name = assetInfo.name
+                  ?.replace(/\.[^/.]+$/, "") // remove extension
+                  .replace(/\s+/g, "-") // replace spaces with hyphens
+                  .toLowerCase(); // lowercase
+
+                return \`_astro/\${name}-${serviceNameText}-${city}.[hash][extname]\`;
+              },
+            },
+          },
+        },
+      },`
+    );
+
+    const updatedFileContent = astroConfigFileContent.replace(configMatch[1], newConfig);   
+    await fs.writeFile(destPath, updatedFileContent, 'utf-8')
+  } else {
+    console.log("No config object found.");
+  }
 }

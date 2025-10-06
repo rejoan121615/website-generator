@@ -1,4 +1,4 @@
-import type { CsvRowDataType, JsonLdDataType } from "../types/DataType.js";
+import type { CsvAddressType, CsvRowDataType, JsonLdDataType } from "../types/DataType.js";
 import fs from "fs-extra";
 
 export async function SeoComponentHandler({
@@ -26,9 +26,11 @@ export async function SeoComponentHandler({
     gallery_2,
   } = csvRowData;
 
-  const [street, city, state, country] = address
-    .split(",")
-    .map((part) => part.trim());
+
+  // parse address
+  console.log('Address string --------------------- ', address);
+  const { street, city, country, state }: CsvAddressType = JSON.parse(address);
+
 
   const LdSchemaData = `
     <script type="application/ld+json">

@@ -3,7 +3,7 @@ import fs from "fs-extra";
 import { CsvRowDataType } from "../types/DataType.js";
 import { getRootDir } from "../utilities/path-solver.js";
 import { spintaxAndTokenHandler } from "./spintax-handler.js";
-import { packageJsonFileBuilder } from "./app-scripts-builder.js";
+import { astroConfigFileBuilder, packageJsonFileBuilder } from "./app-scripts-builder.js";
 import { SeoComponentHandler } from "./seo-component-handler.js";
 
 const turboRepoRoot = getRootDir("../../../../");
@@ -51,8 +51,9 @@ export async function srcCodeBuilder(data: CsvRowDataType) {
         });
       } else if (item.endsWith("package.json")) {
         // process package.json file
-
         packageJsonFileBuilder(data.domain, srcPath, destPath);
+      } else if (item.endsWith("astro.config.mjs")) {
+        astroConfigFileBuilder({ csvData: data,srcPath,  destPath });
       } else {
         // process none astro file normally
         await fs.copyFile(srcPath, destPath);

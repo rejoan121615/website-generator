@@ -30,9 +30,4 @@ export function astroProjectBuilder(
   cloudFlareScriptBuilder(turboRepoRoot, data);
 
 
-  // create necessary scripts like tsconfig, package.json, astro.config.mjs
-  // tsConfigFileBuilder(domain, turboRepoRoot);
-  // packageJsonFileBuilder(domain, turboRepoRoot);
-  // astroConfigFileBuilder(domain, turboRepoRoot);
-
 }

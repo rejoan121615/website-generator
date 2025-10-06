@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import seedrandom from "seedrandom";
-import { CsvRowDataType } from "../types/DataType.js";
+import { CsvAddressType, CsvRowDataType } from "../types/DataType.js";
 import sharp from "sharp";
 import path from "path";
 
@@ -26,6 +26,8 @@ export async function spintaxAndTokenHandler({
       inputPath,
       outputPath,
     });
+
+    
 
     // parse tokens in the file content
     const contentAfterTokens = parseTokens({
@@ -71,9 +73,7 @@ function imageProcessor({
   let importedImageListUnfiltered = [
     ...fileContent.matchAll(importedImageListRegex),
   ];
-  console.log(
-    "------------------------------------------------------------------------------------------------------"
-  );
+
   let importedImageList = importedImageListUnfiltered.map((match) => {
     return match[0].trimEnd();
   });
@@ -279,7 +279,14 @@ function parseTokens({
     tokenRegex,
     (match: string, token: string): string => {
       if (token in csvData) {
-        return csvData[token as keyof CsvRowDataType]; // Replace token with corresponding CSV data
+        if (token === 'address') {
+          const { street, city, state, country } : CsvAddressType = JSON.parse(csvData[token as keyof CsvRowDataType]);
+
+          
+          return `${street}, ${city}, ${state}, ${country}`; // Replace token with corresponding CSV data
+        } else {
+          return csvData[token as keyof CsvRowDataType]; // Replace token with corresponding CSV data
+        }
       } else {
         console.warn(
           `Token ${token} not found in CSV data for file => ${inputPath}`
