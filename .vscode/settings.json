@@ -1,0 +1,9 @@
+{
+    "chat.mcp.serverSampling": {
+        "website-generator/.vscode/mcp.json: mui-mcp": {
+            "allowedModels": [
+                "copilot/gpt-4.1"
+            ]
+        }
+    }
+}
