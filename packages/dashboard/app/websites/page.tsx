@@ -1,46 +1,54 @@
 "use client";
-
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import SectionTitle from "@/components/SectionTitle";
 import TableControlBar from "@/components/TableControlBar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import axios from "axios";
+import { CsvRowDataType, WebsitesResTYPE } from "@/types/api.type";
 
-const rows = [
-  {
-    name: "Rejoan",
-    domain: "rejoan.com",
-    buildStatus: "ready",
-    deployed: "un-available",
-  },
-  {
-    name: "Paul",
-    domain: "paulsite.net",
-    buildStatus: "building",
-    deployed: "available",
-  },
-  {
-    name: "Daniel",
-    domain: "danielweb.org",
-    buildStatus: "failed",
-    deployed: "un-available",
-  },
-  {
-    name: "Edwards",
-    domain: "edwards.io",
-    buildStatus: "ready",
-    deployed: "available",
-  },
-  {
-    name: "Alice",
-    domain: "alice.dev",
-    buildStatus: "building",
-    deployed: "un-available",
-  },
-];
+type RowType = {
+  name: string;
+  domain: string;
+  buildStatus: string;
+  deployed: string;
+};
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
+// const rows = [
+//   {
+//     name: "Rejoan",
+//     domain: "rejoan.com",
+//     buildStatus: "ready",
+//     deployed: "un-available",
+//   },
+//   {
+//     name: "Paul",
+//     domain: "paulsite.net",
+//     buildStatus: "building",
+//     deployed: "available",
+//   },
+//   {
+//     name: "Daniel",
+//     domain: "danielweb.org",
+//     buildStatus: "failed",
+//     deployed: "un-available",
+//   },
+//   {
+//     name: "Edwards",
+//     domain: "edwards.io",
+//     buildStatus: "ready",
+//     deployed: "available",
+//   },
+//   {
+//     name: "Alice",
+//     domain: "alice.dev",
+//     buildStatus: "building",
+//     deployed: "un-available",
+//   },
+// ];
+
+const columns: GridColDef<RowType>[] = [
   {
     field: "name",
     headerName: "Name",
@@ -75,7 +83,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
           gap: 1,
           alignItems: "center",
           width: "100%",
-          height: '100%'
+          height: "100%",
         }}
       >
         <Button
@@ -100,6 +108,50 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
 ];
 
 export default function BasicTable() {
+  const [websitesList, setWebsitesList] = useState<RowType[]>([]);
+
+  // useEffect(() => {
+  //   const fetchWebsites = async () => {
+  //     try {
+  //       const response = await axios.get("/api/websites");
+  //       if (response.data.SUCCESS) {
+  //         setWebsitesList(response.data.DATA || []);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching websites:", error);
+  //     }
+  //   };
+
+  //   fetchWebsites();
+  // }, []);
+
+  useEffect(() => {
+    axios
+      .get<WebsitesResTYPE>("/api/websites")
+      .then((res) => {
+        const { data } = res;
+        if (data.SUCCESS) {
+          const websitesList = data.DATA?.map((item) => {
+            return {
+              name: item.name,
+              domain: item.domain,
+              buildStatus: "un-available",
+              deployed: "un-available",
+            };
+          });
+
+          setWebsitesList(websitesList || [])
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+
+    return () => {
+      setWebsitesList([]);
+    };
+  }, []);
+
   return (
     <Box sx={{ p: 3 }}>
       {/* section title  */}
@@ -107,7 +159,13 @@ export default function BasicTable() {
       {/* control bar  */}
       <TableControlBar />
       {/* table  */}
-      <DataGrid rows={rows} columns={columns} getRowId={(row) => row.domain} checkboxSelection disableRowSelectionOnClick />
+      <DataGrid
+        rows={websitesList}
+        columns={columns}
+        getRowId={(row) => row.domain}
+        checkboxSelection
+        disableRowSelectionOnClick
+      />
     </Box>
   );
 }
