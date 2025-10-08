@@ -2,17 +2,11 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
-import { CsvRowDataType, WebsitesResTYPE } from "@/types/api.type";
+import { ReadyToBuildResTYPE, CsvRowDataType, WebsitesResTYPE } from "@/types/websiteApi.type";
+import { ProjectRoot } from "@/lib/assists";
 
-export async function getAllWebsites(): Promise<WebsitesResTYPE> {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const websitesCsvPath = path.resolve(
-    __dirname,
-    "../../../../../data/websites.csv"
-  );
-
-  const websitesDir = path.resolve(__dirname, "../../../../../apps")
+export async function GetWebsiteCsvData(): Promise<WebsitesResTYPE> {
+  const websitesCsvPath = path.resolve(ProjectRoot(), "data", "websites.csv");
 
   if (!fs.existsSync(websitesCsvPath)) {
     return {
@@ -48,8 +42,35 @@ export async function getAllWebsites(): Promise<WebsitesResTYPE> {
     csvParser.on("error", (err) => {
       reject({
         SUCCESS: false,
-        MESSAGE: "CSV processing fail, Please check the file format and content",
+        MESSAGE:
+          "CSV processing fail, Please check the file format and content",
       });
     });
   });
+}
+
+export async function GetReadyToBuildList(): Promise<ReadyToBuildResTYPE> {
+  const appsFolderPath = path.resolve(ProjectRoot(), "apps");
+
+  try {
+
+    fs.ensureDirSync(appsFolderPath);
+
+    const websiteList = await fs.readdir(appsFolderPath, {
+      withFileTypes: false,
+      encoding: "utf-8",
+    });
+    
+    return {
+      SUCCESS: true,
+      MESSAGE: websiteList.length > 0 ? "Website list found successfully" : "No websites found",
+      DATA: websiteList,
+    };
+  } catch (error) {
+    console.error("Error building website list:", error);
+    return {
+      SUCCESS: false,
+      MESSAGE: "Error finding website list",
+    }
+  }
 }

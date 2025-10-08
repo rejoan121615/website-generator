@@ -1,21 +1,55 @@
-import { NextResponse } from 'next/server'
-import { getAllWebsites } from './utilities'
-import type { WebsitesResTYPE } from '@/types/api.type';
+import { NextResponse } from "next/server";
+import { GetReadyToBuildList, GetWebsiteCsvData } from "./utilities";
+import type {
+  GetApiResTYPE,
+  WebsiteRowTYPE,
+  WebsitesResTYPE,
+} from "@/types/websiteApi.type";
 
+export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
+  try {
+    const { SUCCESS: CsvSuccess, DATA: CsvData } = await GetWebsiteCsvData();
+    const { DATA: ReadyToBuildData } = await GetReadyToBuildList();
 
-export async function GET() {
-    try {
-        const result = await getAllWebsites();
-        return NextResponse.json(result);
-        
-    } catch (error) {
-        const typedError = error as WebsitesResTYPE;
-        console.log('error => ', error);
-        return NextResponse.json({
-            SUCCESS: false,
-            MESSAGE: typedError.MESSAGE,
-        }, {
-            status: 500
-        });
+    if (CsvData && ReadyToBuildData) {
+      const WebsiteRowData: WebsiteRowTYPE[] = CsvData.map((csvItem) => {
+
+        const { name, domain } = csvItem;
+
+        const buildStatus = ReadyToBuildData.find((item) => item === domain);
+
+        return {
+          name: name,
+          domain: domain,
+          build: buildStatus === undefined ? "unavailable" : "complete",
+          deployed: "unavailable",
+        };
+      });
+
+    return NextResponse.json({
+      SUCCESS: true,
+      MESSAGE: "Websites fetched successfully.",
+      DATA: WebsiteRowData,
+    });
     }
+
+    // default return 
+    return NextResponse.json({
+      SUCCESS: true,
+      MESSAGE: "No websites data found.",
+      DATA: [],
+    });
+  } catch (error) {
+    const typedError = error as WebsitesResTYPE;
+    console.log("error => ", error);
+    return NextResponse.json(
+      {
+        SUCCESS: false,
+        MESSAGE: typedError.MESSAGE,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }

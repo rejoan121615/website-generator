@@ -6,49 +6,15 @@ import SectionTitle from "@/components/SectionTitle";
 import TableControlBar from "@/components/TableControlBar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
-import { CsvRowDataType, WebsitesResTYPE } from "@/types/api.type";
+import {
+  CsvRowDataType,
+  WebsitesResTYPE,
+  WebsiteRowTYPE,
+  GetApiResTYPE,
+} from "@/types/websiteApi.type";
+import { ButtonGroup, Chip } from "@mui/material";
 
-type RowType = {
-  name: string;
-  domain: string;
-  buildStatus: string;
-  deployed: string;
-};
-
-// const rows = [
-//   {
-//     name: "Rejoan",
-//     domain: "rejoan.com",
-//     buildStatus: "ready",
-//     deployed: "un-available",
-//   },
-//   {
-//     name: "Paul",
-//     domain: "paulsite.net",
-//     buildStatus: "building",
-//     deployed: "available",
-//   },
-//   {
-//     name: "Daniel",
-//     domain: "danielweb.org",
-//     buildStatus: "failed",
-//     deployed: "un-available",
-//   },
-//   {
-//     name: "Edwards",
-//     domain: "edwards.io",
-//     buildStatus: "ready",
-//     deployed: "available",
-//   },
-//   {
-//     name: "Alice",
-//     domain: "alice.dev",
-//     buildStatus: "building",
-//     deployed: "un-available",
-//   },
-// ];
-
-const columns: GridColDef<RowType>[] = [
+const columns: GridColDef<WebsiteRowTYPE>[] = [
   {
     field: "name",
     headerName: "Name",
@@ -57,17 +23,31 @@ const columns: GridColDef<RowType>[] = [
   {
     field: "domain",
     headerName: "Domain",
-    width: 250,
+    width: 250
   },
   {
-    field: "buildStatus",
-    headerName: "Build Status",
+    field: "build",
+    headerName: "Build",
     width: 150,
+    renderCell: (params) => (
+      <Chip
+        sx={{ textTransform: "capitalize" }}
+        label={params.row.build}
+        color={params.row.build === "complete" ? "success" : "default"}
+      />
+    ),
   },
   {
     field: "deployed",
     headerName: "Deployed",
     width: 175,
+    renderCell: (params) => (
+      <Chip
+        sx={{ textTransform: "capitalize" }}
+        label={params.row.deployed}
+        color={params.row.deployed === "complete" ? "success" : "default"}
+      />
+    ),
   },
   {
     field: "actions",
@@ -86,61 +66,40 @@ const columns: GridColDef<RowType>[] = [
           height: "100%",
         }}
       >
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => alert(`Edit ${params.row.name}`)}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={() => alert(`Delete ${params.row.name}`)}
-        >
-          Delete
-        </Button>
+        <ButtonGroup>
+          <Button variant="contained" color="primary" size="small">
+            Build
+          </Button>
+          <Button variant="contained" color="error" size="small">
+            Remove
+          </Button>
+        </ButtonGroup>
+
+        <ButtonGroup>
+          <Button variant="contained" color="success" size="small">
+            Deploy
+          </Button>
+          <Button variant="contained" color="warning" size="small">
+            Undeploy
+          </Button>
+        </ButtonGroup>
       </Box>
     ),
   },
 ];
 
 export default function BasicTable() {
-  const [websitesList, setWebsitesList] = useState<RowType[]>([]);
-
-  // useEffect(() => {
-  //   const fetchWebsites = async () => {
-  //     try {
-  //       const response = await axios.get("/api/websites");
-  //       if (response.data.SUCCESS) {
-  //         setWebsitesList(response.data.DATA || []);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching websites:", error);
-  //     }
-  //   };
-
-  //   fetchWebsites();
-  // }, []);
+  const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
 
   useEffect(() => {
+    console.log("Fetching websites...");
     axios
-      .get<WebsitesResTYPE>("/api/websites")
+      .get<GetApiResTYPE>("/api/websites")
       .then((res) => {
+        console.log("your api response ", res);
         const { data } = res;
         if (data.SUCCESS) {
-          const websitesList = data.DATA?.map((item) => {
-            return {
-              name: item.name,
-              domain: item.domain,
-              buildStatus: "un-available",
-              deployed: "un-available",
-            };
-          });
-
-          setWebsitesList(websitesList || [])
+          setWebsitesList(data.DATA || []);
         }
       })
       .catch((err) => {

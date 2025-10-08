@@ -21,3 +21,22 @@ export type WebsitesResTYPE = {
     MESSAGE: string,
     DATA?: CsvRowDataType[]
 }
+
+export type ReadyToBuildResTYPE = {
+    SUCCESS: boolean,
+    MESSAGE: string,
+    DATA?: string[]
+}
+
+export type WebsiteRowTYPE = {
+  name: string;
+  domain: string;
+  build: "unavailable" | "processing" | "complete" | "failed";
+  deployed: "unavailable" | "processing" | "complete" | "failed";
+}
+
+export type GetApiResTYPE = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: WebsiteRowTYPE[];
+}
