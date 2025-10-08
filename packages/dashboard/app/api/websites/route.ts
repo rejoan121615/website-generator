@@ -8,19 +8,18 @@ import type {
 
 export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
   try {
-    const { SUCCESS: CsvSuccess, DATA: CsvData } = await GetWebsiteCsvData();
+    const { DATA: CsvData } = await GetWebsiteCsvData();
     const { DATA: ReadyToBuildData } = await GetReadyToBuildList();
 
     if (CsvData && ReadyToBuildData) {
       const WebsiteRowData: WebsiteRowTYPE[] = CsvData.map((csvItem) => {
 
-        const { name, domain } = csvItem;
+        const { domain } = csvItem;
 
         const buildStatus = ReadyToBuildData.find((item) => item === domain);
 
         return {
-          name: name,
-          domain: domain,
+          ...csvItem,
           build: buildStatus === undefined ? "unavailable" : "complete",
           deployed: "unavailable",
         };

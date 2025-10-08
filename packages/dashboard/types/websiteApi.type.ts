@@ -28,12 +28,10 @@ export type ReadyToBuildResTYPE = {
     DATA?: string[]
 }
 
-export type WebsiteRowTYPE = {
-  name: string;
-  domain: string;
+export type WebsiteRowTYPE = CsvRowDataType & {
   build: "unavailable" | "processing" | "complete" | "failed";
   deployed: "unavailable" | "processing" | "complete" | "failed";
-}
+};
 
 export type GetApiResTYPE = {
   SUCCESS: boolean;

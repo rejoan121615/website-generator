@@ -26,5 +26,11 @@
     "@types/seedrandom": "^3.0.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
+  },
+  "exports": {
+    "./app-bundler": {
+      "import": "./dist/modules/app-builder.js",
+      "types": "./dist/modules/app-builder.d.ts"
+    }
   }
 }

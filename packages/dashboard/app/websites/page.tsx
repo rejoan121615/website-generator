@@ -19,6 +19,7 @@ export default function BasicTable() {
       .then((res) => {
         const { data } = res;
         if (data.SUCCESS) {
+          console.log('recived data ', data.DATA)
           setWebsitesList(data.DATA || []);
         }
       })
@@ -35,6 +36,13 @@ export default function BasicTable() {
   const handleBuild = (row: WebsiteRowTYPE) => {
     // Your build logic here
     console.log("Build clicked for", row.domain);
+
+    axios
+      .post("api/websites/build", { data: row })
+      .then((res) => {})
+      .catch((err) => {
+        console.log("err", err);
+      });
   };
 
   const handleRemove = (row: WebsiteRowTYPE) => {

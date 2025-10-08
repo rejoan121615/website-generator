@@ -1,6 +1,5 @@
 import fs from "fs-extra";
 import path from "path";
-import { fileURLToPath } from "url";
 import { parse } from "csv-parse";
 import { ReadyToBuildResTYPE, CsvRowDataType, WebsitesResTYPE } from "@/types/websiteApi.type";
 import { ProjectRoot } from "@/lib/assists";

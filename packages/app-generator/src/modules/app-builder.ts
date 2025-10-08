@@ -1,12 +1,5 @@
-import fs from "fs-extra";
-import path from "path";
 import type { CsvRowDataType } from "../types/DataType.js";
 import { folderCreator } from "./folder-creator.js";
-import {
-  tsConfigFileBuilder,
-  packageJsonFileBuilder,
-  astroConfigFileBuilder,
-} from "./app-scripts-builder.js";
 import { srcCodeBuilder } from "./src-code-builder.js";
 import { cloudFlareScriptBuilder } from "./cloudflare-script-builder.js";
 import { getRootDir } from "../utilities/path-solver.js";
