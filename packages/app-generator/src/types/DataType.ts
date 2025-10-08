@@ -43,3 +43,9 @@ export type CsvRowDataType = {
   gallery_1: string;
   gallery_2: string;
 };
+
+
+export type PromiseResultType= {
+  success: boolean;
+  message: string;
+};

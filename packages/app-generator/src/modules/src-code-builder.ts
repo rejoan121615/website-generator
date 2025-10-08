@@ -62,5 +62,4 @@ export async function srcCodeBuilder(data: CsvRowDataType) {
   }
 
   console.log(`Astro app created successfully for domain: ${data.domain}`);
-  process.exit(0);
 }
