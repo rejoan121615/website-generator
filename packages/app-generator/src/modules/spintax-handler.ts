@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import seedrandom from "seedrandom";
-import { CsvAddressType, CsvRowDataType } from "../types/DataType.js";
+import { CsvAddressType, CsvRowDataType, PromiseResultType } from "../types/DataType.js";
 import sharp from "sharp";
 import path from "path";
 import { getRootDir } from "../utilities/path-solver.js";
@@ -15,7 +15,7 @@ export async function spintaxAndTokenHandler({
   csvData: CsvRowDataType;
   inputPath: string;
   outputPath: string;
-}): Promise<void> {
+}): Promise<PromiseResultType> {
   try {
     // Read the file content
     const fileContent = await fs.readFile(inputPath, "utf-8");
@@ -28,8 +28,6 @@ export async function spintaxAndTokenHandler({
       outputPath,
     });
 
-    
-
     // parse tokens in the file content
     const contentAfterTokens = parseTokens({
       fileContent: contentAfterSpintax,
@@ -38,7 +36,6 @@ export async function spintaxAndTokenHandler({
     });
 
     // process content for image handeling
-
     const contentAfterImageProcess = imageProcessor({
       fileContent: contentAfterTokens,
       domain: csvData.domain,
@@ -48,8 +45,16 @@ export async function spintaxAndTokenHandler({
 
     // Write the parsed content into the destination file
     await fs.writeFile(outputPath, contentAfterImageProcess, "utf-8");
-  } catch (error) {
+    return {
+      success: true,
+      message: `Spintax and token processing complete for ${outputPath}`,
+    };
+  } catch (error: any) {
     console.error(`Error processing spintax for file: ${inputPath}`, error);
+    return {
+      success: false,
+      message: `Error processing spintax for file: ${inputPath}: ${error?.message || error}`,
+    };
   }
 }
 

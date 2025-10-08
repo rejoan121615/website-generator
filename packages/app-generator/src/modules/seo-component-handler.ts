@@ -1,4 +1,4 @@
-import type { CsvAddressType, CsvRowDataType, JsonLdDataType } from "../types/DataType.js";
+import type { CsvAddressType, CsvRowDataType, JsonLdDataType, PromiseResultType } from "../types/DataType.js";
 import fs from "fs-extra";
 
 export async function SeoComponentHandler({
@@ -9,7 +9,7 @@ export async function SeoComponentHandler({
   csvRowData: CsvRowDataType;
   destPath: string;
   srcPath: string;
-}): Promise<void> {
+}): Promise<PromiseResultType> {
   // get generated ld data
   //   const ldSchemaData = generateJsonLd(csvRowData);
   const {
@@ -28,7 +28,7 @@ export async function SeoComponentHandler({
 
 
   // parse address
-  const { street, city, country, state }: CsvAddressType = JSON.parse(address);
+  const { street, city, country, state } = JSON.parse(address) as CsvAddressType;
 
 
   const LdSchemaData = `
@@ -70,9 +70,15 @@ export async function SeoComponentHandler({
     const updatedSeoComponent = newSeoComponent.replace(titleDescRegex, replacement);
 
     await fs.writeFile(destPath, updatedSeoComponent, 'utf-8');
-  } catch (error) {
-    console.log('Error processing SEO component:', error);
-    process.exit(1);
+    return {
+      success: true,
+      message: `SEO component processed and written to ${destPath}`,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: `Error processing SEO component: ${error?.message || error}`,
+    };
   }
 
 }

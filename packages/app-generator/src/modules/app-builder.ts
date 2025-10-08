@@ -21,10 +21,10 @@ export async function astroProjectBuilder(
   await srcCodeBuilder(data);
 
   // create cloudflare scripts such as deploy and remove
-  cloudFlareScriptBuilder(turboRepoRoot, data);
+  await cloudFlareScriptBuilder(turboRepoRoot, data);
 
   // run pnpm install and build commands
-  pnpmCmdHandler({ rootDir: turboRepoRoot, domain: domain });
+  await pnpmCmdHandler({ rootDir: turboRepoRoot, domain: domain });
 
   console.log('Astro project build process completed for domain: ', domain);
 
