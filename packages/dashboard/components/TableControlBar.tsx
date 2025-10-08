@@ -6,30 +6,27 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 
 
-const TableControlBar = () => {
+
+interface TableControlBarProps {
+  search: string;
+  onSearchChange: (value: string) => void;
+}
+
+const TableControlBar = ({ search, onSearchChange }: TableControlBarProps) => {
   return (
-    <Paper sx={{ p: 2, mb: 3 }} elevation={1}>
+    <Paper sx={{ p: 2, mb: 3 }}>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="end"
       >
-        <Stack direction="row" spacing={1}>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />}>
-            New Website
-          </Button>
-          <Button variant="outlined" startIcon={<UploadIcon />}>
-            Import
-          </Button>
-          <Button variant="outlined" startIcon={<MoreVertIcon />}>
-            Actions
-          </Button>
-        </Stack>
 
         <TextField
           size="small"
           placeholder="Search websites"
+          value={search}
+          onChange={e => onSearchChange(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

@@ -40,7 +40,7 @@ const columns: GridColDef<WebsiteRowTYPE>[] = [
   {
     field: "deployed",
     headerName: "Deployed",
-    width: 175,
+    width: 150,
     renderCell: (params) => (
       <Chip
         sx={{ textTransform: "capitalize" }}
@@ -88,15 +88,15 @@ const columns: GridColDef<WebsiteRowTYPE>[] = [
   },
 ];
 
+
 export default function BasicTable() {
   const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    console.log("Fetching websites...");
     axios
       .get<GetApiResTYPE>("/api/websites")
       .then((res) => {
-        console.log("your api response ", res);
         const { data } = res;
         if (data.SUCCESS) {
           setWebsitesList(data.DATA || []);
@@ -105,21 +105,28 @@ export default function BasicTable() {
       .catch((err) => {
         console.log("err", err);
       });
-
     return () => {
       setWebsitesList([]);
     };
   }, []);
 
+  // Filter websites by search
+  const filteredWebsites = search.trim()
+    ? websitesList.filter((row) => {
+        const q = search.toLowerCase();
+        return (
+          row.name.toLowerCase().includes(q) ||
+          row.domain.toLowerCase().includes(q) 
+        );
+      })
+    : websitesList;
+
   return (
     <Box sx={{ p: 3 }}>
-      {/* section title  */}
       <SectionTitle title="Websites" description="Manage your websites here." />
-      {/* control bar  */}
-      <TableControlBar />
-      {/* table  */}
+      <TableControlBar search={search} onSearchChange={setSearch} />
       <DataGrid
-        rows={websitesList}
+        rows={filteredWebsites}
         columns={columns}
         getRowId={(row) => row.domain}
         checkboxSelection
