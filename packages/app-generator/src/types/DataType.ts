@@ -49,3 +49,16 @@ export type PromiseResultType= {
   success: boolean;
   message: string;
 };
+
+export type TerminalOperationResultType = {
+  success: boolean;
+  message: string;
+  stdout?: string;
+  stderr?: string;
+};
+
+export type AstroProjectBuilderResultType = {
+  success: boolean;
+  message: string;
+  data: PromiseResultType [] | null
+};

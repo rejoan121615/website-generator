@@ -117,7 +117,7 @@ export default function BasicTable() {
               variant="contained"
               color="primary"
               size="small"
-              disabled={params.row.build === "complete"}
+              // disabled={params.row.build === "complete"}
               onClick={() => handleBuild(params.row)}
             >
               Build

@@ -92,7 +92,7 @@ export async function astroConfigFileBuilder({
 }): Promise<PromiseResultType> {
   try {
     // parse address
-    const { address, service_name } = csvData;
+    const { address, service_name,  } = csvData;
     const { city }: CsvAddressType = JSON.parse(address);
 
     const serviceNameText = service_name.replaceAll(" ", "-").toLowerCase();
@@ -117,15 +117,13 @@ export async function astroConfigFileBuilder({
             rollupOptions: {
               output: {
                 assetFileNames: (assetInfo) => {
-                  const service = "electronics"; // hardcoded service
-                  const city = "dhaka"; // hardcoded city
 
                   const name = assetInfo.name
                     ?.replace(/\.[^/.]+$/, "") // remove extension
                     .replace(/\s+/g, "-") // replace spaces with hyphens
                     .toLowerCase(); // lowercase
 
-                  return \`_astro/\${name}-\${serviceNameText}-\${city}.[hash][extname]\`;
+                  return \`_astro/\${name}-${serviceNameText}-${city}.[hash][extname]\`;
                 },
               },
             },

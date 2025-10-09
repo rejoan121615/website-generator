@@ -4,7 +4,7 @@ import fs from "fs-extra";
 import { parse } from "csv-parse";
 import type { CsvRowDataType } from "./types/DataType.js";
 import { getRootDir } from "./utilities/path-solver.js";
-import { astroProjectBuilder } from "./modules/app-builder.js";
+import { astroProjectCreator } from "./modules/app-builder.js";
 
 const turboRepoRoot = getRootDir("../../../../");
 
@@ -30,7 +30,7 @@ if (fs.existsSync(csvFilePath)) {
   );
 
   parser.on("data", async (row: CsvRowDataType) => {
-    astroProjectBuilder(row);
+    astroProjectCreator(row);
   });
 
   parser.on("end", () => {
