@@ -19,7 +19,7 @@ export default function BasicTable() {
       .then((res) => {
         const { data } = res;
         if (data.SUCCESS) {
-          console.log('recived data ', data.DATA)
+          console.log("recived data ", data.DATA);
           setWebsitesList(data.DATA || []);
         }
       })
@@ -33,16 +33,50 @@ export default function BasicTable() {
 
   // Inside BasicTable component
 
-  const handleBuild = (row: WebsiteRowTYPE) => {
-    // Your build logic here
-    console.log("Build clicked for", row.domain);
+  // const handleBuild = (row: WebsiteRowTYPE) => {
+  //   // Your build logic here
+  //   console.log("Build clicked for", row.domain);
 
-    axios
-      .post("api/websites/build", { data: row })
-      .then((res) => {})
-      .catch((err) => {
-        console.log("err", err);
-      });
+  //   axios
+  //     .post("api/websites/build", { data: row })
+  //     .then((res) => {
+  //       const eventSource = new EventSource(res.data.url);
+
+  //       eventSource.onmessage = (event) => {
+  //         console.log("Build event:", event.data);
+  //       };
+
+  //       eventSource.onerror = (err) => {
+  //         console.log('got an error ', err)
+  //       }
+
+  //     })
+  //     .catch((err) => {
+  //       console.log("err", err);
+  //     });
+  // };
+
+  const handleBuild = async (row: WebsiteRowTYPE) => {
+
+    const response = await fetch("/api/websites/build", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: row }),
+    });
+
+    if (!response.body) return;
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      if (value) {
+        console.log(decoder.decode(value));
+      }
+    }
   };
 
   const handleRemove = (row: WebsiteRowTYPE) => {
