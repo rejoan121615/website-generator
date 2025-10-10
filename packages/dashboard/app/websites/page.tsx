@@ -49,7 +49,9 @@ function BasicTableInner() {
         body: JSON.stringify({ data: row }),
       });
 
-      if (!response.body) return;
+
+      if (!response.ok) throw new Error(`Sending http request failed: ${response.status}`);
+      if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -93,13 +95,49 @@ function BasicTableInner() {
         }
       }
     } catch (error) {
+      snackbarClickVariant("Sending request failed", "error")();
+      console.log('error', error);
       // handle error
     }
   };
 
-  const handleRemove = (row: WebsiteRowTYPE) => {
-    // Your remove logic here
-    console.log("Remove clicked for", row.domain);
+  const handleRemove = async (row: WebsiteRowTYPE) => {
+
+    snackbarClickVariant(`Removing project: ${row.name}`, "info")();
+
+    try {
+      const response = await fetch("/api/websites/remove", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: row }),
+      });
+
+      if (!response.ok) throw new Error(`Sending http request failed: ${response.status}`);
+      if (!response.body) throw new Error("No response body");
+
+      const result = await response.json();
+      if (result.SUCCESS) {
+        snackbarClickVariant(result.MESSAGE, "success")();
+        setWebsitesList((prevState) => {
+         return prevState.map((item) =>
+            item.domain === row.domain
+              ? { ...item, build: "unavailable", deployed: "unavailable" }
+              : item
+          );
+        });
+        // remove from list if needed
+        if (row.build === "complete") {
+          setWebsitesList((prevState) =>
+            prevState.filter((item) => item.domain !== row.domain)
+          );
+        }
+      } else {
+        snackbarClickVariant(result.MESSAGE, "error")();
+      }
+    } catch (error) {
+      snackbarClickVariant("Failed to remove project", "error")();
+      console.log("error", error);
+    }
   };
 
   const handleDeploy = (row: WebsiteRowTYPE) => {

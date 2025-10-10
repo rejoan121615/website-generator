@@ -1,3 +1,4 @@
+import { ServerEventResTYPE } from "@/types/websiteApi.type";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -8,4 +9,16 @@ export function ProjectRoot() : string {
     __dirname,
     "../../../"
   );
+}
+
+// sse server response handler function
+export function sendSSE(
+  controller: ReadableStreamDefaultController,
+  data: ServerEventResTYPE
+) {
+  const jsonData = JSON.stringify(data);
+
+  const sseFormatted = `data: ${jsonData}\n\n`;
+
+  controller.enqueue(sseFormatted);
 }
