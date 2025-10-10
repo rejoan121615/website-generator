@@ -55,10 +55,22 @@ export async function GetReadyToBuildList(): Promise<ReadyToBuildResTYPE> {
 
     fs.ensureDirSync(appsFolderPath);
 
-    const websiteList = await fs.readdir(appsFolderPath, {
+    let websiteList = await fs.readdir(appsFolderPath, {
       withFileTypes: false,
       encoding: "utf-8",
     });
+
+    // Filter websiteList to include only folders that contain all required subfolders
+    const requiredFolders = ["dist", "cloudflare", "src", "node_modules", "public"];
+    const filteredWebsiteList = websiteList.filter((folderName) => {
+      const folderPath = path.join(appsFolderPath, folderName);
+      // Check if all required subfolders exist inside the folder
+      return requiredFolders.every((subFolder) =>
+      fs.existsSync(path.join(folderPath, subFolder))
+      );
+    });
+
+    websiteList = filteredWebsiteList;
     
     return {
       SUCCESS: true,

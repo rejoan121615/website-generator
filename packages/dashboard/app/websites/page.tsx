@@ -57,25 +57,34 @@ export default function BasicTable() {
   // };
 
   const handleBuild = async (row: WebsiteRowTYPE) => {
+    try {
+      const response = await fetch("/api/websites/build", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: row }),
+      });
 
-    const response = await fetch("/api/websites/build", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: row }),
-    });
+      if (!response.body) return;
 
-    if (!response.body) return;
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let done = false;
-
-    while (!done) {
-      const { value, done: doneReading } = await reader.read();
-      done = doneReading;
-      if (value) {
-        console.log(decoder.decode(value));
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        if (value) {
+          try {
+            const SSEMessage = JSON.parse(decoder.decode(value));
+            console.log(SSEMessage);
+            
+          } catch (error) {
+            console.error("Error parsing SSE message:", error);
+          }
+        }
       }
+    } catch (error) {
+      console.error("Error during build:", error);
     }
   };
 

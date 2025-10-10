@@ -60,5 +60,5 @@ export type TerminalOperationResultType = {
 export type AstroProjectBuilderResultType = {
   success: boolean;
   message: string;
-  data: PromiseResultType [] | null
+  data: PromiseResultType [] | string | null
 };

@@ -38,3 +38,8 @@ export type GetApiResTYPE = {
   MESSAGE: string;
   DATA?: WebsiteRowTYPE[];
 }
+
+export type ServerEventResTYPE = {
+  MESSAGE: string;
+  CSV_DATA: WebsiteRowTYPE;
+};
