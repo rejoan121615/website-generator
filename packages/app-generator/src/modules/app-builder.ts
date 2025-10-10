@@ -6,9 +6,11 @@ import { folderCreator } from "./folder-creator.js";
 import { srcCodeBuilder } from "./src-code-builder.js";
 import { cloudFlareScriptBuilder } from "./cloudflare-script-builder.js";
 import { getRootDir } from "../utilities/path-solver.js";
-import { pnpmCmdHandler } from "./pnpm-cmd-handler.js";
 import fs from 'fs-extra';
 import path from 'path';
+import { ProjectBuilderLogger } from '@repo/log-helper'
+
+
 
 export async function astroProjectCreator(
   data: CsvRowDataType
@@ -20,6 +22,12 @@ export async function astroProjectCreator(
     // create domain specific folder
     const folderCreationResult = await folderCreator({
       domain: domain,
+    });
+
+    ProjectBuilderLogger({
+      domain,
+      logMessage: `Folder creation result: ${JSON.stringify(folderCreationResult)}`,
+      logType: "success",
     });
 
     // create src folder and files

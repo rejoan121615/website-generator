@@ -8,6 +8,7 @@ import {
   packageJsonFileBuilder,
 } from "./app-scripts-builder.js";
 import { SeoComponentHandler } from "./seo-component-handler.js";
+import { ProjectBuilderLogger } from '@repo/log-helper'
 
 const turboRepoRoot = getRootDir("../../../../");
 

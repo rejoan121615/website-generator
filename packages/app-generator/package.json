@@ -19,7 +19,8 @@
     "execa": "^9.6.0",
     "fs-extra": "^11.3.1",
     "seedrandom": "^3.0.5",
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.4",
+    "@repo/log-helper": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

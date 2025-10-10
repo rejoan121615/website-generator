@@ -1,0 +1,31 @@
+{
+  "name": "@repo/log-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc -p .",
+    "compile": "tsc -p . --watch",
+    "output": "nodemon ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.3.2",
+    "pino": "^10.0.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/fs-extra": "^11.0.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.9.2"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}

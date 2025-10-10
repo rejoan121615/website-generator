@@ -22,6 +22,7 @@ export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
           ...csvItem,
           build: buildStatus === undefined ? "unavailable" : "complete",
           deployed: "unavailable",
+          log: "---",
         };
       });
 

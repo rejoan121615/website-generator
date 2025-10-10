@@ -62,3 +62,11 @@ export type AstroProjectBuilderResultType = {
   message: string;
   data: PromiseResultType [] | string | null
 };
+
+
+export type LogDataTYPE = {
+  timestamp: string;
+  message: string;
+  type: "info" | "error" | "warning";
+  context?: string;
+}

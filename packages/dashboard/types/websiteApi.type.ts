@@ -31,6 +31,7 @@ export type ReadyToBuildResTYPE = {
 export type WebsiteRowTYPE = CsvRowDataType & {
   build: "unavailable" | "processing" | "complete" | "failed";
   deployed: "unavailable" | "processing" | "complete" | "failed";
+  log: "---" | string;
 };
 
 export type GetApiResTYPE = {
