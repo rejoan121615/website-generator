@@ -6,12 +6,23 @@ import SectionTitle from "@/components/SectionTitle";
 import TableControlBar from "@/components/TableControlBar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
-import { WebsiteRowTYPE, GetApiResTYPE } from "@/types/websiteApi.type";
+import {
+  WebsiteRowTYPE,
+  GetApiResTYPE,
+  ServerEventResTYPE,
+} from "@/types/websiteApi.type";
 import { ButtonGroup, Chip } from "@mui/material";
+import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
 
-export default function BasicTable() {
+function BasicTableInner() {
+  const { enqueueSnackbar } = useSnackbar();
   const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
   const [search, setSearch] = useState("");
+
+  const snackbarClickVariant =
+    (message: string, variant: VariantType) => () => {
+      enqueueSnackbar(message, { variant });
+    };
 
   useEffect(() => {
     axios
@@ -19,42 +30,16 @@ export default function BasicTable() {
       .then((res) => {
         const { data } = res;
         if (data.SUCCESS) {
-          console.log("recived data ", data.DATA);
           setWebsitesList(data.DATA || []);
         }
       })
       .catch((err) => {
-        console.log("err", err);
+        // handle error
       });
     return () => {
       setWebsitesList([]);
     };
   }, []);
-
-  // Inside BasicTable component
-
-  // const handleBuild = (row: WebsiteRowTYPE) => {
-  //   // Your build logic here
-  //   console.log("Build clicked for", row.domain);
-
-  //   axios
-  //     .post("api/websites/build", { data: row })
-  //     .then((res) => {
-  //       const eventSource = new EventSource(res.data.url);
-
-  //       eventSource.onmessage = (event) => {
-  //         console.log("Build event:", event.data);
-  //       };
-
-  //       eventSource.onerror = (err) => {
-  //         console.log('got an error ', err)
-  //       }
-
-  //     })
-  //     .catch((err) => {
-  //       console.log("err", err);
-  //     });
-  // };
 
   const handleBuild = async (row: WebsiteRowTYPE) => {
     try {
@@ -69,22 +54,46 @@ export default function BasicTable() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let done = false;
+      let buffer = "";
 
       while (!done) {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
         if (value) {
-          try {
-            const SSEMessage = JSON.parse(decoder.decode(value));
-            console.log(SSEMessage);
-            
-          } catch (error) {
-            console.error("Error parsing SSE message:", error);
+          buffer += decoder.decode(value, { stream: !done });
+          const messages = buffer.split("\n\n");
+          buffer = messages.pop() || "";
+          for (const msg of messages) {
+            const dataLine = msg
+              .split("\n")
+              .find((line) => line.startsWith("data: "));
+            if (dataLine) {
+              const jsonStr = dataLine.replace(/^data:\s*/, "");
+              try {
+                const event = JSON.parse(jsonStr) as ServerEventResTYPE;
+                const { MESSAGE, CSV_DATA } = event;
+                snackbarClickVariant(
+                  MESSAGE,
+                  CSV_DATA.build === "complete"
+                    ? "success"
+                    : CSV_DATA.build === "failed"
+                      ? "error"
+                      : "info"
+                )();
+                setWebsitesList((prevState) => {
+                  return prevState.map((item) =>
+                    item.domain === CSV_DATA.domain ? CSV_DATA : item
+                  );
+                });
+              } catch (e) {
+                // handle parse error
+              }
+            }
           }
         }
       }
     } catch (error) {
-      console.error("Error during build:", error);
+      // handle error
     }
   };
 
@@ -107,12 +116,17 @@ export default function BasicTable() {
     {
       field: "name",
       headerName: "Name",
-      width: 250,
+      width: 200,
     },
     {
       field: "domain",
       headerName: "Domain",
-      width: 250,
+      width: 200,
+    },
+    {
+      field: "log",
+      headerName: "Log",
+      width: 75,
     },
     {
       field: "build",
@@ -122,7 +136,15 @@ export default function BasicTable() {
         <Chip
           sx={{ textTransform: "capitalize" }}
           label={params.row.build}
-          color={params.row.build === "complete" ? "success" : "default"}
+          color={
+            params.row.build === "complete"
+              ? "success"
+              : params.row.build === "processing"
+                ? "warning"
+              : params.row.build === "failed"
+                ? "error"
+                : "default"
+          }
         />
       ),
     },
@@ -214,7 +236,10 @@ export default function BasicTable() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <SectionTitle title="Websites" description="Manage your websites here." />
+      <SectionTitle
+        title="Websites"
+        description="Manage your websites here."
+      />
       <TableControlBar search={search} onSearchChange={setSearch} />
       <DataGrid
         rows={filteredWebsites}
@@ -224,5 +249,13 @@ export default function BasicTable() {
         disableRowSelectionOnClick
       />
     </Box>
+  );
+}
+
+export default function BasicTable() {
+  return (
+    <SnackbarProvider>
+      <BasicTableInner />
+    </SnackbarProvider>
   );
 }
