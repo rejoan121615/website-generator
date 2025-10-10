@@ -223,7 +223,7 @@ function BasicTableInner() {
               // disabled={params.row.build === "complete"}
               onClick={() => handleBuild(params.row)}
             >
-              Build
+              { params.row.build === "complete" || params.row.build === "failed" ? "Rebuild" : "Build" }
             </Button>
             <Button
               variant="contained"
