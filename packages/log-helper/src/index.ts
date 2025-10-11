@@ -11,16 +11,16 @@ export async function LogBuilder({
   logType,
   context,
   error,
-  fileName = "dashboard"
+  logFileName = "dashboard"
 }: {
   domain: string;
   logMessage: string;
   logType: "fatal" | "error" | "warn" | "info" | "debug" | "trace";
   error?: Error;
   context?: Record<string, any>;
-  fileName?: string;
+  logFileName?: string;
 }) {
-  const buildReport = path.resolve(reportFolder, domain, `${fileName}-log.log`);
+  const buildReport = path.resolve(reportFolder, domain, `${logFileName}-log.log`);
   // make sure the report folder exists
   ensureDirSync(path.dirname(buildReport));
 

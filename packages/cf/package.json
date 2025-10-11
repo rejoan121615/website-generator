@@ -23,7 +23,8 @@
     "dotenv": "^17.2.2",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",
-    "wrangler": "^4.37.1"
+    "wrangler": "^4.37.1",
+    "@repo/log-helper": "workspace:*"
   },
   "exports": {
     ".": {

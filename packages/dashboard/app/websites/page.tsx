@@ -30,7 +30,7 @@ function BasicTableInner() {
       .then((res) => {
         const { data } = res;
         if (data.SUCCESS) {
-          setWebsitesList(data.DATA || []);
+          setWebsitesList(Array.isArray(data.DATA) ? data.DATA : []);
         }
       })
       .catch((err) => {

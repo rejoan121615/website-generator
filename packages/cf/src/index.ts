@@ -1,11 +1,9 @@
 import env from "dotenv";
-import Cloudflare, { CloudflareError } from "cloudflare";
-import fs from "fs-extra";
+import Cloudflare from "cloudflare";
 import path from "path";
-import { execSync } from "node:child_process";
-import { fileURLToPath } from "url";
 import { GetApiResTYPE } from "./types/DataType.type.js";
-import { execa, ExecaError } from "execa";
+import { execa } from "execa";
+import { LogBuilder } from "@repo/log-helper";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -23,6 +21,13 @@ export async function deploy({
   branchName?: string;
 }): Promise<GetApiResTYPE> {
   if (!process.env.CLOUDFLARE_API_TOKEN && !process.env.CLOUDFLARE_ACCOUNT_ID) {
+    LogBuilder({
+      domain: domainName,
+      logMessage: "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing",
+      logType: "fatal",
+      context: { function: "deploy" },
+      logFileName: "cf-deploy",
+    });
     throw new Error(
       "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing, check .env file"
     );
@@ -41,6 +46,13 @@ export async function deploy({
     });
 
     console.log("Project already exists. Using the existing project...");
+    LogBuilder({
+      domain: domainName,
+      logMessage: "Using existing project for deployment",
+      logType: "info",
+      context: { function: "deploy" },
+      logFileName: "cf-deploy",
+    });
 
     return await DeployApihandler({ domainName, cfProjectName });
   } catch (error) {
@@ -49,7 +61,7 @@ export async function deploy({
       if (status === 404) {
         console.log("Project not found, creating a new one...");
 
-        // ------------------ create cf new project ------------------ 
+        // ------------------ create cf new project ------------------
         try {
           // create new project
           const newProjectRes = await cfClient.pages.projects.create({
@@ -60,8 +72,24 @@ export async function deploy({
 
           console.log("New project created successfully...");
 
+          LogBuilder({
+            domain: domainName,
+            logMessage: "New project created successfully",
+            logType: "info",
+            context: { function: "deploy" },
+            logFileName: "cf-deploy",
+          });
+
           return await DeployApihandler({ domainName, cfProjectName });
         } catch (error) {
+          LogBuilder({
+            domain: domainName,
+            logMessage: "Creating new project failed",
+            logType: "error",
+            context: { function: "deploy" },
+            logFileName: "cf-deploy",
+            error: error instanceof Error ? error : undefined,
+          });
           return {
             SUCCESS: false,
             MESSAGE: "Creating new project failed",
@@ -129,7 +157,13 @@ async function DeployApihandler({
     if (exitCode === 0) {
       console.log("Deployment completed successfully!");
       subprocess.kill(); // kill the subprocess
-
+      LogBuilder({
+        domain: domainName,
+        logMessage: "Deployment complete",
+        logType: "info",
+        context: { function: "DeployApihandler" },
+        logFileName: "cf-deploy",
+      });
       // fetch project details
       const { id, name, domains, subdomain, latest_deployment } =
         await cfClient.pages.projects.get(cfProjectName, {
@@ -143,6 +177,13 @@ async function DeployApihandler({
       };
     } else {
       console.log("Project upload failed");
+      LogBuilder({
+        domain: domainName,
+        logMessage: "Project upload failed",
+        logType: "error",
+        context: { function: "DeployApiHandler" },
+        logFileName: "cf-deploy",
+      });
       return {
         SUCCESS: false,
         MESSAGE: "Project upload failed",
@@ -150,6 +191,13 @@ async function DeployApihandler({
     }
   } catch (error) {
     console.log("Error during deployment:", error);
+    LogBuilder({
+      domain: domainName,
+      logMessage: "Error during deployment",
+      logType: "error",
+      context: { function: "DeployApiHandler" },
+      logFileName: "cf-deploy",
+    });
     return {
       SUCCESS: false,
       MESSAGE: "Error during deployment",
