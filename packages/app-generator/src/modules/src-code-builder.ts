@@ -8,7 +8,7 @@ import {
   packageJsonFileBuilder,
 } from "./app-scripts-builder.js";
 import { SeoComponentHandler } from "./seo-component-handler.js";
-import { ProjectBuilderLogger } from '@repo/log-helper'
+import { LogBuilder } from '@repo/log-helper'
 
 const turboRepoRoot = getRootDir("../../../../");
 
@@ -51,27 +51,72 @@ export async function srcCodeBuilder(
         await fs.ensureDir(destPath);
       } else if (stat.isFile()) {
         if (item.endsWith("Seo.astro")) {
-          await SeoComponentHandler({ csvRowData: data, destPath, srcPath });
+          let seoRes = await SeoComponentHandler({ csvRowData: data, destPath, srcPath });
+          if (!seoRes.success) {
+            LogBuilder({
+              domain: data.domain,
+              logMessage: `${seoRes.message}`,
+              logType: "error",
+              context: { function: "srcCodeBuilder", srcPath, destPath },
+            });
+          }
         } else if (item.endsWith(".astro")) {
           // process astro file with spintax handler
-          await spintaxAndTokenHandler({
+          let spintaxRes = await spintaxAndTokenHandler({
             csvData: data,
             inputPath: srcPath,
             outputPath: destPath,
           });
+
+          if (!spintaxRes.success) {
+            LogBuilder({
+              domain: data.domain,
+              logMessage: `${spintaxRes.message}`,
+              logType: "error",
+              context: { function: "srcCodeBuilder", srcPath, destPath },
+            });
+          }
         } else if (item.endsWith("package.json")) {
           // process package.json file
-          await packageJsonFileBuilder(data.domain, srcPath, destPath);
+         let packageJsonRes = await packageJsonFileBuilder(data.domain, srcPath, destPath);
+          if (!packageJsonRes.success) {
+            LogBuilder({
+              domain: data.domain,
+              logMessage: `${packageJsonRes.message}`,
+              logType: "error",
+              context: { function: "srcCodeBuilder", srcPath, destPath },
+            });
+          }
         } else if (item.endsWith("astro.config.mjs")) {
-          await astroConfigFileBuilder({ csvData: data, srcPath, destPath });
+          let astroConfigRes = await astroConfigFileBuilder({ csvData: data, srcPath, destPath });
+          if (!astroConfigRes.success) {
+            LogBuilder({
+              domain: data.domain,
+              logMessage: `${astroConfigRes.message}`,
+              logType: "error",
+              context: { function: "srcCodeBuilder", srcPath, destPath },
+            });
+          }
         } else {
           // process none astro file normally
           await fs.copyFile(srcPath, destPath);
         }
       }
     }
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Astro app created successfully in => apps/${data.domain}`,
+      logType: "info",
+    });
     return { success: true, message: "Astro app created" };
   } catch (error) {
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Error creating Astro app`,
+      logType: "error",
+      context: { function: "srcCodeBuilder", appFolderPath },
+      error: error instanceof Error ? error : undefined,
+    });
     return { success: false, message: `Error creating Astro app: ${error}` };
   }
 }

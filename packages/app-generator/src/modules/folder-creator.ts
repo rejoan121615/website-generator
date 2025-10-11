@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import { getRootDir } from "../utilities/path-solver.js";
 import { PromiseResultType } from "../types/DataType.js";
+import { LogBuilder } from "@repo/log-helper";
 
 export async function folderCreator(data: {
   domain: string;
@@ -12,16 +13,30 @@ export async function folderCreator(data: {
 
   if (!domain && !outputDir) {
     console.warn("Skipping creation of directory with missing domain");
+    LogBuilder({
+      domain: domain,
+      logMessage: "Missing domain or output directory on folderCreator",
+      logType: "error",
+    })
     return { success: false, message: "Missing domain or output directory" };
   }
   // create folder inside build-output folder with domain name
   try {
     await fs.ensureDir(path.join(outputDir, domain));
-    console.log(`----------------------------------------------`);
-    console.log(`Folder Created for : ${domain}`);
+    LogBuilder({
+      domain: domain,
+      logMessage: `Src folder created inside => apps/${domain}`,
+      logType: "info",
+    })
     return { success: true, message: `Folder created for domain: ${domain}` };
   } catch (err) {
-    console.log(`Failed to create folder for domain "${domain}":`, err);
+    LogBuilder({
+      domain: domain,
+      logMessage: `Failed to create folder for domain "${domain}"`,
+      logType: "error",
+      context: { function: "folderCreator" },
+      error: err instanceof Error ? err : undefined,
+    });
     return {
       success: false,
       message: `Failed to create folder for domain "${domain}": ${err}`,

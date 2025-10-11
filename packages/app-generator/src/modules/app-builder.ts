@@ -6,11 +6,9 @@ import { folderCreator } from "./folder-creator.js";
 import { srcCodeBuilder } from "./src-code-builder.js";
 import { cloudFlareScriptBuilder } from "./cloudflare-script-builder.js";
 import { getRootDir } from "../utilities/path-solver.js";
-import fs from 'fs-extra';
-import path from 'path';
-import { ProjectBuilderLogger } from '@repo/log-helper'
-
-
+import fs from "fs-extra";
+import path from "path";
+import { LogBuilder } from "@repo/log-helper";
 
 export async function astroProjectCreator(
   data: CsvRowDataType
@@ -24,11 +22,6 @@ export async function astroProjectCreator(
       domain: domain,
     });
 
-    ProjectBuilderLogger({
-      domain,
-      logMessage: `Folder creation result: ${JSON.stringify(folderCreationResult)}`,
-      logType: "success",
-    });
 
     // create src folder and files
     const srcCodeBuilderResult = await srcCodeBuilder(data);
@@ -39,36 +32,43 @@ export async function astroProjectCreator(
       data
     );
 
-    // run pnpm install and build commands
-    // const pnpmCmdHandlerResult = await pnpmCmdHandler({
-    //   rootDir: turboRepoRoot,
-    //   domain: domain,
-    // });
-
-    console.log("Astro project build process completed for domain: ", domain);
+    if (cloudFlareScriptBuilderResult.success) {
+      LogBuilder({
+        domain: data.domain,
+        logMessage: `Cloudflare scripts created successfully`,
+        logType: "info",
+      });
+    }
 
     return {
       success: true,
-      message: `Astro project build process completed for domain: ${domain}`,
+      message: `Astro app creating completed for domain: ${domain}`,
       data: [
         folderCreationResult,
         srcCodeBuilderResult,
-        cloudFlareScriptBuilderResult
+        cloudFlareScriptBuilderResult,
       ],
     };
   } catch (error) {
-    console.error("Error occurred during Astro project build process:", error);
-    astroProjectRemover(data);
+    console.error("Error occurred during Astro project creation:", error);
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Error occurred during Astro project creation`,
+      logType: "error",
+      context: { function: "astroProjectCreator" },
+      error: error instanceof Error ? error : undefined,
+    });
     return {
       success: false,
-      message: `Astro project build process failed for domain: ${domain}`,
+      message: `Astro project creation failed for domain: ${domain}`,
       data: null,
     };
   }
 }
 
-
-export async function astroProjectRemover (data: CsvRowDataType) : Promise<AstroProjectBuilderResultType> {
+export async function astroProjectRemover(
+  data: CsvRowDataType
+): Promise<AstroProjectBuilderResultType> {
   const turboRepoRoot = getRootDir("../../../../");
   const { domain } = data;
   try {

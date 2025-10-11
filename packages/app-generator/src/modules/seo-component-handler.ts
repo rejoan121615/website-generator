@@ -1,5 +1,6 @@
 import type { CsvAddressType, CsvRowDataType, JsonLdDataType, PromiseResultType } from "../types/DataType.js";
 import fs from "fs-extra";
+import { LogBuilder } from "@repo/log-helper";
 
 export async function SeoComponentHandler({
   csvRowData,

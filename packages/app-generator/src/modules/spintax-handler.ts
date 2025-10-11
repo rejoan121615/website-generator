@@ -4,6 +4,7 @@ import { CsvAddressType, CsvRowDataType, PromiseResultType } from "../types/Data
 import sharp from "sharp";
 import path from "path";
 import { getRootDir } from "../utilities/path-solver.js";
+import { LogBuilder } from "@repo/log-helper";
 
 type Choice = { value: string; weight: number };
 
