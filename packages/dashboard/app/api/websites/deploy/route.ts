@@ -21,19 +21,31 @@ export async function POST(
     );
   }
 
-  await deploy({
+  const deploymentResult = await deploy({
     domainName: websiteRowData.domain,
-    projectName: websiteRowData.name,
     branchName: "main",
   });
 
+  if (!deploymentResult || !deploymentResult.SUCCESS) {
+    return NextResponse.json(
+      {
+        SUCCESS: false,
+        MESSAGE: "Site deployment failed",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+
   return NextResponse.json(
     {
-      SUCCESS: false,
-      MESSAGE: "Not implemented",
+      SUCCESS: true,
+      MESSAGE: "Site deployed successfully",
+      DATA: deploymentResult.DATA,
     },
     {
-      status: 501,
+      status: 200,
     }
   );
 }

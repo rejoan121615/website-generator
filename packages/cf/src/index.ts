@@ -1,20 +1,24 @@
 import env from "dotenv";
-import Cloudflare from "cloudflare";
+import Cloudflare, { CloudflareError } from "cloudflare";
 import fs from "fs-extra";
 import path from "path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "url";
 import { GetApiResTYPE } from "./types/DataType.type.js";
+import { execa, ExecaError } from "execa";
 
-const dotEnvPath = path.resolve(process.cwd(), "../../", ".env");
+const projectRoot = path.resolve(process.cwd(), "../../");
+const dotEnvPath = path.resolve(projectRoot, ".env");
 env.config({ path: dotEnvPath });
 
+const cfClient = new Cloudflare({
+  apiToken: process.env.CLOUDFLARE_API_TOKEN,
+});
+
 export async function deploy({
-  projectName,
   domainName,
   branchName = "main",
 }: {
-  projectName: string;
   domainName: string;
   branchName?: string;
 }): Promise<GetApiResTYPE> {
@@ -24,141 +28,132 @@ export async function deploy({
     );
   }
 
-  const client = new Cloudflare({
-    apiToken: process.env.CLOUDFLARE_API_TOKEN,
-  });
+  const cfProjectName = domainName.trim().toLowerCase().replaceAll(".", "-");
 
   console.log("Starting deployment........... for project:", domainName);
-
-  // delete old csv file if exists
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const turboRepoRoot = path.resolve(__dirname, "../../../");
-  const deploymentReportFilePath = path.join(
-    turboRepoRoot,
-    "reports",
-    "deploy",
-    domainName,
-    "deployment_data.csv"
-  );
-
-  try {
-    await fs.ensureFile(deploymentReportFilePath);
-    await fs.outputFile(deploymentReportFilePath, ``);
-  } catch (error) {
-    console.log("Error ensuring or clearing deployment report file:", error);
-  }
 
   // check if the project exists or create a new one
 
   try {
-    console.log("Checking if project already exists...", projectName);
-    const existingProjectRes = await client.pages.projects.get(projectName, {
+    console.log("Checking if cf project already exists...", cfProjectName);
+    await cfClient.pages.projects.get(cfProjectName, {
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
 
     console.log("Project already exists. Using the existing project...");
-    const { id, name, domains, subdomain } = existingProjectRes;
-    await fs.outputFile(
-      deploymentReportFilePath,
-      `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","not-available"\n`
-    );
+
+    return await DeployApihandler({ domainName, cfProjectName });
   } catch (error) {
-    console.log("Project not found, Creating new project...");
+    if (error instanceof Cloudflare.APIError) {
+      const { status, errors } = error;
+      if (status === 404) {
+        console.log("Project not found, creating a new one...");
 
-    try {
-      // ceate new project
-      const newProjectRes = await client.pages.projects.create({
-        name: projectName,
-        account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
-        production_branch: branchName,
-      });
+        // ------------------ create cf new project ------------------ 
+        try {
+          // create new project
+          const newProjectRes = await cfClient.pages.projects.create({
+            name: cfProjectName,
+            account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
+            production_branch: branchName,
+          });
 
-      console.log("New project created successfully...");
+          console.log("New project created successfully...");
 
-      // store this project data inside csv file
-      const { id, name, domains, subdomain } = newProjectRes;
-      await fs.outputFile(
-        deploymentReportFilePath,
-        `id,name,domains,subdomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","not-available"\n`
-      );
-      console.log("Project data saved to CSV:", deploymentReportFilePath);
-    } catch (error) {
-      console.log("Creating new project failed:", error);
-      return {
-        SUCCESS: false,
-        MESSAGE: "Creating new project failed",
-      };
+          return await DeployApihandler({ domainName, cfProjectName });
+        } catch (error) {
+          return {
+            SUCCESS: false,
+            MESSAGE: "Creating new project failed",
+          };
+        }
+      } else {
+        return {
+          SUCCESS: false,
+          MESSAGE: "Error checking project",
+        };
+      }
     }
   }
 
+  // default return
+  return {
+    SUCCESS: false,
+    MESSAGE: "Deployment process failed, please check logs for more details",
+  };
+}
+
+async function DeployApihandler({
+  domainName,
+  cfProjectName,
+}: {
+  domainName: string;
+  cfProjectName: string;
+}): Promise<GetApiResTYPE> {
   try {
     console.log("Started uploading source code to the project...");
     // upload source code to the project
     const staticWebsitePath = path.join(
-      turboRepoRoot,
+      projectRoot,
       "apps",
       domainName,
       "dist"
     );
-    const command = `wrangler pages deploy "${staticWebsitePath}" --project-name ${projectName} --branch ${branchName} --commit-dirty=true`;
-    try {
-      execSync(command, {
-        stdio: "inherit",
-        env: {
-          ...process.env, // Inherit other environment variables from the parent process
-          CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
-          CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
-        },
-      });
-    } catch (error) {
-      console.log("Project upload failed:", error);
+
+    const commandArgs = [
+      "pages",
+      "deploy",
+      staticWebsitePath,
+      "--project-name",
+      cfProjectName,
+      "--branch",
+      "main",
+      "--commit-dirty=true",
+    ];
+
+    // wrangler using execa
+    const subprocess = execa("wrangler", commandArgs, {
+      env: {
+        ...process.env,
+        CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
+        CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
+      },
+    });
+
+    // show output
+    subprocess.stdout?.pipe(process.stdout);
+    subprocess.stderr?.pipe(process.stderr);
+
+    const { exitCode } = await subprocess;
+
+    if (exitCode === 0) {
+      console.log("Deployment completed successfully!");
+      subprocess.kill(); // kill the subprocess
+
+      // fetch project details
+      const { id, name, domains, subdomain, latest_deployment } =
+        await cfClient.pages.projects.get(cfProjectName, {
+          account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
+        });
+
+      return {
+        SUCCESS: true,
+        MESSAGE: "Deployment initiated successfully",
+        DATA: { name, domains, subdomain, latest_deployment },
+      };
+    } else {
+      console.log("Project upload failed");
       return {
         SUCCESS: false,
         MESSAGE: "Project upload failed",
       };
     }
-
-    // get the project details again to get the assigned domain
-    client.pages.projects
-      .get(projectName, {
-        account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
-      })
-      .then(async (projectDetails) => {
-        const { id, name, domains, subdomain, latest_deployment } =
-          projectDetails;
-        await fs.outputFile(
-          deploymentReportFilePath,
-          `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","${latest_deployment?.url ?? ""}"\n`
-        );
-
-        console.log("Deployment report file updated with latest domain...");
-        return {
-          SUCCESS: true,
-          MESSAGE: "Deployment initiated successfully",
-        };
-      })
-      .catch((error) => {
-        console.log(
-          "Error fetching project details, writing new published domain failed"
-        );
-        return {
-          SUCCESS: true,
-          MESSAGE: "Deployment initiated successfully",
-        };
-      });
   } catch (error) {
-    console.log("Error uploading source code:", error);
+    console.log("Error during deployment:", error);
     return {
       SUCCESS: false,
-      MESSAGE: "Error uploading source code",
+      MESSAGE: "Error during deployment",
     };
-  }
-
-  // default return 
-  return {
-    SUCCESS: false,
-    MESSAGE: 'Deployment process failed, please check logs for more details',
   }
 }
 

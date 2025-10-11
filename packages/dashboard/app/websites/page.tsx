@@ -145,27 +145,20 @@ function BasicTableInner() {
     // Your deploy logic here
     console.log("Deploy clicked for", row.domain);
 
-    try {
-      const response = await fetch("/api/websites/deploy", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: row }),
-      });
+    axios.post("/api/websites/deploy", { data: row }).then((res) => {
+      const { data } = res;
 
-
-      if (!response.ok) throw new Error(`Sending http request failed: ${response.status}`);
-      if (!response.body) throw new Error("No response body");
-
-      const result = await response.json();
-
-      if (result.SUCCESS) {
+      if (data.SUCCESS) {
         console.log("Deployment initiated successfully");
+        console.log('Data ', data);
       }
-
-
-    } catch (error) {
-      
+    }).catch((err) => {
+      // handle error
+      console.log('err', err);
     }
+  )
+
+   
     
   };
 
@@ -265,7 +258,7 @@ function BasicTableInner() {
               variant="contained"
               color="success"
               size="small"
-              disabled={params.row.build !== "complete"}
+              // disabled={params.row.build !== "complete"}
               onClick={() => handleDeploy(params.row)}
             >
               Deploy

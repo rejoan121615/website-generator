@@ -37,7 +37,7 @@ export type WebsiteRowTYPE = CsvRowDataType & {
 export type GetApiResTYPE = {
   SUCCESS: boolean;
   MESSAGE: string;
-  DATA?: WebsiteRowTYPE[];
+  DATA?: WebsiteRowTYPE[] | Record<string, unknown>;
 }
 
 export type ServerEventResTYPE = {
