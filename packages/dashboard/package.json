@@ -25,7 +25,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sharp": "^0.34.4",
-    "@repo/log-helper": "workspace:*"
+    "@repo/log-helper": "workspace:*",
+    "@repo/cf": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

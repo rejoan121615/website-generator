@@ -140,9 +140,33 @@ function BasicTableInner() {
     }
   };
 
-  const handleDeploy = (row: WebsiteRowTYPE) => {
+  const handleDeploy = async (row: WebsiteRowTYPE) => {
+
     // Your deploy logic here
     console.log("Deploy clicked for", row.domain);
+
+    try {
+      const response = await fetch("/api/websites/deploy", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: row }),
+      });
+
+
+      if (!response.ok) throw new Error(`Sending http request failed: ${response.status}`);
+      if (!response.body) throw new Error("No response body");
+
+      const result = await response.json();
+
+      if (result.SUCCESS) {
+        console.log("Deployment initiated successfully");
+      }
+
+
+    } catch (error) {
+      
+    }
+    
   };
 
   const handleUndeploy = (row: WebsiteRowTYPE) => {

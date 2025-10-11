@@ -1,24 +1,31 @@
+import env from "dotenv";
 import Cloudflare from "cloudflare";
 import fs from "fs-extra";
 import path from "path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "url";
+import { GetApiResTYPE } from "./types/DataType.type.js";
+
+const dotEnvPath = path.resolve(process.cwd(), "../../", ".env");
+env.config({ path: dotEnvPath });
 
 export async function deploy({
-  cfToken,
-  cfId,
   projectName,
   domainName,
-  branchName
+  branchName = "main",
 }: {
-  cfToken: string;
-  cfId: string;
   projectName: string;
   domainName: string;
-  branchName: string;
-}) {
+  branchName?: string;
+}): Promise<GetApiResTYPE> {
+  if (!process.env.CLOUDFLARE_API_TOKEN && !process.env.CLOUDFLARE_ACCOUNT_ID) {
+    throw new Error(
+      "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing, check .env file"
+    );
+  }
+
   const client = new Cloudflare({
-    apiToken: cfToken,
+    apiToken: process.env.CLOUDFLARE_API_TOKEN,
   });
 
   console.log("Starting deployment........... for project:", domainName);
@@ -47,7 +54,7 @@ export async function deploy({
   try {
     console.log("Checking if project already exists...", projectName);
     const existingProjectRes = await client.pages.projects.get(projectName, {
-      account_id: cfId,
+      account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
 
     console.log("Project already exists. Using the existing project...");
@@ -63,7 +70,7 @@ export async function deploy({
       // ceate new project
       const newProjectRes = await client.pages.projects.create({
         name: projectName,
-        account_id: cfId,
+        account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
         production_branch: branchName,
       });
 
@@ -78,7 +85,10 @@ export async function deploy({
       console.log("Project data saved to CSV:", deploymentReportFilePath);
     } catch (error) {
       console.log("Creating new project failed:", error);
-      process.exit(1);
+      return {
+        SUCCESS: false,
+        MESSAGE: "Creating new project failed",
+      };
     }
   }
 
@@ -97,45 +107,58 @@ export async function deploy({
         stdio: "inherit",
         env: {
           ...process.env, // Inherit other environment variables from the parent process
-          CLOUDFLARE_API_TOKEN: cfToken,
-          CLOUDFLARE_ACCOUNT_ID: cfId,
+          CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
+          CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
         },
       });
     } catch (error) {
       console.log("Project upload failed:", error);
-      process.exit(1);
+      return {
+        SUCCESS: false,
+        MESSAGE: "Project upload failed",
+      };
     }
 
     // get the project details again to get the assigned domain
     client.pages.projects
       .get(projectName, {
-        account_id: cfId,
+        account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
       })
       .then(async (projectDetails) => {
-        try {
-          const { id, name, domains, subdomain, latest_deployment } =
-            projectDetails;
-          await fs.outputFile(
-            deploymentReportFilePath,
-            `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","${latest_deployment?.url ?? ""}"\n`
-          );
+        const { id, name, domains, subdomain, latest_deployment } =
+          projectDetails;
+        await fs.outputFile(
+          deploymentReportFilePath,
+          `id,name,domains,subdomain,currentDomain\n${id},${name},"${Array.isArray(domains) ? domains.join(";") : ""}","${subdomain ?? ""}","${latest_deployment?.url ?? ""}"\n`
+        );
 
-          console.log("Deployment report file updated with latest domain...");
-          process.exit(0);
-        } catch (error) {
-          console.log("Error writing latest published domain to file:", error);
-          process.exit(1);
-        }
+        console.log("Deployment report file updated with latest domain...");
+        return {
+          SUCCESS: true,
+          MESSAGE: "Deployment initiated successfully",
+        };
       })
       .catch((error) => {
         console.log(
           "Error fetching project details, writing new published domain failed"
         );
-        process.exit(1);
+        return {
+          SUCCESS: true,
+          MESSAGE: "Deployment initiated successfully",
+        };
       });
   } catch (error) {
     console.log("Error uploading source code:", error);
-    process.exit(1);
+    return {
+      SUCCESS: false,
+      MESSAGE: "Error uploading source code",
+    };
+  }
+
+  // default return 
+  return {
+    SUCCESS: false,
+    MESSAGE: 'Deployment process failed, please check logs for more details',
   }
 }
 
@@ -145,22 +168,20 @@ export async function deploy({
  * @param cfId Cloudflare account ID
  * @param projectName Project name (unsanitized)
  */
-export async function deleteProject({
-  cfToken,
-  cfId,
-  projectName,
-}: {
-  cfToken: string;
-  cfId: string;
-  projectName: string;
-}) {
-  const client = new Cloudflare({ apiToken: cfToken });
+export async function deleteProject({ projectName }: { projectName: string }) {
+  if (!process.env.CLOUDFLARE_API_TOKEN && !process.env.CLOUDFLARE_ACCOUNT_ID) {
+    throw new Error(
+      "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing, check .env file"
+    );
+  }
+
+  const client = new Cloudflare({ apiToken: process.env.CLOUDFLARE_API_TOKEN });
 
   console.log(`Attempting to delete project: ${projectName}`);
   try {
     // Delete the project (this also deletes all deployments)
     await client.pages.projects.delete(projectName, {
-      account_id: cfId,
+      account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
     console.log(`Project '${projectName}' deleted successfully.`);
   } catch (error) {
