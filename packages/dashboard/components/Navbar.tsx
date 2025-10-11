@@ -29,9 +29,9 @@ const NavbarData = [
     link: "/websites",
   },
   {
-    title: "Publish",
+    title: "Domains",
     icon: <CloudUploadIcon />,
-    link: "/publish",
+    link: "/domains",
   },
   {
     title: "Tools",

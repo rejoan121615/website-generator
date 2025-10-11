@@ -1,5 +1,5 @@
-import path from "path";
 import { fileURLToPath } from "url";
+import path from "path";
 
 export function getRootDir(targetPath: string) {
   const __filename = fileURLToPath(import.meta.url);
