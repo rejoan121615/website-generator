@@ -49,8 +49,8 @@ function BasicTableInner() {
         body: JSON.stringify({ data: row }),
       });
 
-
-      if (!response.ok) throw new Error(`Sending http request failed: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`Sending http request failed: ${response.status}`);
       if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
@@ -96,13 +96,12 @@ function BasicTableInner() {
       }
     } catch (error) {
       snackbarClickVariant("Sending request failed", "error")();
-      console.log('error', error);
+      console.log("error", error);
       // handle error
     }
   };
 
   const handleRemove = async (row: WebsiteRowTYPE) => {
-
     snackbarClickVariant(`Removing project: ${row.name}`, "info")();
 
     try {
@@ -112,14 +111,15 @@ function BasicTableInner() {
         body: JSON.stringify({ data: row }),
       });
 
-      if (!response.ok) throw new Error(`Sending http request failed: ${response.status}`);
+      if (!response.ok)
+        throw new Error(`Sending http request failed: ${response.status}`);
       if (!response.body) throw new Error("No response body");
 
       const result = await response.json();
       if (result.SUCCESS) {
         snackbarClickVariant(result.MESSAGE, "success")();
         setWebsitesList((prevState) => {
-         return prevState.map((item) =>
+          return prevState.map((item) =>
             item.domain === row.domain
               ? { ...item, build: "unavailable", deployed: "unavailable" }
               : item
@@ -141,30 +141,66 @@ function BasicTableInner() {
   };
 
   const handleDeploy = async (row: WebsiteRowTYPE) => {
+    // show snackbar
+    snackbarClickVariant(`Deploying project: ${row.name}`, "info")();
 
-    // Your deploy logic here
-    console.log("Deploy clicked for", row.domain);
+    // send deploy request
+    axios
+      .post("/api/websites/deploy", { data: row })
+      .then((res) => {
+        const data = res.data as GetApiResTYPE;
 
-    axios.post("/api/websites/deploy", { data: row }).then((res) => {
-      const { data } = res;
+        if (data.SUCCESS) {
+          snackbarClickVariant(`${row.name}: ${data.MESSAGE}`, "success")();
 
-      if (data.SUCCESS) {
-        console.log("Deployment initiated successfully");
-        console.log('Data ', data);
-      }
-    }).catch((err) => {
-      // handle error
-      console.log('err', err);
-    }
-  )
-
-   
-    
+          setWebsitesList((prevState) => {
+            return prevState.map((item) => {
+              return item.domain === row.domain
+                ? { ...item, deployed: "complete" }
+                : item;
+            });
+          });
+        }
+      })
+      .catch((err) => {
+        snackbarClickVariant(
+          `Failed to deploy project: ${row.name}`,
+          "error"
+        )();
+        // handle error
+        console.log("err", err);
+      });
   };
 
   const handleUndeploy = (row: WebsiteRowTYPE) => {
     // Your undeploy logic here
-    console.log("Undeploy clicked for", row.domain);
+    snackbarClickVariant(`Undeploying project: ${row.name}`, "info")();
+
+    axios
+      .post("/api/websites/undeploy", { data: row })
+      .then((res) => {
+        const data = res.data as GetApiResTYPE;
+
+        if (data.SUCCESS) {
+          snackbarClickVariant(`${row.name}: ${data.MESSAGE}`, "success")();
+
+          // update state
+          setWebsitesList((prevState) => {
+            return prevState.map((item) => {
+              return item.domain === row.domain
+                ? { ...item, deployed: "unavailable" }
+                : item;
+            });
+          });
+        }
+      })
+      .catch((error) => {
+        snackbarClickVariant(
+          `Failed to undeploy project: ${row.name}`,
+          "error"
+        )();
+        console.log("error", error);
+      });
   };
 
   const columns: GridColDef<WebsiteRowTYPE>[] = [
@@ -196,9 +232,9 @@ function BasicTableInner() {
               ? "success"
               : params.row.build === "processing"
                 ? "warning"
-              : params.row.build === "failed"
-                ? "error"
-                : "default"
+                : params.row.build === "failed"
+                  ? "error"
+                  : "default"
           }
         />
       ),
@@ -240,7 +276,9 @@ function BasicTableInner() {
               // disabled={params.row.build === "complete"}
               onClick={() => handleBuild(params.row)}
             >
-              { params.row.build === "complete" || params.row.build === "failed" ? "Rebuild" : "Build" }
+              {params.row.build === "complete" || params.row.build === "failed"
+                ? "Rebuild"
+                : "Build"}
             </Button>
             <Button
               variant="contained"
@@ -291,10 +329,7 @@ function BasicTableInner() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <SectionTitle
-        title="Websites"
-        description="Manage your websites here."
-      />
+      <SectionTitle title="Websites" description="Manage your websites here." />
       <TableControlBar search={search} onSearchChange={setSearch} />
       <DataGrid
         rows={filteredWebsites}

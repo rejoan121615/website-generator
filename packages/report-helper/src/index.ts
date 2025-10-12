@@ -1,6 +1,7 @@
 import fs, { ensureDirSync, ensureFileSync } from "fs-extra";
 import path from "path";
 import { getRootDir } from "./utils/path-solver.js";
+import { GetApiResTYPE } from "./types/Types.type.js";
 
 const reportFolder = path.resolve(getRootDir("../../../../"), "reports");
 
@@ -34,5 +35,26 @@ export async function ReportBuilder({
     );
   } catch (error) {
     console.error("Error writing report:", error);
+  }
+}
+
+
+
+export async function ReportRemover({ domain }: { domain: string }) : Promise<GetApiResTYPE> {
+  const reportDir = path.resolve(reportFolder, domain);
+
+  try {
+    await fs.remove(reportDir);
+    console.log(`Successfully removed report for domain: ${domain}`);
+    return {
+      SUCCESS: true,
+      MESSAGE: `Successfully removed report for domain: ${domain}`,
+    };
+  } catch (error) {
+    console.error("Error removing report:", error);
+    return {
+      SUCCESS: false,
+      MESSAGE: "Error removing report",
+    };
   }
 }
