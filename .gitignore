@@ -35,6 +35,8 @@ requirement.md
 data/requirement.csv
 data/websites.csv
 pnpm-lock.yaml
+logs/
+reports/
 
 
 # Debug
