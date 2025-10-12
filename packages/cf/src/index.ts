@@ -4,6 +4,7 @@ import path from "path";
 import { GetApiResTYPE } from "./types/DataType.type.js";
 import { execa } from "execa";
 import { LogBuilder } from "@repo/log-helper";
+import { ReportBuilder } from "@repo/report-helper";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -152,7 +153,7 @@ async function DeployApihandler({
     subprocess.stdout?.pipe(process.stdout);
     subprocess.stderr?.pipe(process.stderr);
 
-    const { exitCode } = await subprocess;
+    const { exitCode, stack } = await subprocess;
 
     if (exitCode === 0) {
       console.log("Deployment completed successfully!");
@@ -170,6 +171,15 @@ async function DeployApihandler({
           account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
         });
 
+      if (latest_deployment && latest_deployment.url) {
+        ReportBuilder({
+          domain: domainName,
+          CfProjectName: name,
+          liveUrl: latest_deployment.url,
+          fileName: "deploy",
+        });
+      }
+
       return {
         SUCCESS: true,
         MESSAGE: "Deployment initiated successfully",
@@ -183,6 +193,7 @@ async function DeployApihandler({
         logType: "error",
         context: { function: "DeployApiHandler" },
         logFileName: "cf-deploy",
+        error: stack,
       });
       return {
         SUCCESS: false,
@@ -197,6 +208,7 @@ async function DeployApihandler({
       logType: "error",
       context: { function: "DeployApiHandler" },
       logFileName: "cf-deploy",
+      error: error instanceof Error ? error : undefined,
     });
     return {
       SUCCESS: false,

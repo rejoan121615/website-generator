@@ -1,7 +1,7 @@
 {
-  "name": "@repo/cf",
+  "name": "@repo/report-helper",
   "author": "Mohd Rejoan",
-  "description": "Cloudflare static pages deployment CLI",
+  "description": "A helper library for writing reports",
   "version": "1.0.0",
   "private": true,
   "main": "./dist/index.js",
@@ -13,23 +13,21 @@
     "compile": "tsc -p . --watch",
     "output": "nodemon ./dist/index.js"
   },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.3.2",
+    "pino": "^10.0.0"
+  },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/fs-extra": "^11.0.4",
-    "typescript": "5.9.2"
-  },
-  "dependencies": {
-    "cloudflare": "^5.1.0",
-    "dotenv": "^17.2.2",
-    "execa": "^9.6.0",
-    "fs-extra": "^11.3.2",
-    "wrangler": "^4.37.1",
-    "@repo/log-helper": "workspace:*",
-    "@repo/report-helper": "workspace:*"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.9.2"
   },
   "exports": {
     ".": {
-      "default": "./dist/index.js",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   }

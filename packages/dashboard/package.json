@@ -15,18 +15,20 @@
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
     "@mui/x-data-grid": "^8.13.1",
+    "@prisma/client": "^6.17.1",
     "@repo/app-generator": "workspace:*",
+    "@repo/cf": "workspace:*",
+    "@repo/log-helper": "workspace:*",
     "axios": "^1.12.2",
     "csv-parse": "^6.1.0",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",
     "next": "15.5.4",
     "notistack": "^3.0.2",
+    "prisma": "^6.17.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "sharp": "^0.34.4",
-    "@repo/log-helper": "workspace:*",
-    "@repo/cf": "workspace:*"
+    "sharp": "^0.34.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model WebsiteRow {
+  id               Int      @id @default(autoincrement())
+  domain           String   @unique
+  name             String
+  service_name     String
+  address          String
+  phone            String
+  email            String
+  site_title       String
+  meta_title       String
+  meta_description String
+  logo             String
+  hero_image       String
+  gallery_1        String
+  gallery_2        String
+  build            String   // Enum: unavailable | processing | complete | failed
+  deployed         String   // Enum: unavailable | processing | complete | failed
+  log              String   // '---' or string
+}

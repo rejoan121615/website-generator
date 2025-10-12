@@ -3,7 +3,7 @@ import path from "path";
 import { getRootDir } from "./utils/path-solver.js";
 import pino from "pino";
 
-const reportFolder = path.resolve(getRootDir("../../../../"), "reports");
+const reportFolder = path.resolve(getRootDir("../../../../"), "logs");
 
 export async function LogBuilder({
   domain,

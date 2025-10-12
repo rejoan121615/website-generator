@@ -13,7 +13,6 @@ export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
 
     if (CsvData && ReadyToBuildData) {
       const WebsiteRowData: WebsiteRowTYPE[] = CsvData.map((csvItem) => {
-
         const { domain } = csvItem;
 
         const buildStatus = ReadyToBuildData.find((item) => item === domain);
@@ -26,14 +25,14 @@ export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
         };
       });
 
-    return NextResponse.json({
-      SUCCESS: true,
-      MESSAGE: "Websites fetched successfully.",
-      DATA: WebsiteRowData,
-    });
+      return NextResponse.json({
+        SUCCESS: true,
+        MESSAGE: "Websites fetched successfully.",
+        DATA: WebsiteRowData,
+      });
     }
 
-    // default return 
+    // default return
     return NextResponse.json({
       SUCCESS: true,
       MESSAGE: "No websites data found.",
