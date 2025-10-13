@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GetReadyToBuildList, GetWebsiteCsvData } from "./utilities";
+import { GetReadyToBuildList, FetchWebsites } from "./websiteDataOperation";
 import type {
   GetApiResTYPE,
   WebsiteRowTYPE,
@@ -8,7 +8,7 @@ import type {
 
 export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
   try {
-    const { SUCCESS, DATA: CsvData } = await GetWebsiteCsvData();
+    const { SUCCESS, DATA } = await FetchWebsites();
     if (!SUCCESS) {
       return NextResponse.json(
         {
@@ -19,26 +19,18 @@ export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
           status: 500,
         }
       );
-    };
-
-    if (!CsvData || CsvData.length === 0) {
-      return NextResponse.json({
-        SUCCESS: true,
-        MESSAGE: "No website data found.",
-        DATA: [],
-      });
     }
 
-    const { DATA: ReadyToBuildData } = await GetReadyToBuildList({ csvRowData: CsvData });
-
-
-
-    // default return
-    return NextResponse.json({
-      SUCCESS: true,
-      MESSAGE: "Website data retrieved successfully.",
-      DATA: ReadyToBuildData,
-    });
+    return NextResponse.json(
+      {
+        SUCCESS: true,
+        MESSAGE: "Website CSV data retrieved successfully.",
+        DATA: DATA as WebsiteRowTYPE[],
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     const typedError = error as WebsitesResTYPE;
     console.log("error => ", error);

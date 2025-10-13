@@ -25,20 +25,30 @@ function DomainsPage() {
     };
 
   useEffect(() => {
+    // Fetch initial data
     axios
-      .get<GetApiResTYPE>("/api/websites")
-      .then((res) => {
-        const { data } = res;
-        if (data.SUCCESS) {
-          setWebsitesList(data.DATA || []);
+      .get<GetApiResTYPE>("/api/domains")
+      .then((response) => {
+        console.log("Fetched websites:", response);
+        const { SUCCESS, MESSAGE, DATA } = response.data as GetApiResTYPE;
+
+        if (SUCCESS && DATA) {
+          snackbarClickVariant(
+            MESSAGE || "Websites fetched successfully",
+            "success"
+          )();
+          setWebsitesList(DATA as WebsiteRowTYPE[]);
+        } else {
+          snackbarClickVariant(
+            MESSAGE || "Failed to fetch websites",
+            "error"
+          )();
+          setWebsitesList([]);
         }
       })
-      .catch((err) => {
-        // handle error
+      .catch((error) => {
+        console.error("Error fetching websites:", error);
       });
-    return () => {
-      setWebsitesList([]);
-    };
   }, []);
 
   const columns: GridColDef<WebsiteRowTYPE>[] = [
@@ -53,19 +63,14 @@ function DomainsPage() {
       width: 200,
     },
     {
-      field: "currentDomain",
-      headerName: "Current Domain",
+      field: "liveUrl",
+      headerName: "Live URL",
       width: 200,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 75,
-    },
-    {
-      field: "domainStatus",
-      headerName: "Domain Status",
-      width: 150,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noopener noreferrer">
+          {params.value}
+        </a>
+      ),
     },
     {
       field: "log",
@@ -97,16 +102,6 @@ function DomainsPage() {
           >
             Deploy Domain
           </Button>
-
-          <Button
-            variant="contained"
-            color="info"
-            size="small"
-            // disabled={params.row.build === "complete"}
-          >
-            Edit Domain
-          </Button>
-
         </Box>
       ),
     },

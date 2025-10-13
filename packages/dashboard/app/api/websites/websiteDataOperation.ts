@@ -9,8 +9,9 @@ import {
   GetApiResTYPE,
 } from "@/types/websiteApi.type";
 import { ProjectRoot } from "@/lib/assists";
+import { createReadStream } from "fs";
 
-export async function GetWebsiteCsvData(): Promise<WebsitesResTYPE> {
+export async function FetchWebsites(): Promise<GetApiResTYPE> {
   const websitesCsvPath = path.resolve(ProjectRoot(), "data", "websites.csv");
 
   if (!fs.existsSync(websitesCsvPath)) {
@@ -20,7 +21,7 @@ export async function GetWebsiteCsvData(): Promise<WebsitesResTYPE> {
     };
   }
 
-  return new Promise<WebsitesResTYPE>((resolve, reject) => {
+  return new Promise<GetApiResTYPE>((resolve, reject) => {
     const websitesData: CsvRowDataType[] = [];
 
     const csvStream = fs.createReadStream(websitesCsvPath, "utf-8");
@@ -36,12 +37,30 @@ export async function GetWebsiteCsvData(): Promise<WebsitesResTYPE> {
       websitesData.push(row as CsvRowDataType);
     });
 
-    csvParser.on("end", () => {
-      resolve({
-        SUCCESS: true,
-        MESSAGE: "Websites CSV file processed successfully",
-        DATA: websitesData,
-      });
+    csvParser.on("end", async () => {
+      try {
+        const { SUCCESS, MESSAGE, DATA } = await GetReadyToBuildList({
+          csvRowData: websitesData,
+        });
+        if (!SUCCESS) {
+          return reject({
+            SUCCESS: false,
+            MESSAGE,
+          });
+        }
+
+        resolve({
+          SUCCESS: true,
+          MESSAGE: MESSAGE || "Websites CSV data processed successfully",
+          DATA: DATA,
+        });
+      } catch (error) {
+        console.error("Error getting ready to build list:", error);
+        reject({
+          SUCCESS: false,
+          MESSAGE: "Error processing websites data",
+        });
+      }
     });
 
     csvParser.on("error", (err) => {
@@ -97,12 +116,14 @@ export async function GetReadyToBuildList({
         build: buildStatus === undefined ? "unavailable" : "complete",
         deployed: "unavailable",
         log: "---",
+        liveUrl: null,
       };
     });
 
-
-    // deploy checker 
-    const finalWebsiteList = await DeployDataUpdater({ WebsiteList: WebsiteRowData });
+    // deploy checker
+    const finalWebsiteList = await DeployDataUpdater({
+      WebsiteList: WebsiteRowData,
+    });
 
     return {
       SUCCESS: true,
@@ -128,22 +149,47 @@ export async function DeployDataUpdater({
 }): Promise<WebsiteRowTYPE[]> {
   const reportFolderPath = path.resolve(ProjectRoot(), "reports");
 
-  const updatedList = WebsiteList.map((siteData) => {
-    const { deployed, domain } = siteData;
+  const updatedList = await Promise.all(
+    WebsiteList.map(async (siteData) => {
+      const { domain } = siteData;
+      const updatedSiteData = { ...siteData };
+      const reportDir = path.resolve(reportFolderPath, domain, "deploy");
+      const csvFilePath = path.resolve(reportDir, `latest-deploy.csv`);
 
-    // check if the folder is available and have a file end with 'deploy.csv'
-    const reportDir = path.resolve(reportFolderPath, domain, "deploy");
-    const isDeployed =
-      fs.existsSync(reportDir) &&
-      fs
-        .readFileSync(path.resolve(reportDir, `latest-deploy.csv`), "utf-8")
-        .includes("Live-Url");
-
-    return {
-      ...siteData,
-      deployed: isDeployed ? "complete" : deployed,
-    };
-  });
-
+      if (fs.existsSync(csvFilePath)) {
+        // Read the CSV file and parse rows
+        const csvRows: any[] = [];
+        await new Promise<void>((resolve, reject) => {
+          const csvStream = createReadStream(csvFilePath, "utf-8");
+          const csvParse = csvStream.pipe(
+            parse({
+              columns: true,
+              delimiter: ",",
+            })
+          );
+          csvParse.on("data", (row: any) => {
+            csvRows.push(row);
+          });
+          csvParse.on("end", () => {
+            resolve();
+          });
+          csvParse.on("error", (err) => {
+            reject(err);
+          });
+        });
+        // Find the first row with a liveUrl (case-insensitive column)
+        const liveUrlRow = csvRows.find(
+          (row) => row["liveUrl"] || row["Live-Url"] || row["LiveUrl"]
+        );
+        const foundUrl =
+          (liveUrlRow && (liveUrlRow["liveUrl"] || liveUrlRow["Live-Url"] || liveUrlRow["LiveUrl"])) || null;
+        if (foundUrl) {
+          updatedSiteData.liveUrl = foundUrl;
+          updatedSiteData.deployed = "complete";
+        }
+      }
+      return updatedSiteData;
+    })
+  );
   return updatedList;
 }

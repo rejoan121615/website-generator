@@ -32,6 +32,7 @@ export type WebsiteRowTYPE = CsvRowDataType & {
   build: "unavailable" | "processing" | "complete" | "failed";
   deployed: "unavailable" | "processing" | "complete" | "failed";
   log: "---" | string;
+  liveUrl: string | null;
 };
 
 export type GetApiResTYPE = {
