@@ -1,3 +1,6 @@
+import Cloudflare, { APIError } from 'cloudflare'
+
+
 export type CsvRowDataType = {
   domain: string;
   name: string;
@@ -43,4 +46,12 @@ export type GetApiResTYPE = {
 export type ServerEventResTYPE = {
   MESSAGE: string;
   CSV_DATA: WebsiteRowTYPE;
+};
+
+
+export type DomainResTYPE = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: Cloudflare.Zones.Zone[];
+  ERROR?: APIError;
 };

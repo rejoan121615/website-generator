@@ -1,7 +1,7 @@
 import env from "dotenv";
 import Cloudflare from "cloudflare";
 import path from "path";
-import { GetApiResTYPE } from "./types/DataType.type.js";
+import { DomainResTYPE, GetApiResTYPE } from "./types/DataType.type.js";
 import { execa } from "execa";
 import { LogBuilder } from "@repo/log-helper";
 import { ReportBuilder, ReportRemover } from "@repo/report-helper";
@@ -137,7 +137,7 @@ async function DeployApihandler({
       cfProjectName,
       "--branch",
       "main",
-      "--commit-dirty=true"
+      "--commit-dirty=true",
     ];
 
     // wrangler using execa
@@ -148,7 +148,12 @@ async function DeployApihandler({
         CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
         CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL,
         WRANGLER_LOG: process.env.WRANGLER_LOG || "info",
-        WRANGLER_LOG_PATH: path.resolve(projectRoot,'logs',domainName,'wrangler.log'),
+        WRANGLER_LOG_PATH: path.resolve(
+          projectRoot,
+          "logs",
+          domainName,
+          "wrangler.log"
+        ),
       },
     });
 
@@ -226,7 +231,11 @@ async function DeployApihandler({
  * @param cfId Cloudflare account ID
  * @param projectName Project name (unsanitized)
  */
-export async function deleteProject({ projectName }: { projectName: string }) : Promise<GetApiResTYPE> {
+export async function deleteProject({
+  projectName,
+}: {
+  projectName: string;
+}): Promise<GetApiResTYPE> {
   if (!process.env.CLOUDFLARE_API_TOKEN && !process.env.CLOUDFLARE_ACCOUNT_ID) {
     throw new Error(
       "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing, check .env file"
@@ -239,7 +248,7 @@ export async function deleteProject({ projectName }: { projectName: string }) : 
   console.log(`Attempting to delete project: ${cfProjectName}`);
   try {
     // Delete the project (this also deletes all deployments)
-    const result  = await client.pages.projects.delete(cfProjectName, {
+    const result = await client.pages.projects.delete(cfProjectName, {
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
 
@@ -256,7 +265,9 @@ export async function deleteProject({ projectName }: { projectName: string }) : 
     // remove report
     const reportRemovalResult = await ReportRemover({ domain: projectName });
     if (!reportRemovalResult.SUCCESS) {
-      console.error(`Failed to remove report for project '${projectName}': ${reportRemovalResult.MESSAGE}`);
+      console.error(
+        `Failed to remove report for project '${projectName}': ${reportRemovalResult.MESSAGE}`
+      );
     }
 
     return {
@@ -264,7 +275,6 @@ export async function deleteProject({ projectName }: { projectName: string }) : 
       MESSAGE: "Project deleted successfully",
     };
   } catch (error) {
-
     LogBuilder({
       domain: projectName,
       logMessage: "Failed to delete project",
@@ -278,15 +288,26 @@ export async function deleteProject({ projectName }: { projectName: string }) : 
     return {
       SUCCESS: false,
       MESSAGE: "Failed to delete project",
-    }
+    };
   }
 }
 
+export async function FetchDomains(): Promise<DomainResTYPE> {
+  try {
+    let { result } = await cfClient.zones.list();
 
-async function CustomDomain() {
-  
+    return {
+      SUCCESS: true,
+      MESSAGE: "Domain fetched successfully",
+      DATA: result,
+    };
+
+  } catch (error) {
+    const apiError = error instanceof Cloudflare.APIError ? error : undefined;
+    return {
+      SUCCESS: false,
+      MESSAGE: "Failed to fetch domains",
+      ERROR: apiError,
+    };
+  }
 }
-
-
-CustomDomain();
-
