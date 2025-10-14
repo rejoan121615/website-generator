@@ -31,7 +31,7 @@ export async function ReportBuilder({
   try {
     await fs.writeFile(
       buildReport,
-      `Domain, Cf-Project-Name, Live-Url\n${domain},${CfProjectName},${liveUrl}\n`
+      `Domain,Cf-Project-Name,Live-Url\n${domain},${CfProjectName},${liveUrl}\n`
     );
   } catch (error) {
     console.error("Error writing report:", error);

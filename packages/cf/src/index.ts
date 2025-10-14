@@ -14,7 +14,7 @@ const cfClient = new Cloudflare({
   apiToken: process.env.CLOUDFLARE_API_TOKEN,
 });
 
-export async function deploy({
+export async function DeployProject({
   domainName,
   branchName = "main",
 }: {

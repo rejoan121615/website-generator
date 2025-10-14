@@ -1,6 +1,6 @@
 import { GetApiResTYPE, WebsiteRowTYPE } from "@/types/websiteApi.type";
 import { NextResponse } from "next/server";
-import { deploy } from "@repo/cf";
+import { DeployProject } from "@repo/cf";
 
 export async function POST(
   request: Request
@@ -21,7 +21,7 @@ export async function POST(
     );
   }
 
-  const deploymentResult = await deploy({
+  const deploymentResult = await DeployProject({
     domainName: websiteRowData.domain,
     branchName: "main",
   });
