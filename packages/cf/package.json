@@ -19,13 +19,13 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "@repo/log-helper": "workspace:*",
+    "@repo/report-helper": "workspace:*",
     "cloudflare": "^5.1.0",
     "dotenv": "^17.2.2",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",
-    "wrangler": "^4.37.1",
-    "@repo/log-helper": "workspace:*",
-    "@repo/report-helper": "workspace:*"
+    "wrangler": "^4.42.2"
   },
   "exports": {
     ".": {

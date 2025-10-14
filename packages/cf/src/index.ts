@@ -137,7 +137,7 @@ async function DeployApihandler({
       cfProjectName,
       "--branch",
       "main",
-      "--commit-dirty=true",
+      "--commit-dirty=true"
     ];
 
     // wrangler using execa
@@ -146,6 +146,9 @@ async function DeployApihandler({
         ...process.env,
         CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
         CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
+        CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL,
+        WRANGLER_LOG: process.env.WRANGLER_LOG || "info",
+        WRANGLER_LOG_PATH: path.resolve(projectRoot,'logs',domainName,'wrangler.log'),
       },
     });
 
@@ -278,3 +281,12 @@ export async function deleteProject({ projectName }: { projectName: string }) : 
     }
   }
 }
+
+
+async function CustomDomain() {
+  
+}
+
+
+CustomDomain();
+
