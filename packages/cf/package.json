@@ -21,7 +21,7 @@
   "dependencies": {
     "@repo/log-helper": "workspace:*",
     "@repo/report-helper": "workspace:*",
-    "cloudflare": "^5.1.0",
+    "cloudflare": "~4.5.0",
     "dotenv": "^17.2.2",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",

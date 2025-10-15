@@ -1,4 +1,6 @@
-import Cloudflare, { APIError } from 'cloudflare'
+import { APIError } from 'cloudflare'
+import { Zone } from 'cloudflare/resources/zones/zones.mjs';
+import { DomainCreateResponse } from 'cloudflare/src/resources/pages/projects/domains.js';
 
 
 export type CsvRowDataType = {
@@ -52,6 +54,13 @@ export type ServerEventResTYPE = {
 export type DomainResTYPE = {
   SUCCESS: boolean;
   MESSAGE: string;
-  DATA?: Cloudflare.Zones.Zone[];
+  DATA?: Zone[];
   ERROR?: APIError;
 };
+
+export type ConnectDomainResTYPE = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: DomainCreateResponse;
+  ERROR?: APIError;
+}
