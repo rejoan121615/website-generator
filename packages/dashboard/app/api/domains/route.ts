@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { FetchWebsites } from "../websites/websiteDataOperation";
 
 export async function GET({}: {}): Promise<
-  NextResponse<GetApiResTYPE & { DATA: WebsiteRowTYPE[] }>
+  NextResponse<GetApiResTYPE>
 > {
   try {
     const { SUCCESS, DATA, MESSAGE } = await FetchWebsites();

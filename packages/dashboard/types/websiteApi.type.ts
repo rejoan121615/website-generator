@@ -1,3 +1,5 @@
+import { DomainDataTYPE } from '@repo/cf'
+
 export type CsvRowDataType = {
   domain: string;
   name: string;
@@ -45,3 +47,15 @@ export type ServerEventResTYPE = {
   MESSAGE: string;
   CSV_DATA: WebsiteRowTYPE;
 };
+
+
+export type DomainApiResTYPE = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: DomainDataTYPE[];
+}
+
+
+export type DomainTableDataTYPE = DomainDataTYPE & {
+  readyToConnect: "Unavailable" | "Available" | "Processing" | "Connected" | "Failed";
+}

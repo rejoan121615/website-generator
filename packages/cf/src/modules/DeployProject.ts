@@ -4,6 +4,7 @@ import path from "path";
 import { GetApiResTYPE } from "../types/DataType.type.js";
 import { LogBuilder } from "@repo/log-helper";
 import { DeployApihandler } from "./DeployApiHandler.js";
+import fs from 'fs-extra';
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -12,7 +13,6 @@ env.config({ path: dotEnvPath });
 const cfClient = new Cloudflare({
   apiToken: process.env.CLOUDFLARE_API_TOKEN,
 });
-
 
 export async function DeployProject({
   domainName,
@@ -32,6 +32,23 @@ export async function DeployProject({
     throw new Error(
       "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing, check .env file"
     );
+  }
+
+  // check if the deployable project files exists or not
+  const staticWebsiteFiles= path.join(projectRoot, "apps", domainName, "dist");
+
+  if (!fs.existsSync(staticWebsiteFiles)) {
+    LogBuilder({
+      domain: domainName,
+      logMessage: `Deployable project files not found at path: ${staticWebsiteFiles}`,
+      logType: "fatal",
+      context: { function: "deploy" },
+      logFileName: "cf-deploy",
+    });
+    return {
+      SUCCESS: false,
+      MESSAGE: `Deployable project files not found at path: ${staticWebsiteFiles}`,
+    };
   }
 
   const cfProjectName = domainName.trim().toLowerCase().replaceAll(".", "-");

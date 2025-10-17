@@ -125,12 +125,6 @@ function BasicTableInner() {
               : item
           );
         });
-        // remove from list if needed
-        if (row.build === "complete") {
-          setWebsitesList((prevState) =>
-            prevState.filter((item) => item.domain !== row.domain)
-          );
-        }
       } else {
         snackbarClickVariant(result.MESSAGE, "error")();
       }

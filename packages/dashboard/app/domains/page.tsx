@@ -10,14 +10,26 @@ import {
   WebsiteRowTYPE,
   GetApiResTYPE,
   ServerEventResTYPE,
+  DomainTableDataTYPE,
 } from "@/types/websiteApi.type";
 import { ButtonGroup, Chip } from "@mui/material";
 import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
+import {
+  ProjectDataTYPE,
+  DomainDataTYPE,
+  ProjectsResTYPE,
+  DomainResTYPE,
+} from "@repo/cf";
 
 function DomainsPage() {
   const { enqueueSnackbar } = useSnackbar();
-  const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
+  const [websites, setWebsites] = useState<WebsiteRowTYPE[]>([]);
   const [search, setSearch] = useState("");
+  const [projectList, setProjectList] = useState<ProjectDataTYPE[]>([]);
+  const [domains, setDomains] = useState<DomainDataTYPE[]>([]);
+  const [domainTableData, setDomainTableData] = useState<DomainTableDataTYPE[]>(
+    []
+  );
 
   const snackbarClickVariant =
     (message: string, variant: VariantType) => () => {
@@ -25,98 +37,173 @@ function DomainsPage() {
     };
 
   useEffect(() => {
-    // Fetch initial data
-    axios
-      .get<GetApiResTYPE>("/api/domains")
-      .then((response) => {
-        console.log("Fetched websites:", response);
-        const { SUCCESS, MESSAGE, DATA } = response.data as GetApiResTYPE;
+    const fetchAllData = async () => {
+      try {
+        // Execute all requests in parallel
+        const [websitesResponse, domainsResponse, projectsResponse] =
+          await Promise.all([
+            axios.get<GetApiResTYPE>("/api/domains"),
+            axios.get<DomainResTYPE>("/api/domains/list"),
+            axios.get<ProjectsResTYPE>("/api/projects"),
+          ]);
 
-        if (SUCCESS && DATA) {
-          snackbarClickVariant(
-            MESSAGE || "Websites fetched successfully",
-            "success"
-          )();
-          setWebsitesList(DATA as WebsiteRowTYPE[]);
-        } else {
-          snackbarClickVariant(
-            MESSAGE || "Failed to fetch websites",
-            "error"
-          )();
-          setWebsitesList([]);
+        console.log("All data fetched:", {
+          websites: websitesResponse,
+          domains: domainsResponse,
+          projects: projectsResponse,
+        });
+
+        // Process websites data
+        if (websitesResponse.data.SUCCESS) {
+          setWebsites(websitesResponse.data.DATA as WebsiteRowTYPE[]);
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching websites:", error);
-      });
+
+        // Process domains data
+        if (domainsResponse.data.SUCCESS) {
+          setDomains(domainsResponse.data.DATA || []);
+
+          // process table data
+          setDomainTableData(() => {
+            const updatedDomainData: DomainTableDataTYPE[] = (
+              domainsResponse.data.DATA ?? []
+            ).map((domain) => {
+              const status = generateStatus(domain.name);
+
+              return { ...domain, readyToConnect: status };
+            });
+
+            return updatedDomainData;
+          });
+
+          function generateStatus(
+            domainName: string
+          ): DomainTableDataTYPE["readyToConnect"] {
+            const convertedDomainName = domainName.replace(/\./g, "-");
+
+            const selectedProject = (projectsResponse.data.DATA ?? []).find(
+              (proItem) => {
+                return proItem.name === convertedDomainName;
+              }
+            );
+
+            if (!selectedProject) {
+              return "Unavailable";
+            } else if (
+              selectedProject.domains?.find((item) => item === domainName)
+            ) {
+              return "Connected";
+            } else {
+              return "Available";
+            }
+          }
+        }
+
+        // Process projects data
+        if (projectsResponse.data.SUCCESS) {
+          setProjectList(projectsResponse.data.DATA || []);
+        }
+
+        // Show success message after all data is loaded
+        snackbarClickVariant("All data fetched successfully", "success")();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        snackbarClickVariant("Error fetching data", "error")();
+      }
+    };
+
+    fetchAllData();
   }, []);
 
-  const columns: GridColDef<WebsiteRowTYPE>[] = [
+  const columns: GridColDef<DomainDataTYPE>[] = [
     {
       field: "name",
-      headerName: "Name",
-      width: 200,
+      headerName: "Domain Name",
+      width: 275,
     },
     {
-      field: "domain",
-      headerName: "Main Domain",
-      width: 200,
+      field: "status",
+      headerName: "Domain Status",
+      width: 120,
+      renderCell: (params) =>
+        params.value === "active" ? (
+          <Chip label="Active" color="success" size="small" />
+        ) : (
+          <Chip label="Inactive" color="default" size="small" />
+        ),
     },
     {
-      field: "liveUrl",
-      headerName: "Live URL",
-      width: 200,
+      field: "readyToConnect",
+      headerName: "Ready to Connect",
+      width: 150,
       renderCell: (params) => (
-        <a href={params.value} target="_blank" rel="noopener noreferrer">
-          {params.value}
-        </a>
+        <Chip
+          label={params.value}
+          color={
+            params.value === "Connected"
+              ? "success"
+              : params.value === "Unavailable"
+                ? "warning"
+                : params.value === "Available"
+                  ? "primary"
+                : "default"
+          }
+          size="small"
+        />
       ),
     },
     {
-      field: "log",
-      headerName: "Log",
-      width: 75,
-    },
-    {
-      field: "actions",
       headerName: "Actions",
-      flex: 1,
-      sortable: false,
-      filterable: false,
-      hideable: false,
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            // disabled={params.row.build === "complete"}
-          >
-            Deploy Domain
-          </Button>
-        </Box>
-      ),
+      field: "actions",
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <ButtonGroup variant="text" aria-label="text button group">
+            <Button
+              onClick={() => DeployDomainHandler(params.row.name)}
+              variant="contained"
+              size="small"
+            >
+              Connect
+            </Button>
+          </ButtonGroup>
+        );
+      },
     },
   ];
 
+  const DeployDomainHandler = async (domain: string) => {
+    try {
+      const response = await axios.post<ServerEventResTYPE>(
+        "/api/domains/deploy",
+        {
+          domain,
+        }
+      );
+
+      console.log("Deploy response:", response.data);
+      // const { SUCCESS, MESSAGE } = response.data;
+
+      // if (SUCCESS) {
+      //   snackbarClickVariant(MESSAGE || "Domain deployment started", "success")();
+      // } else {
+      //   snackbarClickVariant(MESSAGE || "Domain deployment failed", "error")();
+      // }
+    } catch (error) {
+      console.error("Error deploying domain:", error);
+      snackbarClickVariant("Error deploying domain", "error")();
+    }
+  };
+
   // Filter websites by search
-  const filteredWebsites = search.trim()
-    ? websitesList.filter((row) => {
-        const q = search.toLowerCase();
-        return (
-          row.name.toLowerCase().includes(q) ||
-          row.domain.toLowerCase().includes(q)
-        );
-      })
-    : websitesList;
+  // const filteredWebsites = search.trim()
+  //   ? tableRows.filter((row) => {
+  //       const q = search.toLowerCase();
+  //       return (
+  //         row.name.toLowerCase().includes(q) ||
+  //         row.domain.toLowerCase().includes(q)
+  //       );
+  //     })
+  //   : tableRows;
 
   return (
     <Box sx={{ p: 3 }}>
@@ -126,11 +213,12 @@ function DomainsPage() {
       />
       <TableControlBar search={search} onSearchChange={setSearch} />
       <DataGrid
-        rows={filteredWebsites}
+        rows={domainTableData}
         columns={columns}
-        getRowId={(row) => row.domain}
+        getRowId={(row) => row.id}
         checkboxSelection
         disableRowSelectionOnClick
+        disableColumnMenu
       />
     </Box>
   );

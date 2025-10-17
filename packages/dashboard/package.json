@@ -20,6 +20,7 @@
     "@repo/cf": "workspace:*",
     "@repo/log-helper": "workspace:*",
     "axios": "^1.12.2",
+    "cloudflare": "^4.5.0",
     "csv-parse": "^6.1.0",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",

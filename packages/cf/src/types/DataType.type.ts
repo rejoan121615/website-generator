@@ -1,6 +1,8 @@
 import { APIError } from 'cloudflare'
 import { Zone } from 'cloudflare/resources/zones/zones.mjs';
 import { DomainCreateResponse } from 'cloudflare/src/resources/pages/projects/domains.js';
+import { Project } from 'cloudflare/resources/pages/projects/projects.mjs';
+import { Deployment } from 'cloudflare/resources/pages.mjs';
 
 
 export type CsvRowDataType = {
@@ -39,6 +41,12 @@ export type WebsiteRowTYPE = CsvRowDataType & {
   log: "---" | string;
 };
 
+export type CFApiResTYPE = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  ERROR?: APIError;
+}
+
 export type GetApiResTYPE = {
   SUCCESS: boolean;
   MESSAGE: string;
@@ -50,17 +58,18 @@ export type ServerEventResTYPE = {
   CSV_DATA: WebsiteRowTYPE;
 };
 
+export type DomainDataTYPE = Zone;
 
-export type DomainResTYPE = {
-  SUCCESS: boolean;
-  MESSAGE: string;
-  DATA?: Zone[];
-  ERROR?: APIError;
+export type DomainResTYPE = CFApiResTYPE & {
+  DATA?: DomainDataTYPE[];
 };
 
-export type ConnectDomainResTYPE = {
-  SUCCESS: boolean;
-  MESSAGE: string;
+export type ConnectDomainResTYPE = CFApiResTYPE & {
   DATA?: DomainCreateResponse;
-  ERROR?: APIError;
 }
+
+export type ProjectDataTYPE = Project;
+
+export type ProjectsResTYPE = CFApiResTYPE & {
+  DATA?: ProjectDataTYPE[];
+};
