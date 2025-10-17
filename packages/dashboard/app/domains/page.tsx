@@ -19,6 +19,7 @@ import {
   DomainDataTYPE,
   ProjectsResTYPE,
   DomainResTYPE,
+  ConnectDomainResTYPE
 } from "@repo/cf";
 
 function DomainsPage() {
@@ -173,7 +174,7 @@ function DomainsPage() {
 
   const DeployDomainHandler = async (domain: string) => {
     try {
-      const response = await axios.post<ServerEventResTYPE>(
+      const response = await axios.post<ConnectDomainResTYPE>(
         "/api/domains/deploy",
         {
           domain,
@@ -181,6 +182,7 @@ function DomainsPage() {
       );
 
       console.log("Deploy response:", response.data);
+      snackbarClickVariant(response.data.MESSAGE, response.data.SUCCESS ? "success" : "error")();
       // const { SUCCESS, MESSAGE } = response.data;
 
       // if (SUCCESS) {

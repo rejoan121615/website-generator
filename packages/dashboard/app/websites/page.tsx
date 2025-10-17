@@ -138,6 +138,15 @@ function BasicTableInner() {
     // show snackbar
     snackbarClickVariant(`Deploying project: ${row.name}`, "info")();
 
+    // update website status to processing 
+    setWebsitesList((prevState) => {
+      return prevState.map((item) => {
+        return item.domain === row.domain
+          ? { ...item, deployed: "processing" }
+          : item;
+      });
+    });
+
     // send deploy request
     axios
       .post("/api/websites/deploy", { data: row })
@@ -169,6 +178,15 @@ function BasicTableInner() {
   const handleUndeploy = (row: WebsiteRowTYPE) => {
     // Your undeploy logic here
     snackbarClickVariant(`Undeploying project: ${row.name}`, "info")();
+
+    // update deployed status into processing 
+    setWebsitesList((prevState) => {
+      return prevState.map((item) => {
+        return item.domain === row.domain
+          ? { ...item, deployed: "processing" }
+          : item;
+      });
+    });
 
     axios
       .post("/api/websites/undeploy", { data: row })
@@ -241,7 +259,7 @@ function BasicTableInner() {
         <Chip
           sx={{ textTransform: "capitalize" }}
           label={params.row.deployed}
-          color={params.row.deployed === "complete" ? "success" : "default"}
+          color={params.row.deployed === "complete" ? "success" : params.row.deployed === "processing" ? "warning" : params.row.build === "failed" ? "error" : "default"}
         />
       ),
     },

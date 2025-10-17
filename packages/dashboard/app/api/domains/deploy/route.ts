@@ -14,15 +14,13 @@ export async function POST(
       });
     }
 
-    const res = await ConnectDomain({ domainName: domain });
-
-    console.log('connect domain response on route ')
-    console.log('--------------------------------------------------------------------------')
-    console.log(res);
+    const { MESSAGE, SUCCESS, ERROR, DATA} = await ConnectDomain({ domainName: domain });
 
     return NextResponse.json({
-      SUCCESS: false,
-      MESSAGE: "Fallback response from api",
+      SUCCESS,
+      MESSAGE,
+      DATA,
+      ERROR
     });
   } catch (error) {
     return NextResponse.json({
