@@ -1,6 +1,7 @@
 import { GetApiResTYPE, WebsiteRowTYPE } from '@/types/websiteApi.type';
 import { deleteProject } from '@repo/cf';
 import { NextRequest, NextResponse } from 'next/server'
+import { APIError } from 'cloudflare'
 
 export async function POST(request: NextRequest) : Promise<NextResponse<GetApiResTYPE>> {
     const body = await request.json();
@@ -17,9 +18,20 @@ export async function POST(request: NextRequest) : Promise<NextResponse<GetApiRe
         const result = await deleteProject({ projectName: websiteRowData.domain });
         return NextResponse.json(result);
     } catch (error) {
+        const err = error instanceof APIError ? error : null;
+
+        if (err) {
+            console.log(err.errors[0]?.message)
+            return NextResponse.json({
+                SUCCESS: false,
+                MESSAGE: "Failed to delete project",
+                ERROR: err || undefined,
+            });
+        }
+
         return NextResponse.json({
             SUCCESS: false,
-            MESSAGE: "Failed to delete project",
+            MESSAGE: "An unexpected error occurred",
         });
     }
 }

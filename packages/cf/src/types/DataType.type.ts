@@ -73,3 +73,10 @@ export type ProjectDataTYPE = Project;
 export type ProjectsResTYPE = CFApiResTYPE & {
   DATA?: ProjectDataTYPE[];
 };
+
+
+export type DeleteProjectResTYPE = CFApiResTYPE & {
+  DATA?: {
+    deleted: boolean;
+  };
+};
