@@ -346,7 +346,7 @@ function BasicTableInner() {
       <DataGrid
         rows={filteredWebsites}
         columns={columns}
-        getRowId={(row) => row.domain}
+        getRowId={(row) => `${row.domain}-${row.name}`}
         checkboxSelection
         disableRowSelectionOnClick
       />

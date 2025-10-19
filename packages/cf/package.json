@@ -25,6 +25,7 @@
     "dotenv": "^17.2.2",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",
+    "tldts": "^7.0.17",
     "wrangler": "^4.42.2"
   },
   "exports": {

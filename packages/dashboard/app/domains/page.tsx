@@ -43,8 +43,8 @@ function DomainsPage() {
         // Execute all requests in parallel
         const [websitesResponse, domainsResponse, projectsResponse] =
           await Promise.all([
-            axios.get<GetApiResTYPE>("/api/domains"),
-            axios.get<DomainResTYPE>("/api/domains/list"),
+            axios.get<GetApiResTYPE>("/api/websites"),
+            axios.get<DomainResTYPE>("/api/domains"),
             axios.get<ProjectsResTYPE>("/api/projects"),
           ]);
 
@@ -60,20 +60,34 @@ function DomainsPage() {
         }
 
         // Process domains data
-        if (domainsResponse.data.SUCCESS) {
+        if (domainsResponse.data.SUCCESS && websitesResponse.data.SUCCESS && websitesResponse.data.DATA) {
           setDomains(domainsResponse.data.DATA || []);
 
+          console.log('your website data ', websites);
           // process table data
           setDomainTableData(() => {
-            const updatedDomainData: DomainTableDataTYPE[] = (
-              domainsResponse.data.DATA ?? []
-            ).map((domain) => {
-              const status = generateStatus(domain.name);
-
-              return { ...domain, readyToConnect: status };
+            // cast DATA to the expected WebsiteRowTYPE[] so .map is safe
+            const websitesData = websitesResponse.data.DATA as WebsiteRowTYPE[] | undefined;
+            const newDomainTableData: DomainTableDataTYPE[] = (websitesData ?? []).map((website) => {
+              return {
+                domain: website.domain,
+                domainStatus: 'active',
+                readyToConnect: 'Unavailable'
+              };
             });
 
-            return updatedDomainData;
+            console.log('new domain table data ', newDomainTableData);
+
+            return newDomainTableData;
+            // const updatedDomainData: DomainTableDataTYPE[] = (
+            //   domainsResponse.data.DATA ?? []
+            // ).map((domain) => {
+            //   const status = generateStatus(domain.name);
+
+            //   return { ...domain, readyToConnect: status };
+            // });
+
+            // return updatedDomainData;
           });
 
           function generateStatus(
@@ -115,9 +129,9 @@ function DomainsPage() {
     fetchAllData();
   }, []);
 
-  const columns: GridColDef<DomainDataTYPE>[] = [
+  const columns: GridColDef<DomainTableDataTYPE>[] = [
     {
-      field: "name",
+      field: "domain",
       headerName: "Domain Name",
       width: 275,
     },
@@ -160,7 +174,7 @@ function DomainsPage() {
         return (
           <ButtonGroup variant="text" aria-label="text button group">
             <Button
-              onClick={() => DeployDomainHandler(params.row.name)}
+              onClick={() => DeployDomainHandler(params.row.domain)}
               variant="contained"
               size="small"
             >
@@ -181,15 +195,17 @@ function DomainsPage() {
         }
       );
 
-      console.log("Deploy response:", response.data);
-      snackbarClickVariant(response.data.MESSAGE, response.data.SUCCESS ? "success" : "error")();
-      // const { SUCCESS, MESSAGE } = response.data;
+      const { SUCCESS, MESSAGE, ERROR } = response.data;
 
-      // if (SUCCESS) {
-      //   snackbarClickVariant(MESSAGE || "Domain deployment started", "success")();
-      // } else {
-      //   snackbarClickVariant(MESSAGE || "Domain deployment failed", "error")();
-      // }
+      // domains deploy response 
+      console.log('domain deploy response ', response.data);
+
+      if (SUCCESS) {
+        snackbarClickVariant(MESSAGE || "Domain deployment started", "success")();
+      } else if (ERROR?.errors.length) {
+        const isNotFound = ERROR.errors[0]?.code === 8000007;
+        snackbarClickVariant(isNotFound ? "Please deploy your project first" : "Domain deployment failed", "error")();
+      }
     } catch (error) {
       console.error("Error deploying domain:", error);
       snackbarClickVariant("Error deploying domain", "error")();
@@ -197,15 +213,15 @@ function DomainsPage() {
   };
 
   // Filter websites by search
-  // const filteredWebsites = search.trim()
-  //   ? tableRows.filter((row) => {
-  //       const q = search.toLowerCase();
-  //       return (
-  //         row.name.toLowerCase().includes(q) ||
-  //         row.domain.toLowerCase().includes(q)
-  //       );
-  //     })
-  //   : tableRows;
+  const filteredWebsites = search.trim()
+    ? domainTableData.filter((row) => {
+        const q = search.toLowerCase();
+        return (
+          row.domain.toLowerCase().includes(q) ||
+          row.domain.toLowerCase().includes(q)
+        );
+      })
+    : domainTableData;
 
   return (
     <Box sx={{ p: 3 }}>
@@ -215,9 +231,9 @@ function DomainsPage() {
       />
       <TableControlBar search={search} onSearchChange={setSearch} />
       <DataGrid
-        rows={domainTableData}
+        rows={filteredWebsites}
         columns={columns}
-        getRowId={(row) => row.id}
+        getRowId={(row) => row.domain}
         checkboxSelection
         disableRowSelectionOnClick
         disableColumnMenu

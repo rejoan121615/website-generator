@@ -56,6 +56,8 @@ export type DomainApiResTYPE = {
 }
 
 
-export type DomainTableDataTYPE = DomainDataTYPE & {
+export type DomainTableDataTYPE = {
+  domain: string;
+  domainStatus: 'active' | 'inactive';
   readyToConnect: "Unavailable" | "Available" | "Processing" | "Connected" | "Failed";
 }

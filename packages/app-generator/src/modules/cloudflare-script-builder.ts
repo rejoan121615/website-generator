@@ -90,7 +90,7 @@ async function removeScriptBuilder(
 import { deleteProject } from "@repo/cf";
 
 deleteProject({
-  projectName: "${domain}",
+  domainName: "${domain}",
 });
 `;
       await fs.writeFile(removeScriptPath, removeScriptContent);

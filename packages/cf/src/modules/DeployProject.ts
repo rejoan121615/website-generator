@@ -5,6 +5,7 @@ import { GetApiResTYPE } from "../types/DataType.type.js";
 import { LogBuilder } from "@repo/log-helper";
 import { DeployApihandler } from "./DeployApiHandler.js";
 import fs from 'fs-extra';
+import { GetProjectName } from "../lib/GetProjectName.js";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -51,11 +52,8 @@ export async function DeployProject({
     };
   }
 
-  const cfProjectName = domainName.trim().toLowerCase().replaceAll(".", "-");
 
-  console.log("Starting deployment........... for project:", domainName);
-
-  // check if the project exists or create a new one
+  const { projectName: cfProjectName, hasSubdomain } = GetProjectName(domainName);
 
   try {
     console.log("Checking if cf project already exists...", cfProjectName);
@@ -74,6 +72,7 @@ export async function DeployProject({
 
     return await DeployApihandler({ domainName, cfProjectName });
   } catch (error) {
+    console.log("Error checking project existence:", error);
     if (error instanceof Cloudflare.APIError) {
       const { status, errors } = error;
       if (status === 404) {
@@ -100,6 +99,7 @@ export async function DeployProject({
 
           return await DeployApihandler({ domainName, cfProjectName });
         } catch (error) {
+          console.log("Error creating new project:", error);
           LogBuilder({
             domain: domainName,
             logMessage: "Creating new project failed",

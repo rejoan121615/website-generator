@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) : Promise<NextResponse<GetApiRe
     }
 
     try {
-        const result = await deleteProject({ projectName: websiteRowData.domain });
+        const result = await deleteProject({ domainName: websiteRowData.domain });
         return NextResponse.json(result);
     } catch (error) {
         const err = error instanceof APIError ? error : null;

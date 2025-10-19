@@ -19,8 +19,6 @@ export async function FetchProjects(): Promise<ProjectsResTYPE> {
         account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
 
-    console.log('Your projects res', result);
-
     return {
       SUCCESS: true,
       MESSAGE: "Projects fetched successfully",

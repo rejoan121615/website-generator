@@ -10,6 +10,7 @@ import {
 } from "@/types/websiteApi.type";
 import { ProjectRoot } from "@/lib/assists";
 import { createReadStream } from "fs";
+import { FetchProjects, GetProjectName } from '@repo/cf'
 
 export async function FetchWebsites(): Promise<GetApiResTYPE> {
   const websitesCsvPath = path.resolve(ProjectRoot(), "data", "websites.csv");
@@ -147,49 +148,69 @@ export async function DeployDataUpdater({
 }: {
   WebsiteList: WebsiteRowTYPE[];
 }): Promise<WebsiteRowTYPE[]> {
-  const reportFolderPath = path.resolve(ProjectRoot(), "reports");
 
-  const updatedList = await Promise.all(
-    WebsiteList.map(async (siteData) => {
-      const { domain } = siteData;
-      const updatedSiteData = { ...siteData };
-      const reportDir = path.resolve(reportFolderPath, domain, "deploy");
-      const csvFilePath = path.resolve(reportDir, `latest-deploy.csv`);
+  const projectData = await FetchProjects();
 
-      if (fs.existsSync(csvFilePath)) {
-        // Read the CSV file and parse rows
-        const csvRows: any[] = [];
-        await new Promise<void>((resolve, reject) => {
-          const csvStream = createReadStream(csvFilePath, "utf-8");
-          const csvParse = csvStream.pipe(
-            parse({
-              columns: true,
-              delimiter: ",",
-            })
-          );
-          csvParse.on("data", (row: any) => {
-            csvRows.push(row);
-          });
-          csvParse.on("end", () => {
-            resolve();
-          });
-          csvParse.on("error", (err) => {
-            reject(err);
-          });
-        });
-        // Find the first row with a liveUrl (case-insensitive column)
-        const liveUrlRow = csvRows.find(
-          (row) => row["liveUrl"] || row["Live-Url"] || row["LiveUrl"]
-        );
-        const foundUrl =
-          (liveUrlRow && (liveUrlRow["liveUrl"] || liveUrlRow["Live-Url"] || liveUrlRow["LiveUrl"])) || null;
-        if (foundUrl) {
-          updatedSiteData.liveUrl = foundUrl;
-          updatedSiteData.deployed = "complete";
-        }
+  if (projectData.SUCCESS && projectData.DATA) {
+    const projectNameList = projectData.DATA.map(proj => proj.name);
+    
+   return  WebsiteList.map((site) => {
+      const { projectName } = GetProjectName(site.domain);
+      if (projectNameList.includes(projectName)) {
+        site.deployed = "complete";
       }
-      return updatedSiteData;
-    })
-  );
-  return updatedList;
+      return site;
+    });
+  }
+  
+  return WebsiteList;
+
+
+  // console.log('fetch project data ', projectData)
+
+  // const reportFolderPath = path.resolve(ProjectRoot(), "reports");
+
+  // const updatedList = await Promise.all(
+  //   WebsiteList.map(async (siteData) => {
+  //     const { domain } = siteData;
+  //     const updatedSiteData = { ...siteData };
+  //     const reportDir = path.resolve(reportFolderPath, domain, "deploy");
+  //     const csvFilePath = path.resolve(reportDir, `latest-deploy.csv`);
+
+  //     if (fs.existsSync(csvFilePath)) {
+  //       // Read the CSV file and parse rows
+  //       const csvRows: any[] = [];
+  //       await new Promise<void>((resolve, reject) => {
+  //         const csvStream = createReadStream(csvFilePath, "utf-8");
+  //         const csvParse = csvStream.pipe(
+  //           parse({
+  //             columns: true,
+  //             delimiter: ",",
+  //           })
+  //         );
+  //         csvParse.on("data", (row: any) => {
+  //           csvRows.push(row);
+  //         });
+  //         csvParse.on("end", () => {
+  //           resolve();
+  //         });
+  //         csvParse.on("error", (err) => {
+  //           reject(err);
+  //         });
+  //       });
+  //       // Find the first row with a liveUrl (case-insensitive column)
+  //       const liveUrlRow = csvRows.find(
+  //         (row) => row["liveUrl"] || row["Live-Url"] || row["LiveUrl"]
+  //       );
+  //       const foundUrl =
+  //         (liveUrlRow && (liveUrlRow["liveUrl"] || liveUrlRow["Live-Url"] || liveUrlRow["LiveUrl"])) || null;
+  //       if (foundUrl) {
+  //         updatedSiteData.liveUrl = foundUrl;
+  //         updatedSiteData.deployed = "complete";
+  //       }
+  //     }
+  //     return updatedSiteData;
+  //   })
+  // );
+  // return updatedList;
 }

@@ -1,48 +1,35 @@
-import { GetApiResTYPE, WebsiteRowTYPE } from "@/types/websiteApi.type";
-import { NextRequest, NextResponse } from "next/server";
-import { FetchWebsites } from "../websites/websiteDataOperation";
+import { NextResponse, NextRequest } from "next/server";
+import { FetchDomains } from "@repo/cf";
+import { DomainApiResTYPE } from "@/types/websiteApi.type";
 
-export async function GET({}: {}): Promise<
-  NextResponse<GetApiResTYPE>
-> {
+export async function GET(): Promise<NextResponse<DomainApiResTYPE>> {
   try {
-    const { SUCCESS, DATA, MESSAGE } = await FetchWebsites();
-
-    // only send who is ready to deploy
-    if (DATA && SUCCESS) {
-      const readyForDomains = (DATA as WebsiteRowTYPE[]).filter(
-        (website: WebsiteRowTYPE) => {
-          return (
-            website.build === "complete" && website.deployed === "complete"
-          );
-        }
-      );
-
-      if (!readyForDomains.length) {
+    const { DATA, MESSAGE, SUCCESS } = await FetchDomains();
+    
+    if (DATA === undefined || !Array.isArray(DATA)) {
         return NextResponse.json({
-          SUCCESS: true,
-          MESSAGE: "There is no website ready for domain",
-          DATA: readyForDomains,
+            SUCCESS,
+            MESSAGE,
+            DATA
         });
-      }
+    } 
 
-      return NextResponse.json({
-        SUCCESS: true,
-        MESSAGE: MESSAGE || "Websites fetched successfully",
-        DATA: readyForDomains,
-      });
-    } else {
-      return NextResponse.json({
-        SUCCESS: true,
-        MESSAGE: "Websites data not available",
-        DATA: [],
-      });
-    }
+    return NextResponse.json({
+      SUCCESS,
+      MESSAGE,
+      DATA  
+    }, {
+        status: 200,
+    });
+    
+    
   } catch (error) {
+    console.error("Error fetching domains:", error);
     return NextResponse.json({
       SUCCESS: false,
-      MESSAGE: "Failed to fetch websites",
-      DATA: [],
+      MESSAGE: "Failed to fetch domains",
+    }, {
+        status: 500,
     });
   }
 }
