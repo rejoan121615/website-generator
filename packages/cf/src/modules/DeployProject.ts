@@ -72,7 +72,6 @@ export async function DeployProject({
 
     return await DeployApihandler({ domainName, cfProjectName });
   } catch (error) {
-    console.log("Error checking project existence:", error);
     if (error instanceof Cloudflare.APIError) {
       const { status, errors } = error;
       if (status === 404) {

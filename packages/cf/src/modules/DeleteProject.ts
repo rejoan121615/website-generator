@@ -25,7 +25,6 @@ export async function deleteProject({
 
   const { projectName, hasSubdomain, rootDomain, subDomain } = GetProjectName(domainName);
 
-
   console.log(`Attempting to delete project: ${projectName}`);
   try {
     // Step 1: Get project details to check for custom domains
@@ -35,15 +34,20 @@ export async function deleteProject({
 
     console.log('project details ', projectDetails);
 
-    // Step 2: Remove custom domains if they exist
+    // Step 2: Remove custom domains and their DNS records if they exist
     if (projectDetails.domains && projectDetails.domains.length > 0) {
-      console.log(`Found ${projectDetails.domains.length} domains, removing them first...`);
+      console.log(`Found ${projectDetails.domains.length} domains, removing them and their DNS records...`);
       
       for (const domain of projectDetails.domains) {
         // Skip the default .pages.dev subdomain
         if (!domain.endsWith('.pages.dev')) {
           try {
             console.log(`Removing custom domain: ${domain}`);
+            
+            // Remove DNS records first
+            await removeDNSRecords(client, domain);
+            
+            // Then remove from Pages project
             await client.pages.projects.domains.delete(projectName, domain, {
               account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
             });
@@ -105,5 +109,56 @@ export async function deleteProject({
       MESSAGE: "Failed to delete project",
       ERROR: error instanceof APIError ? error : undefined,
     };
+  }
+}
+
+// Helper function to remove DNS records
+async function removeDNSRecords(client: Cloudflare, domain: string) {
+  try {
+    const { hasSubdomain, rootDomain, subDomain } = GetProjectName(domain);
+    
+    // Get the zone ID for the root domain
+    const zones = await client.zones.list({
+      name: rootDomain,
+    });
+
+    if (!zones.result || zones.result.length === 0) {
+      console.warn(`Zone for ${rootDomain} not found, skipping DNS record removal`);
+      return;
+    }
+
+    const zoneId = zones.result[0].id;
+    
+    // Get all DNS records for the zone
+    const dnsRecords = await client.dns.records.list({
+      zone_id: zoneId,
+    });
+
+    if (!dnsRecords.result) {
+      console.warn(`No DNS records found for zone ${rootDomain}`);
+      return;
+    }
+
+    // Find and delete the relevant CNAME record
+    const recordName = hasSubdomain ? subDomain : rootDomain;
+    const cNameRecord = dnsRecords.result.find(record => 
+      record.type === 'CNAME' && 
+      (record.name === recordName || record.name === `${recordName}.${rootDomain}` || 
+       (record.name === rootDomain && !hasSubdomain))
+    );
+
+    if (cNameRecord) {
+      console.log(`Removing DNS CNAME record: ${cNameRecord.name}`);
+      await client.dns.records.delete(cNameRecord.id!, {
+        zone_id: zoneId,
+      });
+      console.log(`Successfully removed DNS record: ${cNameRecord.name}`);
+    } else {
+      console.log(`No matching CNAME record found for ${domain}`);
+    }
+
+  } catch (error) {
+    console.warn(`Failed to remove DNS records for ${domain}:`, error);
+    // Don't throw error, just log warning as DNS removal is not critical for project deletion
   }
 }

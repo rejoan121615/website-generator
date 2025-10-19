@@ -22,6 +22,9 @@ import {
   ConnectDomainResTYPE
 } from "@repo/cf";
 
+import { GetProjectName } from '../../utilities/GetProjectName';
+
+
 function DomainsPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [websites, setWebsites] = useState<WebsiteRowTYPE[]>([]);
@@ -64,53 +67,63 @@ function DomainsPage() {
           setDomains(domainsResponse.data.DATA || []);
 
           console.log('your website data ', websites);
+          // const domainListFromWebsite: string[] = ((websitesResponse.data.DATA as WebsiteRowTYPE[]) || []).map((websiteData: WebsiteRowTYPE) => {
+          //   return websiteData.domain;
+          // });
+
+          const nameListFromProjects: string[] = ((projectsResponse.data.DATA as ProjectDataTYPE[]) || [])
+            .map((projectData: ProjectDataTYPE) => projectData.name)
+            .filter((n): n is string => n !== undefined);
+
+
+
+            function ReadyToConnectStatus (domain: string) : "Deploy First" | "Ready" | "Processing" | "Connected" {
+              const { projectName } = GetProjectName(domain);
+
+              // Find the matching project by name
+              const matchingProject = (projectsResponse.data.DATA as ProjectDataTYPE[])?.find(
+                (project) => project.name === projectName
+              );
+
+              if (matchingProject) {
+                // Check if this domain is already connected to the project
+                const isDomainConnected = matchingProject.domains?.some(
+                  (projectDomain) => projectDomain === domain
+                );
+
+                if (isDomainConnected) {
+                  return "Connected";
+                } else {
+                  return "Ready";
+                }
+              } else {
+                return "Deploy First";
+              }
+            }
+
+
+        
           // process table data
           setDomainTableData(() => {
             // cast DATA to the expected WebsiteRowTYPE[] so .map is safe
             const websitesData = websitesResponse.data.DATA as WebsiteRowTYPE[] | undefined;
             const newDomainTableData: DomainTableDataTYPE[] = (websitesData ?? []).map((website) => {
+
+              const { projectName } = GetProjectName(website.domain);
+
+              const isReadyToConnect = nameListFromProjects.includes(projectName);
+
               return {
                 domain: website.domain,
                 domainStatus: 'active',
-                readyToConnect: 'Unavailable'
+                readyToConnect: ReadyToConnectStatus(website.domain)
               };
             });
 
             console.log('new domain table data ', newDomainTableData);
 
             return newDomainTableData;
-            // const updatedDomainData: DomainTableDataTYPE[] = (
-            //   domainsResponse.data.DATA ?? []
-            // ).map((domain) => {
-            //   const status = generateStatus(domain.name);
-
-            //   return { ...domain, readyToConnect: status };
-            // });
-
-            // return updatedDomainData;
           });
-
-          function generateStatus(
-            domainName: string
-          ): DomainTableDataTYPE["readyToConnect"] {
-            const convertedDomainName = domainName.replace(/\./g, "-");
-
-            const selectedProject = (projectsResponse.data.DATA ?? []).find(
-              (proItem) => {
-                return proItem.name === convertedDomainName;
-              }
-            );
-
-            if (!selectedProject) {
-              return "Unavailable";
-            } else if (
-              selectedProject.domains?.find((item) => item === domainName)
-            ) {
-              return "Connected";
-            } else {
-              return "Available";
-            }
-          }
         }
 
         // Process projects data
@@ -154,13 +167,15 @@ function DomainsPage() {
         <Chip
           label={params.value}
           color={
-            params.value === "Connected"
-              ? "success"
-              : params.value === "Unavailable"
-                ? "warning"
-                : params.value === "Available"
-                  ? "primary"
-                : "default"
+            params.value === "Deploy First"
+              ? "warning"
+              : params.value === "Ready"
+                ? "secondary"
+                : params.value === "Processing"
+                  ? "warning"
+                : params.value === "Connected"
+                  ? "success"
+                : "error"
           }
           size="small"
         />
@@ -177,6 +192,7 @@ function DomainsPage() {
               onClick={() => DeployDomainHandler(params.row.domain)}
               variant="contained"
               size="small"
+              disabled={ params.row.readyToConnect !== "Ready" ? true : false }
             >
               Connect
             </Button>

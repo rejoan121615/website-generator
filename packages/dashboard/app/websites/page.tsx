@@ -138,7 +138,7 @@ function BasicTableInner() {
     // show snackbar
     snackbarClickVariant(`Deploying project: ${row.name}`, "info")();
 
-    // update website status to processing 
+    // update website status to processing
     setWebsitesList((prevState) => {
       return prevState.map((item) => {
         return item.domain === row.domain
@@ -170,6 +170,14 @@ function BasicTableInner() {
           `Failed to deploy project: ${row.name}`,
           "error"
         )();
+
+        setWebsitesList((prevState) => {
+          return prevState.map((item) => {
+            return item.domain === row.domain
+              ? { ...item, deployed: "failed" }
+              : item;
+          });
+        });
         // handle error
         console.log("err", err);
       });
@@ -179,7 +187,7 @@ function BasicTableInner() {
     // Your undeploy logic here
     snackbarClickVariant(`Undeploying project: ${row.name}`, "info")();
 
-    // update deployed status into processing 
+    // update deployed status into processing
     setWebsitesList((prevState) => {
       return prevState.map((item) => {
         return item.domain === row.domain
@@ -259,7 +267,15 @@ function BasicTableInner() {
         <Chip
           sx={{ textTransform: "capitalize" }}
           label={params.row.deployed}
-          color={params.row.deployed === "complete" ? "success" : params.row.deployed === "processing" ? "warning" : params.row.build === "failed" ? "error" : "default"}
+          color={
+            params.row.deployed === "complete"
+              ? "success"
+              : params.row.deployed === "processing"
+                ? "warning"
+                : params.row.build === "failed"
+                  ? "error"
+                  : "default"
+          }
         />
       ),
     },
