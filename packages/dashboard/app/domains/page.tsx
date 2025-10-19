@@ -34,6 +34,7 @@ function DomainsPage() {
   const [domainTableData, setDomainTableData] = useState<DomainTableDataTYPE[]>(
     []
   );
+  const [loading, setLoading] = useState(true);
 
   const snackbarClickVariant =
     (message: string, variant: VariantType) => () => {
@@ -43,6 +44,7 @@ function DomainsPage() {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
+        setLoading(true);
         // Execute all requests in parallel
         const [websitesResponse, domainsResponse, projectsResponse] =
           await Promise.all([
@@ -136,6 +138,8 @@ function DomainsPage() {
       } catch (error) {
         console.error("Error fetching data:", error);
         snackbarClickVariant("Error fetching data", "error")();
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -147,11 +151,13 @@ function DomainsPage() {
       field: "domain",
       headerName: "Domain Name",
       width: 275,
+      flex: 2
     },
     {
       field: "status",
       headerName: "Domain Status",
       width: 120,
+      flex: 1,
       renderCell: (params) =>
         params.value === "active" ? (
           <Chip label="Active" color="success" size="small" />
@@ -163,6 +169,7 @@ function DomainsPage() {
       field: "readyToConnect",
       headerName: "Ready to Connect",
       width: 150,
+      flex: 1,
       renderCell: (params) => (
         <Chip
           label={params.value}
@@ -185,6 +192,7 @@ function DomainsPage() {
       headerName: "Actions",
       field: "actions",
       width: 250,
+      flex: 2,
       renderCell: (params) => {
         return (
           <ButtonGroup variant="text" aria-label="text button group">
@@ -249,6 +257,7 @@ function DomainsPage() {
       <DataGrid
         rows={filteredWebsites}
         columns={columns}
+        loading={loading}
         getRowId={(row) => row.domain}
         checkboxSelection
         disableRowSelectionOnClick

@@ -18,6 +18,7 @@ function BasicTableInner() {
   const { enqueueSnackbar } = useSnackbar();
   const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const snackbarClickVariant =
     (message: string, variant: VariantType) => () => {
@@ -25,6 +26,7 @@ function BasicTableInner() {
     };
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get<GetApiResTYPE>("/api/websites")
       .then((res) => {
@@ -35,6 +37,9 @@ function BasicTableInner() {
       })
       .catch((err) => {
         // handle error
+      })
+      .finally(() => {
+        setLoading(false);
       });
     return () => {
       setWebsitesList([]);
@@ -362,6 +367,7 @@ function BasicTableInner() {
       <DataGrid
         rows={filteredWebsites}
         columns={columns}
+        loading={loading}
         getRowId={(row) => `${row.domain}-${row.name}`}
         checkboxSelection
         disableRowSelectionOnClick
