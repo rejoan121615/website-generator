@@ -2,10 +2,8 @@ import path from "path";
 import env from "dotenv";
 import Cloudflare, { APIError } from "cloudflare";
 import { ConnectDomainResTYPE } from "../types/DataType.type.js";
-import { parse } from 'tldts'
+import { parse } from "tldts";
 import { GetProjectName } from "../lib/GetProjectName.js";
-
-
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -37,8 +35,8 @@ export async function ConnectDomain({
     };
   }
 
-
-  const { projectName, hasSubdomain, rootDomain, subDomain } = GetProjectName(domainName);
+  const { projectName, hasSubdomain, rootDomain, subDomain } =
+    GetProjectName(domainName);
 
   if (!projectName) {
     return {
@@ -62,10 +60,17 @@ export async function ConnectDomain({
     console.log("Domain connected to Pages project:", response);
 
     // Step 2: Get the zone ID for the domain (use root domain for subdomains)
-    
+
     const zones = await client.zones.list({
-      name: domainName
+      name: rootDomain,
     });
+
+    const { subdomain: pageDomain } = await client.pages.projects.get(
+      projectName,
+      {
+        account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
+      }
+    );
 
     if (!zones.result || zones.result.length === 0) {
       return {
@@ -75,93 +80,32 @@ export async function ConnectDomain({
     }
 
     const zoneId = zones.result[0].id;
-    const pagesSubdomain = `${projectName}.pages.dev`;
+    // const pagesSubdomain = `${projectName}.pages.dev`;
 
-    // Step 3: Check if DNS record already exists
-    const existingRecords = await client.dns.records.list({
-      zone_id: zoneId
-    });
-
+    console.log("has subdomain ", hasSubdomain);
     // Step 4: Create or update DNS record based on domain type
-    const recordName = hasSubdomain ? subDomain : "@"; // Use subdomain name or "@" for root
 
-    // For root domains, we need to check if we should use CNAME flattening or direct Pages connection
-    if (!hasSubdomain) {
-      // For root domains, try to connect directly without creating CNAME to .pages.dev
-      // Instead, let Cloudflare handle the connection internally
-      console.log(`Root domain ${domainName} connected to Pages project. DNS will be handled by Cloudflare Pages automatically.`);
-      
-      // Remove any existing conflicting CNAME records for root domain
-      const conflictingRecords = existingRecords.result?.filter(record => 
-        record.name === domainName && record.type === "CNAME"
-      );
-      
-      for (const record of conflictingRecords || []) {
-        try {
-          await client.dns.records.delete(record.id, { zone_id: zoneId });
-          console.log(`Removed conflicting CNAME record for ${domainName}`);
-        } catch (error) {
-          console.warn(`Could not remove conflicting record:`, error);
-        }
-      }
-    } else {
-      // For subdomains, create CNAME as normal
-      const existingRecord = existingRecords.result?.find(record => 
-        record.name === domainName && record.type === "CNAME"
-      );
-
-      if (existingRecord) {
-        // Update existing CNAME record
-        await client.dns.records.update(existingRecord.id, {
-          zone_id: zoneId,
-          type: "CNAME",
-          name: recordName,
-          content: pagesSubdomain,
-          proxied: true,
-          ttl: 1 // Auto
-        });
-        console.log(`Updated existing CNAME record for ${domainName}`);
-      } else {
-        // Create new CNAME record
-        await client.dns.records.create({
-          zone_id: zoneId,
-          type: "CNAME",
-          name: recordName,
-          content: pagesSubdomain,
-          proxied: true,
-          ttl: 1 // Auto
-        });
-        console.log(`Created new CNAME record for ${domainName}`);
-      }
-    }
-
-    // Step 5: Create www CNAME only for root domains (not subdomains)
-    if (!hasSubdomain) {
-      const allRecords = await client.dns.records.list({
-        zone_id: zoneId
+    if (hasSubdomain) {
+      await client.dns.records.create({
+        zone_id: zoneId,
+        type: "CNAME",
+        name: subDomain,
+        content: pageDomain,
+        proxied: true,
+        ttl: 1,
       });
-
-      // Filter for existing www CNAME records
-      const existingWwwRecord = allRecords.result?.find(record => 
-        record.name === `www.${domainName}` && record.type === "CNAME"
-      );
-
-      if (!existingWwwRecord) {
-        await client.dns.records.create({
-          zone_id: zoneId,
-          type: "CNAME",
-          name: "www",
-          content: pagesSubdomain,
-          proxied: true,
-          ttl: 1
-        });
-        console.log("Created www CNAME record successfully");
-      } else {
-        console.log("www CNAME record already exists, skipping creation");
-      }
     } else {
-      console.log("Skipping www record creation for subdomain");
+      await client.dns.records.create({
+        zone_id: zoneId,
+        type: "CNAME",
+        name: "@",
+        content: pageDomain,
+        proxied: true,
+        ttl: 1,
+      });
     }
+
+    console.log(`CNAME record created `);
 
     return {
       SUCCESS: true,
@@ -170,10 +114,11 @@ export async function ConnectDomain({
         : `Domain ${domainName} connected and DNS records configured successfully`,
       DATA: response || undefined,
     };
-
   } catch (error) {
+    console.log(`Error => ${error}`);
     const err = error instanceof APIError ? error : null;
-    const errorMsg = err?.errors[0]?.message || "Failed to connect domain or configure DNS";
+    const errorMsg =
+      err?.errors[0]?.message || "Failed to connect domain or configure DNS";
 
     return {
       SUCCESS: false,

@@ -8,6 +8,7 @@ export function GetProjectName(domainName: string): {
   subDomain: string ;
 } {
   const { domain, domainWithoutSuffix, subdomain } = parse(domainName);
+  const parseResponse = parse(domainName);
 
 //   parsed domain object : {
     //   domain: 'plumbersbow.co.uk',
@@ -24,7 +25,7 @@ export function GetProjectName(domainName: string): {
 
   return {
     projectName: cfProjectName,
-    hasSubdomain: subdomain !== null,
+    hasSubdomain: subdomain === "" || subdomain === null ? false : true,
     rootDomain: domain!,
     subDomain: subdomain || "",
   };
