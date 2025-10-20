@@ -40,20 +40,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvParseA
     const randomId = Math.random().toString(36).substring(2, 15);
     tempFilePath = path.join(tempDir, `csv-upload-${timestamp}-${randomId}.csv`);
     
-    console.log(`💾 Creating temporary file: ${tempFilePath}`);
+    console.log(`Creating temporary file: ${tempFilePath}`);
 
     // Write uploaded file to temp location using fs-extra
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     await fs.writeFile(tempFilePath as string, buffer);
     
-    console.log("✅ File written to temporary location");
+    console.log("File written to temporary location");
 
     // Read file content using fs-extra
     const fileContent = await fs.readFile(tempFilePath as string, 'utf-8') as string;
     
     if (!fileContent.trim()) {
-      console.log("❌ CSV file is empty");
+      console.log("CSV file is empty");
       return NextResponse.json({
         SUCCESS: false,
         MESSAGE: "CSV file is empty"
@@ -70,18 +70,17 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvParseA
       cast: true,
     }) as CsvRowDataType[];
 
-    console.log(`📈 Parsed ${records.length} records from CSV`);
-    console.log('✅ Successfully processed records', records);
+    console.log(`Parsed ${records.length} records from CSV`);
 
     if (records.length === 0) {
-      console.log("❌ No valid data found after processing");
+      console.log("No valid data found after processing");
       return NextResponse.json({
         SUCCESS: false,
         MESSAGE: "No valid data found in CSV file"
       }, { status: 400 });
     }
 
-    console.log(`✅ Successfully processed ${records.length} records`);
+    console.log(`Successfully processed ${records.length} records`);
 
     return NextResponse.json({
       SUCCESS: true,
@@ -90,7 +89,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvParseA
     }, { status: 200 });
 
   } catch (error) {
-    console.error("💥 CSV Parse Error:", error);
+    console.error("CSV Parse Error:", error);
     
     let errorMessage = "Failed to parse CSV file";
     if (error instanceof Error) {
@@ -106,9 +105,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvParseA
     if (tempFilePath) {
       try {
         await fs.remove(tempFilePath);
-        console.log(`🧹 Cleaned up temporary file: ${tempFilePath}`);
+        console.log(`Cleaned up temporary file: ${tempFilePath}`);
       } catch (cleanupError) {
-        console.warn("⚠️ Failed to clean up temporary file:", cleanupError);
+        console.warn("Failed to clean up temporary file:", cleanupError);
       }
     }
   }

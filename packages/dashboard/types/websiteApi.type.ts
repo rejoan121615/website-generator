@@ -64,3 +64,22 @@ export type CsvParseApiResponse = {
   MESSAGE: string;
   DATA?: CsvRowDataType[];
 };
+
+export type CsvReplaceApiResponse = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: {
+    totalRecords: number;
+    replacedRecords: number;
+  };
+};
+
+export type CsvMergeApiResponse = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: {
+    totalRecords: number;
+    newRecords: number;
+    existingRecords: number;
+  };
+};

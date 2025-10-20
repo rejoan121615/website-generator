@@ -9,6 +9,7 @@ import WebsiteDetailsModal from '@/components/WebsiteDetailsModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import axios from 'axios'
 import { CsvRowDataType, GetApiResTYPE, WebsitesResTYPE, WebsiteRowTYPE } from '@repo/cf'
+import { CsvReplaceApiResponse, CsvMergeApiResponse } from '@/types/websiteApi.type'
 
 
 const Tools = () => {
@@ -113,21 +114,96 @@ const Tools = () => {
       setSelectedRow(null);
     };
 
-    const handleCSVReplace = (newData: WebsiteRowTYPE[]) => {
-      // Replace existing data with new CSV data
-      setWebsiteData(newData.map((item, index) => ({
-        ...item,
-        id: index + 1
-      })));
-      setCsvUploadModalOpen(false);
-      setPendingCsvFile(null);
-    };
+    const handleCSVReplace = async (newData: WebsiteRowTYPE[]) => {
+      try {
+        console.log('🔄 Starting CSV replace operation...', newData);
+        
+        // Call replace API
+        const response = await axios.post<CsvReplaceApiResponse>('/api/csv/replace', {
+          newData: newData
+        });
 
-    const handleCSVMerge = (newData: WebsiteRowTYPE[]) => {
-      // Merge CSV data with existing API data
-      setWebsiteData(prevData => [...prevData, ...newData]);
-      setCsvUploadModalOpen(false);
-      setPendingCsvFile(null);
+        if (response.data.SUCCESS) {
+          console.log('✅ CSV replace successful:', response.data);
+          
+          // Update local state with new data
+          const formattedData = newData.map((item, index) => ({
+            ...item,
+            id: index + 1,
+            build: item.build ?? 'unavailable',
+            deployed: item.deployed ?? 'unavailable',
+            log: item.log ?? ''
+          }));
+          
+          setWebsiteData(formattedData);
+          
+          // Show success message (you can add a toast notification here)
+          console.log(`Successfully replaced data with ${response.data.DATA?.totalRecords} records`);
+          
+        } else {
+          console.error('❌ CSV replace failed:', response.data.MESSAGE);
+          // Handle error (show error message to user)
+        }
+        
+      } catch (error) {
+        console.error('💥 Error during CSV replace:', error);
+        
+        if (axios.isAxiosError(error)) {
+          const errorMessage = error.response?.data?.MESSAGE || error.message;
+          console.error('API Error:', errorMessage);
+          // Show error message to user
+        }
+      } finally {
+        setCsvUploadModalOpen(false);
+        setPendingCsvFile(null);
+      }
+    };    const handleCSVMerge = async (newData: WebsiteRowTYPE[]) => {
+      try {
+        console.log('🔄 Starting CSV merge operation...', newData);
+        
+        // Call merge API
+        const response = await axios.post<CsvMergeApiResponse>('/api/csv/merge', {
+          newData: newData
+        });
+
+        if (response.data.SUCCESS) {
+          console.log('✅ CSV merge successful:', response.data);
+          
+          // Refresh data from API to get the merged result
+          const refreshResponse = await axios.get<WebsitesResTYPE>('/api/websites');
+          
+          if (refreshResponse.data.SUCCESS && refreshResponse.data.DATA) {
+            const formattedData = refreshResponse.data.DATA.map((item, index) => ({
+              ...item,
+              id: (item as any).id ?? index + 1,
+              build: (item as any).build ?? 'unavailable',
+              deployed: (item as any).deployed ?? 'unavailable',
+              log: (item as any).log ?? ''
+            })) as WebsiteRowTYPE[];
+            
+            setWebsiteData(formattedData);
+          }
+          
+          // Show success message
+          console.log(`Successfully merged ${response.data.DATA?.newRecords} new records with ${response.data.DATA?.existingRecords} existing records`);
+          
+        } else {
+          console.error('❌ CSV merge failed:', response.data.MESSAGE);
+          // Handle error (show error message to user)
+        }
+        
+      } catch (error) {
+        console.error('💥 Error during CSV merge:', error);
+        
+        if (axios.isAxiosError(error)) {
+          const errorMessage = error.response?.data?.MESSAGE || error.message;
+          console.error('API Error:', errorMessage);
+          // Show error message to user
+        }
+      } finally {
+        setCsvUploadModalOpen(false);
+        setPendingCsvFile(null);
+      }
     };
 
     const handleCSVModalClose = () => {
