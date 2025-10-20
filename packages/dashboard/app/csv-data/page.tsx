@@ -6,50 +6,37 @@ import { Box, Button, Paper } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import ToolsTopBar from '@/components/ToolsTopBar'
 import WebsiteDetailsModal from '@/components/WebsiteDetailsModal'
+import CSVUploadModal from '@/components/CSVUploadModal'
 import axios from 'axios'
+import { CsvRowDataType, GetApiResTYPE, WebsitesResTYPE, WebsiteRowTYPE } from '@repo/cf'
 
-interface WebsiteRowData {
-  id: number;
-  domain: string;
-  name: string;
-  service_name?: string;
-  address: string;
-  phone: string;
-  email?: string;
-  site_title?: string;
-  meta_title?: string;
-  meta_description?: string;
-  logo_url?: string;
-}
 
 const Tools = () => {
     const [search, setSearch] = useState("");
-    const [websiteData, setWebsiteData] = useState<WebsiteRowData[]>([]);
+    const [websiteData, setWebsiteData] = useState<WebsiteRowTYPE[]>([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedRow, setSelectedRow] = useState<WebsiteRowData | null>(null);
+    const [selectedRow, setSelectedRow] = useState<WebsiteRowTYPE | null>(null);
+    const [csvUploadModalOpen, setCsvUploadModalOpen] = useState(false);
+    const [pendingCsvFile, setPendingCsvFile] = useState<File | null>(null);
 
     // Fetch data from API on component mount
     useEffect(() => {
       const fetchWebsites = async () => {
         try {
           setLoading(true);
-          const response = await axios.get('/api/websites');
+          const response = await axios.get<WebsitesResTYPE>('/api/websites');
           
           if (response.data.SUCCESS && response.data.DATA) {
-            const formattedData: WebsiteRowData[] = response.data.DATA.map((website: any, index: number) => ({
-              id: index + 1,
-              domain: website.domain || '',
-              name: website.name || '',
-              service_name: website.service_name || '',
-              address: website.address || '',
-              phone: website.phone || '',
-              email: website.email || '',
-              site_title: website.site_title || '',
-              meta_title: website.meta_title || '',
-              meta_description: website.meta_description || '',
-              logo_url: website.logo_url || ''
-            }));
+            // Ensure items conform to WebsiteRowTYPE by adding missing fields with sensible defaults
+            const formattedData = response.data.DATA.map((item, index) => ({
+              ...item,
+              id: (item as any).id ?? index + 1,
+              build: (item as any).build ?? 'unavailable',
+              deployed: (item as any).deployed ?? 'unavailable',
+              log: (item as any).log ?? ''
+            })) as WebsiteRowTYPE[];
+            
             setWebsiteData(formattedData);
           }
         } catch (error) {
@@ -63,36 +50,12 @@ const Tools = () => {
     }, []);
 
     const handleFileUpload = (file: File) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target?.result as string;
-        const rows = text.split('\n').filter(row => row.trim() !== '');
-        const headers = rows[0].split(',').map(h => h.trim());
-        
-        const csvData: WebsiteRowData[] = rows.slice(1).map((row, index) => {
-          const values = row.split(',').map(v => v.trim());
-          return {
-            id: websiteData.length + index + 1,
-            domain: values[0] || '',
-            name: values[1] || '',
-            service_name: values[2] || '',
-            address: values[3] || '',
-            phone: values[4] || '',
-            email: values[5] || '',
-            site_title: values[6] || '',
-            meta_title: values[7] || '',
-            meta_description: values[8] || '',
-            logo_url: values[9] || ''
-          };
-        });
-        
-        // Merge CSV data with existing API data
-        setWebsiteData(prevData => [...prevData, ...csvData]);
-      };
-      reader.readAsText(file);
+      // Store the file and open modal - let modal handle parsing via API
+      setPendingCsvFile(file);
+      setCsvUploadModalOpen(true);
     };
 
-    const columns: GridColDef<WebsiteRowData>[] = [
+    const columns: GridColDef<WebsiteRowTYPE>[] = [
       {
         field: 'domain',
         headerName: 'Domain',
@@ -140,7 +103,7 @@ const Tools = () => {
       }
     ];
 
-    const handleShowAll = (row: WebsiteRowData) => {
+    const handleShowAll = (row: WebsiteRowTYPE) => {
       setSelectedRow(row);
       setModalOpen(true);
     };
@@ -148,6 +111,28 @@ const Tools = () => {
     const handleCloseModal = () => {
       setModalOpen(false);
       setSelectedRow(null);
+    };
+
+    const handleCSVReplace = (newData: WebsiteRowTYPE[]) => {
+      // Replace existing data with new CSV data
+      setWebsiteData(newData.map((item, index) => ({
+        ...item,
+        id: index + 1
+      })));
+      setCsvUploadModalOpen(false);
+      setPendingCsvFile(null);
+    };
+
+    const handleCSVMerge = (newData: WebsiteRowTYPE[]) => {
+      // Merge CSV data with existing API data
+      setWebsiteData(prevData => [...prevData, ...newData]);
+      setCsvUploadModalOpen(false);
+      setPendingCsvFile(null);
+    };
+
+    const handleCSVModalClose = () => {
+      setCsvUploadModalOpen(false);
+      setPendingCsvFile(null);
     };
 
     // Filter data based on search
@@ -195,6 +180,15 @@ const Tools = () => {
         open={modalOpen}
         onClose={handleCloseModal}
         data={selectedRow}
+      />
+      
+      <CSVUploadModal 
+        open={csvUploadModalOpen}
+        onClose={handleCSVModalClose}
+        csvFile={pendingCsvFile}
+        existingData={websiteData}
+        onReplace={handleCSVReplace}
+        onMerge={handleCSVMerge}
       />
     </Box>
   )

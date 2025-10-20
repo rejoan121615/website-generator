@@ -10,10 +10,7 @@ export type CsvRowDataType = {
   site_title: string;
   meta_title: string;
   meta_description: string;
-  logo: string;
-  hero_image: string;
-  gallery_1: string;
-  gallery_2: string;
+  logo_url: string;
 };
 
 
@@ -61,3 +58,9 @@ export type DomainTableDataTYPE = {
   domainStatus: 'active' | 'inactive';
   readyToConnect: "Deploy First" | "Ready" | "Processing" | "Connected" | "Failed";
 }
+
+export type CsvParseApiResponse = {
+  SUCCESS: boolean;
+  MESSAGE: string;
+  DATA?: CsvRowDataType[];
+};

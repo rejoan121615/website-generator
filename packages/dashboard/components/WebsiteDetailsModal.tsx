@@ -12,25 +12,12 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-
-interface WebsiteRowData {
-  id: number;
-  domain: string;
-  name: string;
-  service_name?: string;
-  address: string;
-  phone: string;
-  email?: string;
-  site_title?: string;
-  meta_title?: string;
-  meta_description?: string;
-  logo_url?: string;
-}
+import { WebsiteRowTYPE } from '@repo/cf';
 
 interface WebsiteDetailsModalProps {
   open: boolean;
   onClose: () => void;
-  data: WebsiteRowData | null;
+  data: WebsiteRowTYPE | null;
 }
 
 const WebsiteDetailsModal: React.FC<WebsiteDetailsModalProps> = ({
@@ -106,13 +93,6 @@ const WebsiteDetailsModal: React.FC<WebsiteDetailsModalProps> = ({
           
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  ID
-                </Typography>
-                <Chip label={`#${data.id}`} size="small" variant="outlined" />
-              </Box>
-              
               <Box sx={{ flex: 1 }}>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                   Domain
