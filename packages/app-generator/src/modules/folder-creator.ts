@@ -1,12 +1,12 @@
 import fs from "fs-extra";
 import path from "path";
 import { getRootDir } from "../utilities/path-solver.js";
-import { PromiseResultType } from "../types/DataType.js";
 import { LogBuilder } from "@repo/log-helper";
+import { EventResType } from "@repo/shared-types";
 
 export async function folderCreator(data: {
   domain: string;
-}): Promise<PromiseResultType> {
+}): Promise<EventResType> {
   const { domain } = data;
 
   const outputDir = path.join(getRootDir("../../../../"), "apps");

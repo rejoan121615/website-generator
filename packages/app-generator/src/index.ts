@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import path from "path";
 import fs from "fs-extra";
 import { parse } from "csv-parse";
-import type { CsvRowDataType } from "./types/DataType.js";
+import { CsvRowDataType } from '@repo/shared-types'
 import { getRootDir } from "./utilities/path-solver.js";
 import { astroProjectCreator } from "./modules/app-builder.js";
 

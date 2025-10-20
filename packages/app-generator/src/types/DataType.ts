@@ -1,3 +1,5 @@
+import { EventResType } from "@repo/shared-types";
+
 export interface JsonLdAddressType {
   "@type": "PostalAddress";
   streetAddress: string;
@@ -21,52 +23,11 @@ export interface JsonLdDataType {
   email: string;
 }
 
-export type CsvAddressType = {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-};
-
-export type CsvRowDataType = {
-  domain: string;
-  name: string;
-  service_name: string;
-  address: string;
-  phone: string;
-  email: string;
-  site_title: string;
-  meta_title: string;
-  meta_description: string;
-  logo: string;
-  hero_image: string;
-  gallery_1: string;
-  gallery_2: string;
-};
-
-
-export type PromiseResultType= {
-  success: boolean;
-  message: string;
-};
-
-export type TerminalOperationResultType = {
-  success: boolean;
-  message: string;
+export type TerminalOperationResultType = EventResType & {
   stdout?: string;
   stderr?: string;
 };
 
-export type AstroProjectBuilderResultType = {
-  success: boolean;
-  message: string;
-  data: PromiseResultType [] | string | null
+export type AstroProjectBuilderResultType = EventResType & {
+  data: EventResType[] | string | null
 };
-
-
-export type LogDataTYPE = {
-  timestamp: string;
-  message: string;
-  type: "info" | "error" | "warning";
-  context?: string;
-}

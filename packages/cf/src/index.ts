@@ -1,6 +1,5 @@
 export * from "./types/DataType.type.js";
 export * from "./modules/ConnectDomain.js";
-export * from "./modules/ConnectDomainV2.js";
 export * from './lib/GetProjectName.js'
 export * from './modules/DeleteProject.js';
 export * from './modules/DeployApiHandler.js';

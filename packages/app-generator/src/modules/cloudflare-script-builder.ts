@@ -1,13 +1,12 @@
 import "dotenv/config";
 import fs from "fs-extra";
 import path from "path";
-
-import type { CsvRowDataType, PromiseResultType } from "../types/DataType.js";
+import { CsvRowDataType, EventResType } from "@repo/shared-types"; 
 
 export async function cloudFlareScriptBuilder(
   turboRepoRoot: string,
   data: CsvRowDataType
-): Promise<PromiseResultType> {
+): Promise<EventResType> {
   const { domain } = data;
   try {
     await deployScriptBuilder(domain, turboRepoRoot);
@@ -27,7 +26,7 @@ export async function cloudFlareScriptBuilder(
 async function deployScriptBuilder(
   domain: string,
   turboRepoRoot: string
-): Promise<PromiseResultType> {
+): Promise<EventResType> {
   try {
     const cloudflareDir = path.join(
       turboRepoRoot,
@@ -72,7 +71,7 @@ deploy({
 async function removeScriptBuilder(
   domain: string,
   turboRepoRoot: string
-): Promise<PromiseResultType> {
+): Promise<EventResType> {
   try {
     const cloudflareDir = path.join(
       turboRepoRoot,

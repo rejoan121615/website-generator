@@ -1,7 +1,7 @@
 import type {
   AstroProjectBuilderResultType,
-  CsvRowDataType,
 } from "../types/DataType.js";
+import { CsvRowDataType } from '@repo/shared-types'
 import { folderCreator } from "./folder-creator.js";
 import { srcCodeBuilder } from "./src-code-builder.js";
 import { cloudFlareScriptBuilder } from "./cloudflare-script-builder.js";

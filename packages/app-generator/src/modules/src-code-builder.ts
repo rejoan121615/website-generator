@@ -1,6 +1,5 @@
 import path from "path";
 import fs from "fs-extra";
-import { CsvRowDataType, PromiseResultType } from "../types/DataType.js";
 import { getRootDir } from "../utilities/path-solver.js";
 import { spintaxAndTokenHandler } from "./spintax-handler.js";
 import {
@@ -9,13 +8,14 @@ import {
 } from "./app-scripts-builder.js";
 import { SeoComponentHandler } from "./seo-component-handler.js";
 import { LogBuilder } from '@repo/log-helper'
+import { CsvRowDataType, EventResType } from "@repo/shared-types";
 
 const turboRepoRoot = getRootDir("../../../../");
 
 // src folder handler
 export async function srcCodeBuilder(
   data: CsvRowDataType
-): Promise<PromiseResultType> {
+): Promise<EventResType> {
   console.log("Creating Astro app ...", data.domain);
 
   const baseFrontendPath = path.join(turboRepoRoot, "packages", "baseFrontend");

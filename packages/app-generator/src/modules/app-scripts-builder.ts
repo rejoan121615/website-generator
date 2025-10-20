@@ -1,13 +1,12 @@
 import fs from "fs-extra";
 import path from "path";
-import type { CsvAddressType, CsvRowDataType, PromiseResultType } from "../types/DataType.js";
-import { PageOptionsTYPE } from "../types/AstroHandler.js";
+import { CsvRowDataType, CsvAddressType, EventResType } from '@repo/shared-types'
 
 // ts config file builder
 export async function tsConfigFileBuilder(
   domain: string,
   turboRepoRoot: string
-): Promise<PromiseResultType> {
+): Promise<EventResType> {
   try {
     const tsConfigFileContent = {
       extends: "astro/tsconfigs/strict",
@@ -54,7 +53,7 @@ export async function packageJsonFileBuilder(
   domain: string,
   srcPath: string,
   destPath: string
-): Promise<PromiseResultType> {
+): Promise<EventResType> {
   try {
     // Sanitize domain to create a valid project name
     console.log("Domain received for package.json processing: ", domain);
@@ -89,7 +88,7 @@ export async function astroConfigFileBuilder({
   csvData: CsvRowDataType;
   srcPath: string;
   destPath: string;
-}): Promise<PromiseResultType> {
+}): Promise<EventResType> {
   try {
     // parse address
     const { address, service_name,  } = csvData;

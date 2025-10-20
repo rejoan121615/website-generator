@@ -1,4 +1,4 @@
-import type { CsvAddressType, CsvRowDataType, JsonLdDataType, PromiseResultType } from "../types/DataType.js";
+import { CsvAddressType, CsvRowDataType, EventResType } from "@repo/shared-types";
 import fs from "fs-extra";
 import { LogBuilder } from "@repo/log-helper";
 
@@ -10,7 +10,7 @@ export async function SeoComponentHandler({
   csvRowData: CsvRowDataType;
   destPath: string;
   srcPath: string;
-}): Promise<PromiseResultType> {
+}): Promise<EventResType> {
   // get generated ld data
   //   const ldSchemaData = generateJsonLd(csvRowData);
   const {
@@ -21,10 +21,9 @@ export async function SeoComponentHandler({
     email,
     meta_title,
     meta_description,
-    logo,
-    hero_image,
-    gallery_1,
-    gallery_2,
+    logo_url,
+    service_name, 
+    site_title
   } = csvRowData;
 
 
@@ -42,8 +41,7 @@ export async function SeoComponentHandler({
     "description": "${meta_description}",
     "slogan": "${meta_title}",
     "url": "https://${domain}",
-    "logo": "https://${domain}/${logo}",
-    "image": ["https://${domain}/${hero_image}", "https://${domain}/${gallery_1}", "https://${domain}/${gallery_2}"],
+    "logo": "https://${domain}/${logo_url}",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "${street}",

@@ -12,12 +12,12 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { WebsiteRowTYPE } from '@repo/cf';
+import { CsvRowDataType } from '@repo/cf';
 
 interface WebsiteDetailsModalProps {
   open: boolean;
   onClose: () => void;
-  data: WebsiteRowTYPE | null;
+  data: CsvRowDataType | null;
 }
 
 const WebsiteDetailsModal: React.FC<WebsiteDetailsModalProps> = ({

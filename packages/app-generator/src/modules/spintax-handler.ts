@@ -1,10 +1,10 @@
 import fs from "fs-extra";
 import seedrandom from "seedrandom";
-import { CsvAddressType, CsvRowDataType, PromiseResultType } from "../types/DataType.js";
 import sharp from "sharp";
 import path from "path";
 import { getRootDir } from "../utilities/path-solver.js";
 import { LogBuilder } from "@repo/log-helper";
+import { CsvAddressType, CsvRowDataType, EventResType } from "@repo/shared-types";
 
 type Choice = { value: string; weight: number };
 
@@ -16,7 +16,7 @@ export async function spintaxAndTokenHandler({
   csvData: CsvRowDataType;
   inputPath: string;
   outputPath: string;
-}): Promise<PromiseResultType> {
+}): Promise<EventResType> {
   try {
     // Read the file content
     const fileContent = await fs.readFile(inputPath, "utf-8");
@@ -103,29 +103,6 @@ function imageProcessor({
       }
     })
     .filter((item) => item !== "");
-
-  // replace file content with used import
-  // let updatedFileContent: string = "";
-  // importedImageList.forEach((importText) => {
-  //   // handler image optimization and conversion
-  //   console.log('run image optimizer ---------- ', importText)
-
-  //   // imageOptimizationAndConversion({
-  //   //   importStatement: importText,
-  //   //   inputPath,
-  //   //   outputPath,
-  //   // });
-
-  //   // updated file path
-  //   const imgExt = path.extname(importText);
-  //   const importTextUpdated = importText.replace(imgExt, '.webp"');
-
-  //   updatedFileContent = fileContentWithoutImageImports.replace(
-  //     // replace import with placeholder text
-  //     rmImportPlaceholder,
-  //     `${importTextUpdated}\n\n`
-  //   );
-  // });
 
   // ✅ collect all updated imports first
   const allImports = importedImageList
