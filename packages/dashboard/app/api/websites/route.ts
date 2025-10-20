@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { GetReadyToBuildList, FetchWebsites } from "./websiteDataOperation";
 import type {
-  WebsiteRowTYPE,
   WebsitesResTYPE,
 } from "@/types/dashboard.type";
+import { WebsiteRowTYPE } from "@repo/shared-types";
 
 export async function GET(): Promise<NextResponse<WebsitesResTYPE>> {
   try {

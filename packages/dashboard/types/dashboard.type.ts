@@ -1,5 +1,5 @@
 import { DomainDataTYPE } from '@repo/cf'
-import { CsvRowDataType, EventResType } from '@repo/shared-types'
+import { CsvRowDataType, EventResType, WebsiteRowTYPE } from '@repo/shared-types'
 
 export type WebsitesResTYPE = EventResType & {
     DATA?: CsvRowDataType[]
@@ -8,14 +8,6 @@ export type WebsitesResTYPE = EventResType & {
 export type ReadyToBuildResTYPE = EventResType & {
     DATA?: string[]
 }
-
-export type WebsiteRowTYPE = CsvRowDataType & {
-  build: "unavailable" | "processing" | "complete" | "failed";
-  deployed: "unavailable" | "processing" | "complete" | "failed";
-  log?: "---" | string;
-  liveUrl?: string | null;
-};
-
 
 export type WebsiteFuncResTYPE = EventResType & {
   DATA?: WebsiteRowTYPE[];
@@ -46,3 +38,5 @@ export type CsvMergeApiResponse = EventResType & {
     existingRecords: number;
   };
 };
+
+

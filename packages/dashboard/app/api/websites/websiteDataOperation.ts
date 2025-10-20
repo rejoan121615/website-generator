@@ -3,12 +3,11 @@ import path from "path";
 import { parse } from "csv-parse";
 import {
   WebsiteFuncResTYPE,
-  WebsiteRowTYPE,
 } from "@/types/dashboard.type";
 import { ProjectRoot } from "@/lib/assists";
 import { createReadStream } from "fs";
 import { FetchProjects, GetProjectName } from '@repo/cf'
-import { CsvRowDataType } from "@repo/shared-types";
+import { CsvRowDataType, WebsiteRowTYPE } from "@repo/shared-types";
 
 export async function FetchWebsites(): Promise<WebsiteFuncResTYPE> {
   const websitesCsvPath = path.resolve(ProjectRoot(), "data", "websites.csv");

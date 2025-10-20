@@ -7,13 +7,12 @@ import TableControlBar from "@/components/TableControlBar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
 import {
-  WebsiteFuncResTYPE,
-  WebsiteRowTYPE,
-  WebsitesResTYPE
+  WebsiteFuncResTYPE
 } from "@/types/dashboard.type";
 import { ButtonGroup, Chip } from "@mui/material";
 import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
-import { DeleteProjectResTYPE, DeployResTYPE, ServerEventResTYPE } from "@repo/cf";
+import { DeleteProjectResTYPE, DeployResTYPE } from "@repo/cf";
+import { ServerEventResTYPE, WebsiteRowTYPE } from "@repo/shared-types";
 
 function WebsitesPage() {
   const { enqueueSnackbar } = useSnackbar();

@@ -7,7 +7,6 @@ import TableControlBar from "@/components/TableControlBar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
 import {
-  WebsiteRowTYPE,
   DomainTableDataTYPE,
   WebsitesResTYPE,
 } from "@/types/dashboard.type";
@@ -24,6 +23,7 @@ import {
 import { GetProjectName } from "../../utilities/GetProjectName";
 import { ReadyToConnectStatus } from "@/utilities/ReadyToConnectStatus";
 import { CheckDomainStatus } from "@/utilities/CheckDomainStatus";
+import { WebsiteRowTYPE } from "@repo/shared-types";
 
 function DomainsPage() {
   const { enqueueSnackbar } = useSnackbar();

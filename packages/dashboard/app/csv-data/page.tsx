@@ -8,8 +8,9 @@ import ToolsTopBar from '@/components/ToolsTopBar'
 import WebsiteDetailsModal from '@/components/WebsiteDetailsModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import axios from 'axios'
-import { WebsitesResTYPE, WebsiteRowTYPE } from '@repo/cf'
+import { WebsitesResTYPE } from '@repo/cf'
 import { CsvReplaceApiResponse, CsvMergeApiResponse } from '@/types/dashboard.type'
+import { WebsiteRowTYPE } from '@repo/shared-types'
 
 
 const Tools = () => {

@@ -1,6 +1,6 @@
-import { WebsiteRowTYPE } from "@/types/dashboard.type";
 import { NextResponse } from "next/server";
 import { DeployProject, DeployResTYPE } from "@repo/cf";
+import { WebsiteRowTYPE } from "@repo/shared-types";
 
 export async function POST(
   request: Request

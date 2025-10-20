@@ -22,3 +22,17 @@ export type EventResType = {
   SUCCESS: boolean;
   MESSAGE: string;
 };
+
+
+export type WebsiteRowTYPE = CsvRowDataType & {
+  build?: "unavailable" | "processing" | "complete" | "failed";
+  deployed?: "unavailable" | "processing" | "complete" | "failed";
+  log?: "---" | string;
+  liveUrl?: string | null;
+};
+
+
+export type ServerEventResTYPE = {
+  MESSAGE: string;
+  CSV_DATA: WebsiteRowTYPE;
+}

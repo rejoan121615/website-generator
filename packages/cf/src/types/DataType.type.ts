@@ -17,20 +17,9 @@ export type ReadyToBuildResTYPE = EventResType & {
     DATA?: string[]
 }
 
-export type WebsiteRowTYPE = CsvRowDataType & {
-  build: "unavailable" | "processing" | "complete" | "failed";
-  deployed: "unavailable" | "processing" | "complete" | "failed";
-  log: "---" | string;
-};
-
 export type CFApiResTYPE = EventResType & {
   ERROR?: APIError;
 }
-
-export type ServerEventResTYPE = {
-  MESSAGE: string;
-  CSV_DATA: WebsiteRowTYPE;
-};
 
 export type DomainDataTYPE = Zone;
 
