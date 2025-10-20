@@ -1,11 +1,11 @@
 import env from "dotenv";
 import Cloudflare from "cloudflare";
 import path from "path";
-import { GetApiResTYPE } from "../types/DataType.type.js";
 import { LogBuilder } from "@repo/log-helper";
 import { DeployApihandler } from "./DeployApiHandler.js";
 import fs from 'fs-extra';
 import { GetProjectName } from "../lib/GetProjectName.js";
+import { DeployResTYPE } from "../types/DataType.type.js";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -21,7 +21,7 @@ export async function DeployProject({
 }: {
   domainName: string;
   branchName?: string;
-}): Promise<GetApiResTYPE> {
+}): Promise<DeployResTYPE> {
   if (!process.env.CLOUDFLARE_API_TOKEN && !process.env.CLOUDFLARE_ACCOUNT_ID) {
     LogBuilder({
       domain: domainName,
@@ -80,7 +80,7 @@ export async function DeployProject({
         // ------------------ create cf new project ------------------
         try {
           // create new project
-          const newProjectRes = await cfClient.pages.projects.create({
+         await cfClient.pages.projects.create({
             name: cfProjectName,
             account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
             production_branch: branchName,

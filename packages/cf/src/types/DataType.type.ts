@@ -3,32 +3,17 @@ import { Zone } from 'cloudflare/resources/zones/zones.mjs';
 import { DomainCreateResponse } from 'cloudflare/src/resources/pages/projects/domains.js';
 import { Project } from 'cloudflare/resources/pages/projects/projects.mjs';
 import { Deployment } from 'cloudflare/resources/pages.mjs';
-
-
-export type CsvRowDataType = {
-  domain: string;
-  name: string;
-  service_name: string;
-  address: string;
-  phone: string;
-  email: string;
-  site_title: string;
-  meta_title: string;
-  meta_description: string;
-  logo_url: string;
-};
+import { CsvRowDataType, EventResType } from '@repo/shared-types'
+import { DomainGetResponse } from 'cloudflare/resources/pages/projects.mjs';
 
 
 
-export type WebsitesResTYPE = {
-    SUCCESS: boolean,
-    MESSAGE: string,
+
+export type WebsitesResTYPE = EventResType & {
     DATA?: CsvRowDataType[]
 }
 
-export type ReadyToBuildResTYPE = {
-    SUCCESS: boolean,
-    MESSAGE: string,
+export type ReadyToBuildResTYPE = EventResType & {
     DATA?: string[]
 }
 
@@ -38,16 +23,8 @@ export type WebsiteRowTYPE = CsvRowDataType & {
   log: "---" | string;
 };
 
-export type CFApiResTYPE = {
-  SUCCESS: boolean;
-  MESSAGE: string;
+export type CFApiResTYPE = EventResType & {
   ERROR?: APIError;
-}
-
-export type GetApiResTYPE = {
-  SUCCESS: boolean;
-  MESSAGE: string;
-  DATA?: Record<string, unknown>
 }
 
 export type ServerEventResTYPE = {
@@ -76,4 +53,21 @@ export type DeleteProjectResTYPE = CFApiResTYPE & {
   DATA?: {
     deleted: boolean;
   };
+};
+
+export type ProjectDomainDataTYPE = DomainGetResponse;
+
+export type CheckDomainStatusResTYPE = EventResType & {
+  DATA?: ProjectDomainDataTYPE
+  ERROR?: APIError;
+};
+
+
+export type DeployApiResTYPE = EventResType & {
+  DATA?: ProjectDataTYPE
+};
+
+
+export type DeployResTYPE = EventResType & {
+  DATA?: Deployment;
 };

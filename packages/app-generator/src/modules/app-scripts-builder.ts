@@ -37,13 +37,13 @@ export async function tsConfigFileBuilder(
 
     console.log(`tsconfig.json created successfully ...`);
     return {
-      success: true,
-      message: `tsconfig.json created successfully for ${domain}`,
+      SUCCESS: true,
+      MESSAGE: `tsconfig.json created successfully for ${domain}`,
     };
   } catch (error: any) {
     return {
-      success: false,
-      message: `Error creating tsconfig.json for ${domain}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error creating tsconfig.json for ${domain}: ${error?.message || error}`,
     };
   }
 }
@@ -67,14 +67,14 @@ export async function packageJsonFileBuilder(
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
     console.log(`package.json created successfully ...`);
     return {
-      success: true,
-      message: `package.json created successfully for ${domain}`,
+      SUCCESS: true,
+      MESSAGE: `package.json created successfully for ${domain}`,
     };
   } catch (error: any) {
     console.error(`Error processing package.json for domain: ${domain}`, error);
     return {
-      success: false,
-      message: `Error processing package.json for domain: ${domain}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error processing package.json for domain: ${domain}: ${error?.message || error}`,
     };
   }
 }
@@ -133,20 +133,20 @@ export async function astroConfigFileBuilder({
       const updatedFileContent = astroConfigFileContent.replace(configMatch[1], newConfig);
       await fs.writeFile(destPath, updatedFileContent, "utf-8");
       return {
-        success: true,
-        message: `astro.config.mjs created successfully for ${csvData.domain}`,
+        SUCCESS: true,
+        MESSAGE: `astro.config.mjs created successfully for ${csvData.domain}`,
       };
     } else {
       console.log("No config object found.");
       return {
-        success: false,
-        message: `No config object found in astro config for ${csvData.domain}`,
+        SUCCESS: false,
+        MESSAGE: `No config object found in astro config for ${csvData.domain}`,
       };
     }
   } catch (error: any) {
     return {
-      success: false,
-      message: `Error creating astro config for ${csvData.domain}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error creating astro config for ${csvData.domain}: ${error?.message || error}`,
     };
   }
 }

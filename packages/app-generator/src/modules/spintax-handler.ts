@@ -2,8 +2,6 @@ import fs from "fs-extra";
 import seedrandom from "seedrandom";
 import sharp from "sharp";
 import path from "path";
-import { getRootDir } from "../utilities/path-solver.js";
-import { LogBuilder } from "@repo/log-helper";
 import { CsvAddressType, CsvRowDataType, EventResType } from "@repo/shared-types";
 
 type Choice = { value: string; weight: number };
@@ -47,14 +45,14 @@ export async function spintaxAndTokenHandler({
     // Write the parsed content into the destination file
     await fs.writeFile(outputPath, contentAfterImageProcess, "utf-8");
     return {
-      success: true,
-      message: `Spintax and token processing complete for ${outputPath}`,
+      SUCCESS: true,
+      MESSAGE: `Spintax and token processing complete for ${outputPath}`,
     };
   } catch (error: any) {
     console.error(`Error processing spintax for file: ${inputPath}`, error);
     return {
-      success: false,
-      message: `Error processing spintax for file: ${inputPath}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error processing spintax for file: ${inputPath}: ${error?.message || error}`,
     };
   }
 }

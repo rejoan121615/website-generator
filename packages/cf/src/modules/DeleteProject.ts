@@ -1,7 +1,7 @@
 import env from "dotenv";
 import Cloudflare, { APIError } from "cloudflare";
 import path from "path";
-import { DeleteProjectResTYPE, GetApiResTYPE } from "../types/DataType.type.js";
+import { DeleteProjectResTYPE } from "../types/DataType.type.js";
 import { LogBuilder } from "@repo/log-helper";
 import { ReportRemover } from "@repo/report-helper";
 import { GetProjectName } from "../lib/GetProjectName.js";

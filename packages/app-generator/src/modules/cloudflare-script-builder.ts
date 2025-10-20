@@ -12,13 +12,13 @@ export async function cloudFlareScriptBuilder(
     await deployScriptBuilder(domain, turboRepoRoot);
     await removeScriptBuilder(domain, turboRepoRoot);
     return {
-      success: true,
-      message: `Cloudflare scripts created for ${domain}`,
+      SUCCESS: true,
+      MESSAGE: `Cloudflare scripts created for ${domain}`,
     };
   } catch (error: any) {
     return {
-      success: false,
-      message: `Error creating Cloudflare scripts for ${domain}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error creating Cloudflare scripts for ${domain}: ${error?.message || error}`,
     };
   }
 }
@@ -51,19 +51,19 @@ deploy({
       await fs.writeFile(deployScriptPath, deployScriptContent);
       console.log(`cloudflare/deploy.js created successfully ...`);
       return {
-        success: true,
-        message: `cloudflare/deploy.js created successfully for ${domain}`,
+        SUCCESS: true,
+        MESSAGE: `cloudflare/deploy.js created successfully for ${domain}`,
       };
     } else {
       return {
-        success: true,
-        message: `cloudflare/deploy.js already exists for ${domain}`,
+        SUCCESS: true,
+        MESSAGE: `cloudflare/deploy.js already exists for ${domain}`,
       };
     }
   } catch (error: any) {
     return {
-      success: false,
-      message: `Error creating cloudflare/deploy.js for ${domain}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error creating cloudflare/deploy.js for ${domain}: ${error?.message || error}`,
     };
   }
 }
@@ -95,19 +95,19 @@ deleteProject({
       await fs.writeFile(removeScriptPath, removeScriptContent);
       console.log(`cloudflare/remove.js created successfully ...`);
       return {
-        success: true,
-        message: `cloudflare/remove.js created successfully for ${domain}`,
+        SUCCESS: true,
+        MESSAGE: `cloudflare/remove.js created successfully for ${domain}`,
       };
     } else {
       return {
-        success: true,
-        message: `cloudflare/remove.js already exists for ${domain}`,
+        SUCCESS: true,
+        MESSAGE: `cloudflare/remove.js already exists for ${domain}`,
       };
     }
   } catch (error: any) {
     return {
-      success: false,
-      message: `Error creating cloudflare/remove.js for ${domain}: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error creating cloudflare/remove.js for ${domain}: ${error?.message || error}`,
     };
   }
 }

@@ -2,7 +2,6 @@ import path from "path";
 import env from "dotenv";
 import Cloudflare, { APIError } from "cloudflare";
 import { ConnectDomainResTYPE } from "../types/DataType.type.js";
-import { parse } from "tldts";
 import { GetProjectName } from "../lib/GetProjectName.js";
 
 const projectRoot = path.resolve(process.cwd(), "../../");

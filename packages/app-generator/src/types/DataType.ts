@@ -29,5 +29,5 @@ export type TerminalOperationResultType = EventResType & {
 };
 
 export type AstroProjectBuilderResultType = EventResType & {
-  data: EventResType[] | string | null
+  DATA: EventResType[] | string | null
 };

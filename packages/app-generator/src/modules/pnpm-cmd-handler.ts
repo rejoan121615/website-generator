@@ -19,16 +19,16 @@ export async function pnpmCmdHandler({
     );    
 
     return {
-      success: true,
-      message: `pnpm commands executed successfully for domain: ${domain}`,
+      SUCCESS: true,
+      MESSAGE: `pnpm commands executed successfully for domain: ${domain}`,
       stdout,
       stderr
     };
   } catch (error) {
     console.error("Error occurred while executing pnpm commands:", error);
     return {
-      success: false,
-      message: `pnpm commands failed for domain: ${domain}`,
+      SUCCESS: false,
+      MESSAGE: `pnpm commands failed for domain: ${domain}`,
     };
   }
 }

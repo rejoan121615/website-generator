@@ -70,13 +70,13 @@ export async function SeoComponentHandler({
 
     await fs.writeFile(destPath, updatedSeoComponent, 'utf-8');
     return {
-      success: true,
-      message: `SEO component processed and written to ${destPath}`,
+      SUCCESS: true,
+      MESSAGE: `SEO component processed and written to ${destPath}`,
     };
   } catch (error: any) {
     return {
-      success: false,
-      message: `Error processing SEO component: ${error?.message || error}`,
+      SUCCESS: false,
+      MESSAGE: `Error processing SEO component: ${error?.message || error}`,
     };
   }
 

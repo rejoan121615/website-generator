@@ -1,10 +1,10 @@
 import env from "dotenv";
 import Cloudflare from "cloudflare";
 import path from "path";
-import { DomainResTYPE, GetApiResTYPE } from "../types/DataType.type.js";
 import { execa } from "execa";
 import { LogBuilder } from "@repo/log-helper";
-import { ReportBuilder, ReportRemover } from "@repo/report-helper";
+import { ReportBuilder } from "@repo/report-helper";
+import { DeployApiResTYPE } from "../types/DataType.type.js";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -21,7 +21,7 @@ export async function DeployApihandler({
 }: {
   domainName: string;
   cfProjectName: string;
-}): Promise<GetApiResTYPE> {
+}): Promise<DeployApiResTYPE> {
   try {
     console.log("Started uploading source code to the project...");
     // upload source code to the project

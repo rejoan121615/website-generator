@@ -1,7 +1,7 @@
 import path from "path";
 import env from "dotenv";
 import Cloudflare, { APIError } from "cloudflare";
-import { DomainGetResponse } from "cloudflare/resources/pages/projects.mjs";
+import { CheckDomainStatusResTYPE } from "../types/DataType.type.js";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -14,7 +14,7 @@ export async function CheckDomainStatus({
 }: {
   projectName: string;
   domainName: string;
-}) {
+}) : Promise<CheckDomainStatusResTYPE> {
   if (!process.env.CLOUDFLARE_API_TOKEN || !process.env.CLOUDFLARE_ACCOUNT_ID) {
     return {
       SUCCESS: false,
@@ -39,13 +39,7 @@ export async function CheckDomainStatus({
       return {
         SUCCESS: true,
         MESSAGE: "Domain status fetched successfully",
-        DATA: {
-          status: domainStatus.status, // "initializing", "pending_verification", "active"
-          verification_data: domainStatus.verification_data,
-          validation_data: domainStatus.validation_data,
-          certificate_authority: domainStatus.certificate_authority,
-          created_on: domainStatus.created_on,
-        },
+        DATA: domainStatus
       };
     }
 

@@ -32,7 +32,7 @@ export async function astroProjectCreator(
       data
     );
 
-    if (cloudFlareScriptBuilderResult.success) {
+    if (cloudFlareScriptBuilderResult.SUCCESS) {
       LogBuilder({
         domain: data.domain,
         logMessage: `Cloudflare scripts created successfully`,
@@ -41,9 +41,9 @@ export async function astroProjectCreator(
     }
 
     return {
-      success: true,
-      message: `Astro app creating completed for domain: ${domain}`,
-      data: [
+      SUCCESS: true,
+      MESSAGE: `Astro app creating completed for domain: ${domain}`,
+      DATA: [
         folderCreationResult,
         srcCodeBuilderResult,
         cloudFlareScriptBuilderResult,
@@ -59,9 +59,9 @@ export async function astroProjectCreator(
       error: error instanceof Error ? error : undefined,
     });
     return {
-      success: false,
-      message: `Astro project creation failed for domain: ${domain}`,
-      data: null,
+      SUCCESS: false,
+      MESSAGE: `Astro project creation failed for domain: ${domain}`,
+      DATA: null,
     };
   }
 }
@@ -76,16 +76,16 @@ export async function astroProjectRemover(
     await fs.remove(appFolderPath);
     console.log(`Corrupted project ${domain} removed successfully ...`);
     return {
-      success: true,
-      message: `Corrupted project ${domain} removed successfully ...`,
-      data: null,
+      SUCCESS: true,
+      MESSAGE: `Corrupted project ${domain} removed successfully ...`,
+      DATA: null,
     };
   } catch (error) {
     console.error(`Removing corrupted project ${domain} failed`, error);
     return {
-      success: false,
-      message: `Removing corrupted project ${domain} failed`,
-      data: null,
+      SUCCESS: false,
+      MESSAGE: `Removing corrupted project ${domain} failed`,
+      DATA: null,
     };
   }
 }
