@@ -143,7 +143,7 @@ function DomainsPage() {
       width: 120,
       flex: 1,
       renderCell: (params) => (
-        <Chip sx={{ textTransform: 'capitalize' }} label={params.value} color={params.value === "active" ? "success" : "error"} size="small" />
+        <Chip sx={{ textTransform: 'capitalize' }} label={params.value} color={params.value === "active" ? "success" : "error"} />
       ),
     },
     {
@@ -166,7 +166,6 @@ function DomainsPage() {
                     ? "success"
                     : "error"
           }
-          size="small"
         />
       ),
     },

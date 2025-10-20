@@ -14,7 +14,7 @@ import {
 import { ButtonGroup, Chip } from "@mui/material";
 import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
 
-function BasicTableInner() {
+function WebsitesPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
   const [search, setSearch] = useState("");
@@ -376,10 +376,10 @@ function BasicTableInner() {
   );
 }
 
-export default function BasicTable() {
+export default function WebsitesSnackbarWrapper() {
   return (
     <SnackbarProvider>
-      <BasicTableInner />
+      <WebsitesPage />
     </SnackbarProvider>
   );
 }
