@@ -10,7 +10,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ConstructionIcon from '@mui/icons-material/Construction';
@@ -18,11 +17,6 @@ import Link from "next/link";
 
 
 const NavbarData = [
-  {
-    title: "Dashboard",
-    icon: <SpaceDashboardIcon />,
-    link: "/",
-  },
   {
     title: "Websites",
     icon: <ViewStreamIcon />,
@@ -34,9 +28,9 @@ const NavbarData = [
     link: "/domains",
   },
   {
-    title: "Tools",
+    title: "CSV Data",
     icon: <ConstructionIcon />,
-    link: "/tools",
+    link: "/csv-data",
   },
 ];
 

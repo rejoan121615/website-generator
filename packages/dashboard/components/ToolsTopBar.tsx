@@ -1,9 +1,16 @@
 import React, { useRef } from "react";
-import { Paper, Stack, Button, TextField, InputAdornment, IconButton } from "@mui/material";
+import {
+  Paper,
+  Stack,
+  Button,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Box,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-
-
+import AddIcon from "@mui/icons-material/Add";
 
 interface TableControlBarProps {
   search: string;
@@ -11,7 +18,11 @@ interface TableControlBarProps {
   onFileUpload: (file: File) => void;
 }
 
-const ToolsTopBar = ({ search, onSearchChange, onFileUpload }: TableControlBarProps) => {
+const ToolsTopBar = ({
+  search,
+  onSearchChange,
+  onFileUpload,
+}: TableControlBarProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = () => {
@@ -20,13 +31,13 @@ const ToolsTopBar = ({ search, onSearchChange, onFileUpload }: TableControlBarPr
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type === 'text/csv') {
+    if (file && file.type === "text/csv") {
       onFileUpload(file);
     } else if (file) {
-      alert('Please select a valid CSV file');
+      alert("Please select a valid CSV file");
     }
     // Reset the input so the same file can be selected again
-    event.target.value = '';
+    event.target.value = "";
   };
 
   return (
@@ -37,20 +48,32 @@ const ToolsTopBar = ({ search, onSearchChange, onFileUpload }: TableControlBarPr
         alignItems="center"
         justifyContent="space-between"
       >
-        <Button
-          variant="contained"
-          startIcon={<UploadFileIcon />}
-          onClick={handleFileSelect}
-          sx={{ minWidth: 160 }}
-        >
-          Select CSV File
-        </Button>
+        <Box>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<AddIcon />}
+            onClick={handleFileSelect}
+            sx={{ minWidth: 160, marginRight: 2 }}
+          >
+            Add Record
+          </Button>
+
+          <Button
+            variant="contained"
+            startIcon={<UploadFileIcon />}
+            onClick={handleFileSelect}
+            sx={{ minWidth: 160 }}
+          >
+            Import CSV
+          </Button>
+        </Box>
 
         <input
           type="file"
           ref={fileInputRef}
           accept=".csv"
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
           onChange={handleFileChange}
         />
 
@@ -58,7 +81,7 @@ const ToolsTopBar = ({ search, onSearchChange, onFileUpload }: TableControlBarPr
           size="small"
           placeholder="Search websites"
           value={search}
-          onChange={e => onSearchChange(e.target.value)}
+          onChange={(e) => onSearchChange(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

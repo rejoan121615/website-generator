@@ -5,20 +5,29 @@ import TableControlBar from '@/components/TableControlBar'
 import { Box, Button, Paper } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import ToolsTopBar from '@/components/ToolsTopBar'
+import WebsiteDetailsModal from '@/components/WebsiteDetailsModal'
 import axios from 'axios'
 
 interface WebsiteRowData {
   id: number;
   domain: string;
   name: string;
+  service_name?: string;
   address: string;
   phone: string;
+  email?: string;
+  site_title?: string;
+  meta_title?: string;
+  meta_description?: string;
+  logo_url?: string;
 }
 
 const Tools = () => {
     const [search, setSearch] = useState("");
     const [websiteData, setWebsiteData] = useState<WebsiteRowData[]>([]);
     const [loading, setLoading] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState<WebsiteRowData | null>(null);
 
     // Fetch data from API on component mount
     useEffect(() => {
@@ -32,8 +41,14 @@ const Tools = () => {
               id: index + 1,
               domain: website.domain || '',
               name: website.name || '',
+              service_name: website.service_name || '',
               address: website.address || '',
-              phone: website.phone || ''
+              phone: website.phone || '',
+              email: website.email || '',
+              site_title: website.site_title || '',
+              meta_title: website.meta_title || '',
+              meta_description: website.meta_description || '',
+              logo_url: website.logo_url || ''
             }));
             setWebsiteData(formattedData);
           }
@@ -60,8 +75,14 @@ const Tools = () => {
             id: websiteData.length + index + 1,
             domain: values[0] || '',
             name: values[1] || '',
-            address: values[2] || '',
-            phone: values[3] || ''
+            service_name: values[2] || '',
+            address: values[3] || '',
+            phone: values[4] || '',
+            email: values[5] || '',
+            site_title: values[6] || '',
+            meta_title: values[7] || '',
+            meta_description: values[8] || '',
+            logo_url: values[9] || ''
           };
         });
         
@@ -75,32 +96,38 @@ const Tools = () => {
       {
         field: 'domain',
         headerName: 'Domain',
-        width: 200,
         flex: 2
       },
       {
         field: 'name',
         headerName: 'Name',
-        width: 200,
         flex: 1
       },
       {
         field: 'address',
         headerName: 'Address',
-        width: 200,
-        flex: 2
+        flex: 2,
+        renderCell: (params) => {
+          try {
+            const addressData = JSON.parse(params.value);
+            const { street, city, state, country } = addressData;
+            return `${street || ''}, ${city || ''}, ${state || ''}, ${country || ''}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',');
+          } catch (error) {
+            // If it's not valid JSON, return the original value
+            return params.value;
+          }
+        }
       },
       {
         field: 'phone',
         headerName: 'Phone',
-        width: 150,
         flex: 1
       },
       {
         field: 'actions',
         headerName: 'Action',
-        width: 120,
         sortable: false,
+        flex: 1,
         renderCell: (params) => (
           <Button
             variant="outlined"
@@ -114,8 +141,13 @@ const Tools = () => {
     ];
 
     const handleShowAll = (row: WebsiteRowData) => {
-      console.log('Show all data for:', row);
-      // Add your logic here to show all data for this row
+      setSelectedRow(row);
+      setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+      setModalOpen(false);
+      setSelectedRow(null);
     };
 
     // Filter data based on search
@@ -143,7 +175,7 @@ const Tools = () => {
         onFileUpload={handleFileUpload}
       />
       
-      <Paper sx={{ width: '100%' }}>
+      <Paper>
         <DataGrid
           rows={filteredData}
           columns={columns}
@@ -156,13 +188,14 @@ const Tools = () => {
           pageSizeOptions={[5, 10, 25, 50]}
           checkboxSelection
           disableRowSelectionOnClick
-          sx={{
-            '& .MuiDataGrid-root': {
-              border: 'none',
-            },
-          }}
         />
       </Paper>
+      
+      <WebsiteDetailsModal 
+        open={modalOpen}
+        onClose={handleCloseModal}
+        data={selectedRow}
+      />
     </Box>
   )
 }
