@@ -19,11 +19,12 @@ import {
   DomainDataTYPE,
   ProjectsResTYPE,
   DomainResTYPE,
-  ConnectDomainResTYPE
+  ConnectDomainResTYPE,
 } from "@repo/cf";
 
-import { GetProjectName } from '../../utilities/GetProjectName';
-
+import { GetProjectName } from "../../utilities/GetProjectName";
+import { ReadyToConnectStatus } from "@/utilities/ReadyToConnectStatus";
+import { CheckDomainStatus } from "@/utilities/CheckDomainStatus";
 
 function DomainsPage() {
   const { enqueueSnackbar } = useSnackbar();
@@ -65,65 +66,51 @@ function DomainsPage() {
         }
 
         // Process domains data
-        if (domainsResponse.data.SUCCESS && websitesResponse.data.SUCCESS && websitesResponse.data.DATA) {
+        if (
+          domainsResponse.data.SUCCESS &&
+          websitesResponse.data.SUCCESS &&
+          websitesResponse.data.DATA
+        ) {
           setDomains(domainsResponse.data.DATA || []);
 
-          console.log('your website data ', websites);
+          console.log("your website data ", websites);
           // const domainListFromWebsite: string[] = ((websitesResponse.data.DATA as WebsiteRowTYPE[]) || []).map((websiteData: WebsiteRowTYPE) => {
           //   return websiteData.domain;
           // });
 
-          const nameListFromProjects: string[] = ((projectsResponse.data.DATA as ProjectDataTYPE[]) || [])
+          const nameListFromProjects: string[] = (
+            (projectsResponse.data.DATA as ProjectDataTYPE[]) || []
+          )
             .map((projectData: ProjectDataTYPE) => projectData.name)
             .filter((n): n is string => n !== undefined);
 
-
-
-            function ReadyToConnectStatus (domain: string) : "Deploy First" | "Ready" | "Processing" | "Connected" {
-              const { projectName } = GetProjectName(domain);
-
-              // Find the matching project by name
-              const matchingProject = (projectsResponse.data.DATA as ProjectDataTYPE[])?.find(
-                (project) => project.name === projectName
-              );
-
-              if (matchingProject) {
-                // Check if this domain is already connected to the project
-                const isDomainConnected = matchingProject.domains?.some(
-                  (projectDomain) => projectDomain === domain
-                );
-
-                if (isDomainConnected) {
-                  return "Connected";
-                } else {
-                  return "Ready";
-                }
-              } else {
-                return "Deploy First";
-              }
-            }
-
-
-        
           // process table data
           setDomainTableData(() => {
             // cast DATA to the expected WebsiteRowTYPE[] so .map is safe
-            const websitesData = websitesResponse.data.DATA as WebsiteRowTYPE[] | undefined;
-            const newDomainTableData: DomainTableDataTYPE[] = (websitesData ?? []).map((website) => {
-
-              const { projectName } = GetProjectName(website.domain);
-
-              const isReadyToConnect = nameListFromProjects.includes(projectName);
+            const websitesData = websitesResponse.data.DATA as
+              | WebsiteRowTYPE[]
+              | undefined;
+            const newDomainTableData: DomainTableDataTYPE[] = (
+              websitesData ?? []
+            ).map((website) => {
+              const { projectName, rootDomain } = GetProjectName(
+                website.domain
+              );
+              const isReadyToConnect =
+                nameListFromProjects.includes(projectName);
 
               return {
                 domain: website.domain,
-                domainStatus: 'active',
-                readyToConnect: ReadyToConnectStatus(website.domain)
+                domainStatus: CheckDomainStatus({
+                  domainsList: domainsResponse.data.DATA || [],
+                  rootDomain,
+                }),
+                readyToConnect: ReadyToConnectStatus({
+                  projectsList: projectsResponse.data.DATA || [],
+                  domain: website.domain,
+                }),
               };
             });
-
-            console.log('new domain table data ', newDomainTableData);
-
             return newDomainTableData;
           });
         }
@@ -132,9 +119,6 @@ function DomainsPage() {
         if (projectsResponse.data.SUCCESS) {
           setProjectList(projectsResponse.data.DATA || []);
         }
-
-        // Show success message after all data is loaded
-        snackbarClickVariant("All data fetched successfully", "success")();
       } catch (error) {
         console.error("Error fetching data:", error);
         snackbarClickVariant("Error fetching data", "error")();
@@ -151,19 +135,16 @@ function DomainsPage() {
       field: "domain",
       headerName: "Domain Name",
       width: 275,
-      flex: 2
+      flex: 2,
     },
     {
-      field: "status",
+      field: "domainStatus",
       headerName: "Domain Status",
       width: 120,
       flex: 1,
-      renderCell: (params) =>
-        params.value === "active" ? (
-          <Chip label="Active" color="success" size="small" />
-        ) : (
-          <Chip label="Inactive" color="default" size="small" />
-        ),
+      renderCell: (params) => (
+        <Chip sx={{ textTransform: 'capitalize' }} label={params.value} color={params.value === "active" ? "success" : "error"} size="small" />
+      ),
     },
     {
       field: "readyToConnect",
@@ -172,6 +153,7 @@ function DomainsPage() {
       flex: 1,
       renderCell: (params) => (
         <Chip
+          sx={{ textTransform: 'capitalize'}}
           label={params.value}
           color={
             params.value === "Deploy First"
@@ -180,9 +162,9 @@ function DomainsPage() {
                 ? "secondary"
                 : params.value === "Processing"
                   ? "warning"
-                : params.value === "Connected"
-                  ? "success"
-                : "error"
+                  : params.value === "Connected"
+                    ? "success"
+                    : "error"
           }
           size="small"
         />
@@ -200,7 +182,7 @@ function DomainsPage() {
               onClick={() => DeployDomainHandler(params.row.domain)}
               variant="contained"
               size="small"
-              disabled={ params.row.readyToConnect !== "Ready" ? true : false }
+              disabled={params.row.readyToConnect !== "Ready" ? true : false}
             >
               Connect
             </Button>
@@ -221,14 +203,22 @@ function DomainsPage() {
 
       const { SUCCESS, MESSAGE, ERROR } = response.data;
 
-      // domains deploy response 
-      console.log('domain deploy response ', response.data);
+      // domains deploy response
+      console.log("domain deploy response ", response.data);
 
       if (SUCCESS) {
-        snackbarClickVariant(MESSAGE || "Domain deployment started", "success")();
+        snackbarClickVariant(
+          MESSAGE || "Domain deployment started",
+          "success"
+        )();
       } else if (ERROR?.errors.length) {
         const isNotFound = ERROR.errors[0]?.code === 8000007;
-        snackbarClickVariant(isNotFound ? "Please deploy your project first" : "Domain deployment failed", "error")();
+        snackbarClickVariant(
+          isNotFound
+            ? "Please deploy your project first"
+            : "Domain deployment failed",
+          "error"
+        )();
       }
     } catch (error) {
       console.error("Error deploying domain:", error);

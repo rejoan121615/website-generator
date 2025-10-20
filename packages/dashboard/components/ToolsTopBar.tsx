@@ -51,16 +51,6 @@ const ToolsTopBar = ({
         <Box>
           <Button
             variant="contained"
-            color="success"
-            startIcon={<AddIcon />}
-            onClick={handleFileSelect}
-            sx={{ minWidth: 160, marginRight: 2 }}
-          >
-            Add Record
-          </Button>
-
-          <Button
-            variant="contained"
             startIcon={<UploadFileIcon />}
             onClick={handleFileSelect}
             sx={{ minWidth: 160 }}
