@@ -14,6 +14,7 @@ import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 
 const NavbarData = [
@@ -37,6 +38,8 @@ const NavbarData = [
 const drawerWidth = 240;
 
 export default function Home({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -61,14 +64,26 @@ export default function Home({ children }: { children: React.ReactNode }) {
         <Box sx={{ overflow: "auto" }}>
           <List>
             {NavbarData.map((NavItem) => {
+              const isActive = pathname === NavItem.link;
               return (
                 <ListItem key={NavItem.title} disablePadding>
-                  {/* <Link href={NavItem.link}> */}
-                    <ListItemButton component={Link} href={NavItem.link}>
-                      <ListItemIcon>{NavItem.icon}</ListItemIcon>
-                      <ListItemText primary={NavItem.title} />
-                    </ListItemButton>
-                  {/* </Link> */}
+                  <ListItemButton 
+                    component={Link} 
+                    href={NavItem.link}
+                    sx={{
+                      backgroundColor: isActive ? '#9a9a9a' : 'transparent',
+                      color: isActive ? 'primary.contrastText' : 'inherit',
+                      '&:hover': {
+                        backgroundColor: isActive ? '#9a9a9a' : 'action.hover',
+                      },
+                      '& .MuiListItemIcon-root': {
+                        color: isActive ? 'primary.contrastText' : 'inherit',
+                      }
+                    }}
+                  >
+                    <ListItemIcon>{NavItem.icon}</ListItemIcon>
+                    <ListItemText primary={NavItem.title} />
+                  </ListItemButton>
                 </ListItem>
               );
             })}
