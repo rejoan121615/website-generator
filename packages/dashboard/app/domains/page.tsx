@@ -8,10 +8,9 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
 import {
   WebsiteRowTYPE,
-  GetApiResTYPE,
-  ServerEventResTYPE,
   DomainTableDataTYPE,
-} from "@/types/websiteApi.type";
+  WebsitesResTYPE,
+} from "@/types/dashboard.type";
 import { ButtonGroup, Chip } from "@mui/material";
 import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
 import {
@@ -49,7 +48,7 @@ function DomainsPage() {
         // Execute all requests in parallel
         const [websitesResponse, domainsResponse, projectsResponse] =
           await Promise.all([
-            axios.get<GetApiResTYPE>("/api/websites"),
+            axios.get<WebsitesResTYPE>("/api/websites"),
             axios.get<DomainResTYPE>("/api/domains"),
             axios.get<ProjectsResTYPE>("/api/projects"),
           ]);

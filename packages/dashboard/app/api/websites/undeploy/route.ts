@@ -1,9 +1,10 @@
-import { GetApiResTYPE, WebsiteRowTYPE } from '@/types/websiteApi.type';
-import { deleteProject } from '@repo/cf';
+import { WebsiteRowTYPE } from '@/types/dashboard.type';
+import { deleteProject, DeleteProjectResTYPE } from '@repo/cf';
 import { NextRequest, NextResponse } from 'next/server'
 import { APIError } from 'cloudflare'
+import { EventResType } from '@repo/shared-types';
 
-export async function POST(request: NextRequest) : Promise<NextResponse<GetApiResTYPE>> {
+export async function POST(request: NextRequest) : Promise<NextResponse<DeleteProjectResTYPE>> {
     const body = await request.json();
     const websiteRowData = body?.data as WebsiteRowTYPE;
 

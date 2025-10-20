@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { GetReadyToBuildList, FetchWebsites } from "./websiteDataOperation";
 import type {
-  GetApiResTYPE,
   WebsiteRowTYPE,
   WebsitesResTYPE,
-} from "@/types/websiteApi.type";
+} from "@/types/dashboard.type";
 
-export async function GET(): Promise<NextResponse<GetApiResTYPE>> {
+export async function GET(): Promise<NextResponse<WebsitesResTYPE>> {
   try {
     const { SUCCESS, DATA } = await FetchWebsites();
     if (!SUCCESS) {

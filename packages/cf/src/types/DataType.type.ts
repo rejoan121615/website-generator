@@ -53,6 +53,7 @@ export type DeleteProjectResTYPE = CFApiResTYPE & {
   DATA?: {
     deleted: boolean;
   };
+  ERROR?: APIError;
 };
 
 export type ProjectDomainDataTYPE = DomainGetResponse;

@@ -6,7 +6,7 @@ import axios from 'axios'
 import SectionTitle from '../../components/SectionTitle'
 import ToolsTopBar from '../../components/ToolsTopBar'
 import WebsiteDetailsModal from '../../components/WebsiteDetailsModal'
-import { CsvRowDataType } from '@repo/cf'
+import { CsvRowDataType } from '@repo/shared-types'
 
 
 const Tools = () => {

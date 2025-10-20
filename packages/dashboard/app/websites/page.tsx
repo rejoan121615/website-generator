@@ -7,12 +7,13 @@ import TableControlBar from "@/components/TableControlBar";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
 import {
+  WebsiteFuncResTYPE,
   WebsiteRowTYPE,
-  GetApiResTYPE,
-  ServerEventResTYPE,
-} from "@/types/websiteApi.type";
+  WebsitesResTYPE
+} from "@/types/dashboard.type";
 import { ButtonGroup, Chip } from "@mui/material";
 import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
+import { DeleteProjectResTYPE, DeployResTYPE, ServerEventResTYPE } from "@repo/cf";
 
 function WebsitesPage() {
   const { enqueueSnackbar } = useSnackbar();
@@ -28,7 +29,7 @@ function WebsitesPage() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get<GetApiResTYPE>("/api/websites")
+      .get<WebsiteFuncResTYPE>("/api/websites")
       .then((res) => {
         const { data } = res;
         if (data.SUCCESS) {
@@ -154,9 +155,9 @@ function WebsitesPage() {
 
     // send deploy request
     axios
-      .post("/api/websites/deploy", { data: row })
+      .post<DeployResTYPE>("/api/websites/deploy", { data: row })
       .then((res) => {
-        const data = res.data as GetApiResTYPE;
+        const data = res.data;
 
         if (data.SUCCESS) {
           snackbarClickVariant(`${row.name}: ${data.MESSAGE}`, "success")();
@@ -202,9 +203,9 @@ function WebsitesPage() {
     });
 
     axios
-      .post("/api/websites/undeploy", { data: row })
+      .post<DeleteProjectResTYPE>("/api/websites/undeploy", { data: row })
       .then((res) => {
-        const data = res.data as GetApiResTYPE;
+        const data = res.data;
 
         if (data.SUCCESS) {
           snackbarClickVariant(`${row.name}: ${data.MESSAGE}`, "success")();

@@ -1,4 +1,4 @@
-import { ServerEventResTYPE } from "@/types/websiteApi.type";
+import { ServerEventResTYPE } from "@repo/cf";
 import path from "path";
 import { fileURLToPath } from "url";
 

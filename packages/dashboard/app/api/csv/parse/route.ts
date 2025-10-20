@@ -3,7 +3,8 @@ import { parse } from "csv-parse/sync";
 import fs from "fs-extra";
 import path from "path";
 import os from "os";
-import { CsvParseApiResponse, CsvRowDataType } from "@/types/websiteApi.type"; 
+import { CsvRowDataType } from "@repo/shared-types";
+import { CsvParseApiResponse } from "@/types/dashboard.type";
 
 export async function POST(request: NextRequest): Promise<NextResponse<CsvParseApiResponse>> {
   let tempFilePath: string | null = null;

@@ -4,17 +4,11 @@ import path from "path";
 import { stringify } from "csv-stringify/sync";
 import { parse } from "csv-parse/sync";
 import { ProjectRoot } from "@/lib/assists";
-import type { CsvRowDataType } from "@/types/websiteApi.type";
+import { CsvMergeApiResponse } from "@/types/dashboard.type";
+import { CsvRowDataType } from "@repo/shared-types";
 
-type CsvMergeApiResponse = {
-  SUCCESS: boolean;
-  MESSAGE: string;
-  DATA?: {
-    totalRecords: number;
-    newRecords: number;
-    existingRecords: number;
-  };
-};
+
+
 
 export async function POST(request: NextRequest): Promise<NextResponse<CsvMergeApiResponse>> {
   try {

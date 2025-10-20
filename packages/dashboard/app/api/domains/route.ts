@@ -1,8 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
-import { FetchDomains } from "@repo/cf";
-import { DomainApiResTYPE } from "@/types/websiteApi.type";
+import { FetchDomains, DomainResTYPE } from "@repo/cf";
 
-export async function GET(): Promise<NextResponse<DomainApiResTYPE>> {
+export async function GET(): Promise<NextResponse<DomainResTYPE>> {
   try {
     const { DATA, MESSAGE, SUCCESS } = await FetchDomains();
     

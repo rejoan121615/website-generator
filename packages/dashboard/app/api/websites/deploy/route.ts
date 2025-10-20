@@ -1,10 +1,10 @@
-import { GetApiResTYPE, WebsiteRowTYPE } from "@/types/websiteApi.type";
+import { WebsiteRowTYPE } from "@/types/dashboard.type";
 import { NextResponse } from "next/server";
-import { DeployProject } from "@repo/cf";
+import { DeployProject, DeployResTYPE } from "@repo/cf";
 
 export async function POST(
   request: Request
-): Promise<NextResponse<GetApiResTYPE>> {
+): Promise<NextResponse<DeployResTYPE>> {
   const body = await request.json();
 
   const websiteRowData = body?.data as WebsiteRowTYPE;

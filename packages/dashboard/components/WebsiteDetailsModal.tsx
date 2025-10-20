@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { CsvRowDataType } from '@repo/cf';
+import { CsvRowDataType } from '@repo/shared-types';
 
 interface WebsiteDetailsModalProps {
   open: boolean;

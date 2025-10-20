@@ -24,7 +24,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import MergeIcon from '@mui/icons-material/Merge';
 import ReplaceIcon from '@mui/icons-material/SwapHoriz';
 import axios from 'axios';
-import { CsvParseApiResponse } from '@/types/websiteApi.type';
+import { CsvParseApiResponse } from '@/types/dashboard.type';
 
 interface CSVUploadData {
   fileName: string;

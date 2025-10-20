@@ -3,16 +3,9 @@ import fs from "fs-extra";
 import path from "path";
 import { stringify } from "csv-stringify/sync";
 import { ProjectRoot } from "@/lib/assists";
-import type { CsvRowDataType } from "@/types/websiteApi.type";
+import { CsvRowDataType } from "@repo/shared-types";
+import { CsvReplaceApiResponse } from "@/types/dashboard.type";
 
-type CsvReplaceApiResponse = {
-  SUCCESS: boolean;
-  MESSAGE: string;
-  DATA?: {
-    totalRecords: number;
-    replacedRecords: number;
-  };
-};
 
 export async function POST(request: NextRequest): Promise<NextResponse<CsvReplaceApiResponse>> {
   try {

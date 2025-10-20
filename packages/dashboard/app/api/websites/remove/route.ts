@@ -1,10 +1,10 @@
-import { GetApiResTYPE, WebsiteRowTYPE } from "@/types/websiteApi.type";
 import { astroProjectRemover } from "@repo/app-generator/app-bundler";
 import { NextResponse } from "next/server";
+import { EventResType } from '@repo/shared-types'
 
 export async function POST(
   request: Request
-): Promise<NextResponse<GetApiResTYPE>> {
+): Promise<NextResponse<EventResType>> {
   const body = await request.json();
   const websiteRowData = body?.data;
 

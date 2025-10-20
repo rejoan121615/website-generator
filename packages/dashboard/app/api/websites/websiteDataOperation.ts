@@ -2,17 +2,15 @@ import fs from "fs-extra";
 import path from "path";
 import { parse } from "csv-parse";
 import {
-  ReadyToBuildResTYPE,
-  CsvRowDataType,
-  WebsitesResTYPE,
+  WebsiteFuncResTYPE,
   WebsiteRowTYPE,
-  GetApiResTYPE,
-} from "@/types/websiteApi.type";
+} from "@/types/dashboard.type";
 import { ProjectRoot } from "@/lib/assists";
 import { createReadStream } from "fs";
 import { FetchProjects, GetProjectName } from '@repo/cf'
+import { CsvRowDataType } from "@repo/shared-types";
 
-export async function FetchWebsites(): Promise<GetApiResTYPE> {
+export async function FetchWebsites(): Promise<WebsiteFuncResTYPE> {
   const websitesCsvPath = path.resolve(ProjectRoot(), "data", "websites.csv");
 
   if (!fs.existsSync(websitesCsvPath)) {
@@ -22,7 +20,7 @@ export async function FetchWebsites(): Promise<GetApiResTYPE> {
     };
   }
 
-  return new Promise<GetApiResTYPE>((resolve, reject) => {
+  return new Promise<WebsiteFuncResTYPE>((resolve, reject) => {
     const websitesData: CsvRowDataType[] = [];
 
     const csvStream = fs.createReadStream(websitesCsvPath, "utf-8");
@@ -78,7 +76,7 @@ export async function GetReadyToBuildList({
   csvRowData,
 }: {
   csvRowData: CsvRowDataType[];
-}): Promise<GetApiResTYPE> {
+}): Promise<WebsiteFuncResTYPE> {
   const appsFolderPath = path.resolve(ProjectRoot(), "apps");
 
   try {
@@ -139,6 +137,7 @@ export async function GetReadyToBuildList({
     return {
       SUCCESS: false,
       MESSAGE: "Error finding website list",
+      ERROR: error instanceof Error ? error : new Error("Unknown error"),
     };
   }
 }
@@ -164,53 +163,4 @@ export async function DeployDataUpdater({
   }
   
   return WebsiteList;
-
-
-  // console.log('fetch project data ', projectData)
-
-  // const reportFolderPath = path.resolve(ProjectRoot(), "reports");
-
-  // const updatedList = await Promise.all(
-  //   WebsiteList.map(async (siteData) => {
-  //     const { domain } = siteData;
-  //     const updatedSiteData = { ...siteData };
-  //     const reportDir = path.resolve(reportFolderPath, domain, "deploy");
-  //     const csvFilePath = path.resolve(reportDir, `latest-deploy.csv`);
-
-  //     if (fs.existsSync(csvFilePath)) {
-  //       // Read the CSV file and parse rows
-  //       const csvRows: any[] = [];
-  //       await new Promise<void>((resolve, reject) => {
-  //         const csvStream = createReadStream(csvFilePath, "utf-8");
-  //         const csvParse = csvStream.pipe(
-  //           parse({
-  //             columns: true,
-  //             delimiter: ",",
-  //           })
-  //         );
-  //         csvParse.on("data", (row: any) => {
-  //           csvRows.push(row);
-  //         });
-  //         csvParse.on("end", () => {
-  //           resolve();
-  //         });
-  //         csvParse.on("error", (err) => {
-  //           reject(err);
-  //         });
-  //       });
-  //       // Find the first row with a liveUrl (case-insensitive column)
-  //       const liveUrlRow = csvRows.find(
-  //         (row) => row["liveUrl"] || row["Live-Url"] || row["LiveUrl"]
-  //       );
-  //       const foundUrl =
-  //         (liveUrlRow && (liveUrlRow["liveUrl"] || liveUrlRow["Live-Url"] || liveUrlRow["LiveUrl"])) || null;
-  //       if (foundUrl) {
-  //         updatedSiteData.liveUrl = foundUrl;
-  //         updatedSiteData.deployed = "complete";
-  //       }
-  //     }
-  //     return updatedSiteData;
-  //   })
-  // );
-  // return updatedList;
 }
