@@ -37,36 +37,51 @@ export async function LogBuilder({
   try {
     const logger = winston.createLogger({
       level: logType,
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.errors({ stack: true }),
-        winston.format.json()
-      ),
-      defaultMeta: context || {},
       transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: buildReport })
+        // Console - Simple, human-readable format
+        new winston.transports.Console({
+          format: winston.format.printf(({ level, message }) => {
+            const icon = level === 'error' ? '✗' : level === 'warn' ? '⚠' : '✓';
+            return `${icon} ${message}`;
+          })
+        }),
+        // File - Simple text format with timestamp
+        new winston.transports.File({ 
+          filename: buildReport,
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.printf(({ level, message, timestamp }) => {
+              const icon = level === 'error' ? '✗' : level === 'warn' ? '⚠' : '✓';
+              const time = String(timestamp).replace('T', ' ').split('.')[0];
+              return `${time} ${icon} ${message}`;
+            })
+          )
+        })
       ]
     });
 
-    // Build the log object
-    const logObj: Record<string, any> = {
-      message: logMessage,
-      ...(context || {})
-    };
+    // Build simple message with error details if present
+    let fullMessage = logMessage;
     if (error) {
-      logObj.error = error instanceof Error ? {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      } : error;
+      if (error instanceof Error) {
+        fullMessage += `\n   Error: ${error.message}`;
+        if (error.stack) {
+          // Extract file path and line number from stack
+          const stackLines = error.stack.split('\n');
+          const relevantLine = stackLines.find(line => line.includes('.astro') || line.includes('.ts') || line.includes('.js'));
+          if (relevantLine) {
+            fullMessage += `\n   Location: ${relevantLine.trim()}`;
+          }
+        }
+      } else {
+        fullMessage += `\n   Error: ${JSON.stringify(error)}`;
+      }
     }
 
-
     if (typeof logger[logType] === 'function') {
-      (logger as any)[logType](logObj);
+      (logger as any)[logType](fullMessage);
     } else {
-      logger.info(logObj);
+      logger.info(fullMessage);
     }
   } catch (error) {
     console.error("Error while logging message:", error);
