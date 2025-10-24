@@ -21,6 +21,7 @@ export type CsvAddressType = {
 export type EventResType = {
   SUCCESS: boolean;
   MESSAGE: string;
+  ERROR?: Error | any;
 };
 
 

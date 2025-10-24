@@ -26,9 +26,9 @@ export async function DeployProject({
     LogBuilder({
       domain: domainName,
       logMessage: "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing",
-      logType: "fatal",
+      logType: "verbose",
       context: { function: "deploy" },
-      logFileName: "cf-deploy",
+      logFileName: "cloudflare",
     });
     throw new Error(
       "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing, check .env file"
@@ -42,9 +42,9 @@ export async function DeployProject({
     LogBuilder({
       domain: domainName,
       logMessage: `Deployable project files not found at path: ${staticWebsiteFiles}`,
-      logType: "fatal",
+      logType: "verbose",
       context: { function: "deploy" },
-      logFileName: "cf-deploy",
+      logFileName: "cloudflare",
     });
     return {
       SUCCESS: false,
@@ -57,6 +57,13 @@ export async function DeployProject({
 
   try {
     console.log("Checking if cf project already exists...", cfProjectName);
+    LogBuilder({
+      domain: domainName,
+      logMessage: `Checking if cf project already exists: ${cfProjectName}`,
+      logType: "info",
+      context: { function: "deploy", domainName, cfProjectName },
+      logFileName: "cloudflare",
+    });
     await cfClient.pages.projects.get(cfProjectName, {
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
@@ -64,10 +71,10 @@ export async function DeployProject({
     console.log("Project already exists. Using the existing project...");
     LogBuilder({
       domain: domainName,
-      logMessage: "Using existing project for deployment",
+      logMessage: `Project already exists. Using the existing project...` ,
       logType: "info",
-      context: { function: "deploy" },
-      logFileName: "cf-deploy",
+      context: { function: "deploy", domainName, cfProjectName },
+      logFileName: "cloudflare",
     });
 
     return await DeployApihandler({ domainName, cfProjectName });
@@ -76,6 +83,13 @@ export async function DeployProject({
       const { status, errors } = error;
       if (status === 404) {
         console.log("Project not found, creating a new one...");
+        LogBuilder({
+          domain: domainName,
+          logMessage: `Project not found, creating a new one...` ,
+          logType: "warn",
+          context: { function: "deploy", domainName, cfProjectName },
+          logFileName: "cloudflare",
+        });
 
         // ------------------ create cf new project ------------------
         try {
@@ -87,13 +101,12 @@ export async function DeployProject({
           });
 
           console.log("New project created successfully...");
-
           LogBuilder({
             domain: domainName,
-            logMessage: "New project created successfully",
+            logMessage: `New project created successfully: ${cfProjectName}` ,
             logType: "info",
-            context: { function: "deploy" },
-            logFileName: "cf-deploy",
+            context: { function: "deploy", domainName, cfProjectName },
+            logFileName: "cloudflare",
           });
 
           return await DeployApihandler({ domainName, cfProjectName });
@@ -101,10 +114,10 @@ export async function DeployProject({
           console.log("Error creating new project:", error);
           LogBuilder({
             domain: domainName,
-            logMessage: "Creating new project failed",
+            logMessage: `Error creating new project: ${error}` ,
             logType: "error",
-            context: { function: "deploy" },
-            logFileName: "cf-deploy",
+            context: { function: "deploy", domainName, cfProjectName },
+            logFileName: "cloudflare",
             error: error instanceof Error ? error : undefined,
           });
           return {

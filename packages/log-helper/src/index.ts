@@ -1,7 +1,7 @@
 import fs, { ensureDirSync, ensureFileSync } from "fs-extra";
 import path from "path";
 import { getRootDir } from "./utils/path-solver.js";
-import pino from "pino";
+import winston from 'winston'
 
 const reportFolder = path.resolve(getRootDir("../../../../"), "logs");
 
@@ -11,36 +11,43 @@ export async function LogBuilder({
   logType,
   context,
   error,
-  logFileName = "dashboard"
+  logFileName,
+  newLog = false
 }: {
-  domain: string;
+  domain: "general" | string;
   logMessage: string;
-  logType: "fatal" | "error" | "warn" | "info" | "debug" | "trace";
+  logType: "error" | "warn" | "info" | "verbose" | "debug" | "silly";
+  logFileName: "app-generator" | "cloudflare";
   error?: Error;
   context?: Record<string, any>;
-  logFileName?: string;
+  newLog?: boolean
 }) {
-  const buildReport = path.resolve(reportFolder, domain, `${logFileName}-log.log`);
+  const buildReport = path.resolve(reportFolder, domain, `${logFileName}.log`);
+
+  if (newLog && fs.existsSync(buildReport)) {
+    fs.removeSync(buildReport);
+  }
   // make sure the report folder exists
   ensureDirSync(path.dirname(buildReport));
 
   // make sure the file is available to append log
   ensureFileSync(buildReport);
 
-  // write pino logger to the file
+  // write winston logger to the file
   try {
-    const logger = pino(
-      {
-        level: logType,
-        formatters: {
-          level: (label) => ({ level: label }),
-          log: (log) => ({ ...log }),
-        },
-        timestamp: pino.stdTimeFunctions.isoTime,
-        base: context ? { ...context } : {},
-      },
-      pino.destination(buildReport)
-    );
+    const logger = winston.createLogger({
+      level: logType,
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        winston.format.json()
+      ),
+      defaultMeta: context || {},
+      transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: buildReport })
+      ]
+    });
 
     // Build the log object
     const logObj: Record<string, any> = {
@@ -55,9 +62,9 @@ export async function LogBuilder({
       } : error;
     }
 
-    // append log message to domain specific log file using the correct log level
+
     if (typeof logger[logType] === 'function') {
-      logger[logType](logObj);
+      (logger as any)[logType](logObj);
     } else {
       logger.info(logObj);
     }

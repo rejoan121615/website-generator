@@ -2,6 +2,7 @@ import env from "dotenv";
 import Cloudflare from "cloudflare";
 import path from "path";
 import { DomainResTYPE } from "../types/DataType.type.js";
+import { LogBuilder } from "@repo/log-helper";
 
 
 const projectRoot = path.resolve(process.cwd(), "../../");
@@ -17,6 +18,13 @@ export async function FetchDomains(): Promise<DomainResTYPE> {
   try {
     let { result } = await cfClient.zones.list();
 
+    LogBuilder({
+      domain: "general",
+      logMessage: `Successfully fetched domains` ,
+      logType: "info",
+      context: { function: "FetchDomains", result },
+      logFileName: "cloudflare",
+    });
     return {
       SUCCESS: true,
       MESSAGE: "Domain fetched successfully",
@@ -25,6 +33,14 @@ export async function FetchDomains(): Promise<DomainResTYPE> {
 
   } catch (error) {
     const apiError = error instanceof Cloudflare.APIError ? error : undefined;
+    LogBuilder({
+      domain: "general",
+      logMessage: `Failed to fetch domains: ${apiError?.message || error}`,
+      logType: "error",
+      context: { function: "FetchDomains" },
+      logFileName: "cloudflare",
+      error: error instanceof Error ? error : undefined,
+    });
     return {
       SUCCESS: false,
       MESSAGE: "Failed to fetch domains",

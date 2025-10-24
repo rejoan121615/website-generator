@@ -23,6 +23,13 @@ export async function DeployApihandler({
   cfProjectName: string;
 }): Promise<DeployApiResTYPE> {
   try {
+    LogBuilder({
+      domain: domainName,
+      logMessage: `Started uploading source code to the project...` ,
+      logType: "info",
+      context: { function: "DeployApihandler", domainName, cfProjectName },
+      logFileName: "cloudflare",
+    });
     console.log("Started uploading source code to the project...");
     // upload source code to the project
     const staticWebsitePath = path.join(
@@ -71,10 +78,10 @@ export async function DeployApihandler({
       subprocess.kill(); // kill the subprocess
       LogBuilder({
         domain: domainName,
-        logMessage: "Deployment complete",
+        logMessage: `Deployment initiated successfully for project ${cfProjectName}` ,
         logType: "info",
-        context: { function: "DeployApihandler" },
-        logFileName: "cf-deploy",
+        context: { function: "DeployApihandler", domainName, cfProjectName },
+        logFileName: "cloudflare",
       });
       // fetch project details
       const { id, name, domains, subdomain, latest_deployment } =
@@ -100,10 +107,10 @@ export async function DeployApihandler({
       console.log("Project upload failed");
       LogBuilder({
         domain: domainName,
-        logMessage: "Project upload failed",
+        logMessage: `Project upload failed with exit code ${exitCode}` ,
         logType: "error",
-        context: { function: "DeployApiHandler" },
-        logFileName: "cf-deploy",
+        context: { function: "DeployApiHandler", domainName, exitCode },
+        logFileName: "cloudflare",
         error: stack,
       });
       return {
@@ -115,10 +122,10 @@ export async function DeployApihandler({
     console.log("Error during deployment:", error);
     LogBuilder({
       domain: domainName,
-      logMessage: "Error during deployment",
+      logMessage: `Error during deployment: ${error}` ,
       logType: "error",
-      context: { function: "DeployApiHandler" },
-      logFileName: "cf-deploy",
+      context: { function: "DeployApiHandler", domainName },
+      logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });
     return {

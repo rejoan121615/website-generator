@@ -16,9 +16,10 @@ export async function folderCreator(data: {
     LogBuilder({
       domain: domain,
       logMessage: "Missing domain or output directory on folderCreator",
-      logType: "error",
+      logType: "silly",
+      logFileName: "app-generator",
     })
-    return { SUCCESS: false, MESSAGE: "Missing domain or output directory" };
+    // return { SUCCESS: false, MESSAGE: "Missing domain or output directory" };
   }
   // create folder inside build-output folder with domain name
   try {
@@ -27,6 +28,7 @@ export async function folderCreator(data: {
       domain: domain,
       logMessage: `Src folder created inside => apps/${domain}`,
       logType: "info",
+      logFileName: "app-generator",
     })
     return { SUCCESS: true, MESSAGE: `Folder created for domain: ${domain}` };
   } catch (err) {
@@ -36,6 +38,7 @@ export async function folderCreator(data: {
       logType: "error",
       context: { function: "folderCreator" },
       error: err instanceof Error ? err : undefined,
+      logFileName: "app-generator",
     });
     return {
       SUCCESS: false,

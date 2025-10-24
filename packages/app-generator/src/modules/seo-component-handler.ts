@@ -77,6 +77,7 @@ export async function SeoComponentHandler({
     return {
       SUCCESS: false,
       MESSAGE: `Error processing SEO component: ${error?.message || error}`,
+      ERROR: error instanceof Error ? error : undefined
     };
   }
 

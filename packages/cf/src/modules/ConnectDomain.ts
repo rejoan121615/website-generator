@@ -3,6 +3,7 @@ import env from "dotenv";
 import Cloudflare, { APIError } from "cloudflare";
 import { ConnectDomainResTYPE } from "../types/DataType.type.js";
 import { GetProjectName } from "../lib/GetProjectName.js";
+import { LogBuilder } from "@repo/log-helper";
 
 const projectRoot = path.resolve(process.cwd(), "../../");
 const dotEnvPath = path.resolve(projectRoot, ".env");
@@ -16,18 +17,39 @@ export async function ConnectDomain({
 }): Promise<ConnectDomainResTYPE> {
   if (!process.env.CLOUDFLARE_API_TOKEN) {
     console.error("CLOUDFLARE_API_TOKEN is not found in .env file");
+    LogBuilder({
+      domain: domainName || "general",
+      logMessage: "CLOUDFLARE_API_TOKEN is not found in .env file",
+      logType: "error",
+      context: { function: "ConnectDomain" },
+      logFileName: "cloudflare",
+    });
     return {
       SUCCESS: false,
       MESSAGE: "CLOUDFLARE_API_TOKEN is not found in .env file",
     };
   } else if (!process.env.CLOUDFLARE_ACCOUNT_ID) {
     console.error("CLOUDFLARE_ACCOUNT_ID is not found in .env file");
+    LogBuilder({
+      domain: domainName || "general",
+      logMessage: "CLOUDFLARE_ACCOUNT_ID is not found in .env file",
+      logType: "error",
+      context: { function: "ConnectDomain" },
+      logFileName: "cloudflare",
+    });
     return {
       SUCCESS: false,
       MESSAGE: "CLOUDFLARE_ACCOUNT_ID is not found in .env file",
     };
   } else if (!domainName) {
     console.error("Please provide a valid domain name");
+    LogBuilder({
+      domain: "general",
+      logMessage: "Please provide a valid domain name",
+      logType: "error",
+      context: { function: "ConnectDomain" },
+      logFileName: "cloudflare",
+    });
     return {
       SUCCESS: false,
       MESSAGE: "Please provide a valid domain name",
@@ -38,6 +60,13 @@ export async function ConnectDomain({
     GetProjectName(domainName);
 
   if (!projectName) {
+    LogBuilder({
+      domain: domainName || "general",
+      logMessage: "Unable to parse domain name for project creation",
+      logType: "error",
+      context: { function: "ConnectDomain" },
+      logFileName: "cloudflare",
+    });
     return {
       SUCCESS: false,
       MESSAGE: "Unable to parse domain name for project creation",
@@ -72,6 +101,13 @@ export async function ConnectDomain({
     );
 
     if (!zones.result || zones.result.length === 0) {
+      LogBuilder({
+        domain: domainName,
+        logMessage: `Domain ${domainName} not found in your Cloudflare account. Please add it as a zone first.`,
+        logType: "error",
+        context: { function: "ConnectDomain" },
+        logFileName: "cloudflare",
+      });
       return {
         SUCCESS: false,
         MESSAGE: `Domain ${domainName} not found in your Cloudflare account. Please add it as a zone first.`,
@@ -106,6 +142,15 @@ export async function ConnectDomain({
 
     console.log(`CNAME record created `);
 
+    LogBuilder({
+      domain: domainName,
+      logMessage: hasSubdomain
+        ? `Subdomain ${domainName} connected and DNS configured successfully`
+        : `Domain ${domainName} connected and DNS records configured successfully`,
+      logType: "info",
+      context: { function: "ConnectDomain", domainName, hasSubdomain },
+      logFileName: "cloudflare",
+    });
     return {
       SUCCESS: true,
       MESSAGE: hasSubdomain
@@ -118,7 +163,14 @@ export async function ConnectDomain({
     const err = error instanceof APIError ? error : null;
     const errorMsg =
       err?.errors[0]?.message || "Failed to connect domain or configure DNS";
-
+    LogBuilder({
+      domain: domainName,
+      logMessage: `Failed to connect domain or configure DNS: ${errorMsg}`,
+      logType: "error",
+      context: { function: "ConnectDomain" },
+      logFileName: "cloudflare",
+      error: error instanceof Error ? error : undefined,
+    });
     return {
       SUCCESS: false,
       MESSAGE: errorMsg,

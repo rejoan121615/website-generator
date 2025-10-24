@@ -14,10 +14,42 @@ export async function astroProjectCreator(
   data: CsvRowDataType
 ): Promise<AstroProjectBuilderResultType> {
   const { domain } = data;
+  const startTime = Date.now();
+  
+  LogBuilder({
+    domain: data.domain,
+    logMessage: `Starting Astro project creation for ${domain}`,
+    logType: "info",
+    context: { 
+      function: "astroProjectCreator",
+      businessName: data.name,
+      serviceType: data.service_name,
+      email: data.email,
+      phone: data.phone
+    },
+    logFileName: "app-generator",
+  });
+  
   try {
     const turboRepoRoot = getRootDir("../../../../");
 
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Resolved turbo repo root: ${turboRepoRoot}`,
+      logType: "debug",
+      context: { function: "astroProjectCreator", turboRepoRoot },
+      logFileName: "app-generator",
+    });
+
     // create domain specific folder
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Creating folder structure for ${domain}`,
+      logType: "debug",
+      context: { function: "astroProjectCreator", step: "folder-creation" },
+      logFileName: "app-generator",
+    });
+    
     const folderCreationResult = await folderCreator({
       domain: domain,
     });
@@ -37,9 +69,32 @@ export async function astroProjectCreator(
         domain: data.domain,
         logMessage: `Cloudflare scripts created successfully`,
         logType: "info",
+        logFileName: "app-generator",
       });
     }
 
+    const processingTime = Date.now() - startTime;
+    
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Astro project creation completed successfully for ${domain}`,
+      logType: "info",
+      context: { 
+        function: "astroProjectCreator",
+        step: "completion-success",
+        performance: {
+          processingTimeMs: processingTime,
+          processingTimeSec: `${(processingTime / 1000).toFixed(2)}s`
+        },
+        results: {
+          folderCreation: folderCreationResult.SUCCESS,
+          srcCodeBuilding: srcCodeBuilderResult.SUCCESS,
+          cloudflareScripts: cloudFlareScriptBuilderResult.SUCCESS
+        }
+      },
+      logFileName: "app-generator",
+    });
+    
     return {
       SUCCESS: true,
       MESSAGE: `Astro app creating completed for domain: ${domain}`,
@@ -57,6 +112,7 @@ export async function astroProjectCreator(
       logType: "error",
       context: { function: "astroProjectCreator" },
       error: error instanceof Error ? error : undefined,
+      logFileName: "app-generator",
     });
     return {
       SUCCESS: false,
@@ -71,17 +127,92 @@ export async function astroProjectRemover(
 ): Promise<AstroProjectBuilderResultType> {
   const turboRepoRoot = getRootDir("../../../../");
   const { domain } = data;
+  const startTime = Date.now();
+  
+  LogBuilder({
+    domain: data.domain,
+    logMessage: `Starting removal of corrupted project: ${domain}`,
+    logType: "warn",
+    context: { function: "astroProjectRemover", reason: "cleanup" },
+    logFileName: "app-generator",
+  });
+  
   try {
     const appFolderPath = path.join(turboRepoRoot, "apps", domain);
-    await fs.remove(appFolderPath);
-    console.log(`Corrupted project ${domain} removed successfully ...`);
-    return {
-      SUCCESS: true,
-      MESSAGE: `Corrupted project ${domain} removed successfully ...`,
-      DATA: null,
-    };
+    
+    // Check if folder exists before attempting removal
+    if (await fs.pathExists(appFolderPath)) {
+      const folderStats = await fs.stat(appFolderPath);
+      
+      LogBuilder({
+        domain: data.domain,
+        logMessage: `Removing project folder: ${appFolderPath}`,
+        logType: "debug",
+        context: { 
+          function: "astroProjectRemover",
+          folderPath: appFolderPath,
+          folderSize: folderStats.size,
+          createdAt: folderStats.birthtime
+        },
+        logFileName: "app-generator",
+      });
+      
+      await fs.remove(appFolderPath);
+      
+      const processingTime = Date.now() - startTime;
+      
+      console.log(`Corrupted project ${domain} removed successfully ...`);
+      
+      LogBuilder({
+        domain: data.domain,
+        logMessage: `Corrupted project ${domain} removed successfully`,
+        logType: "info",
+        context: { 
+          function: "astroProjectRemover",
+          result: "success",
+          processingTimeMs: processingTime
+        },
+        logFileName: "app-generator",
+      });
+      
+      return {
+        SUCCESS: true,
+        MESSAGE: `Corrupted project ${domain} removed successfully ...`,
+        DATA: null,
+      };
+    } else {
+      LogBuilder({
+        domain: data.domain,
+        logMessage: `Project folder not found for removal: ${appFolderPath}`,
+        logType: "warn",
+        context: { function: "astroProjectRemover", folderPath: appFolderPath },
+        logFileName: "app-generator",
+      });
+      
+      return {
+        SUCCESS: true,
+        MESSAGE: `Project folder not found: ${domain}`,
+        DATA: null,
+      };
+    }
   } catch (error) {
+    const processingTime = Date.now() - startTime;
+    
     console.error(`Removing corrupted project ${domain} failed`, error);
+    
+    LogBuilder({
+      domain: data.domain,
+      logMessage: `Failed to remove corrupted project: ${domain}`,
+      logType: "error",
+      context: { 
+        function: "astroProjectRemover",
+        result: "failed",
+        processingTimeMs: processingTime
+      },
+      error: error instanceof Error ? error : undefined,
+      logFileName: "app-generator",
+    });
+    
     return {
       SUCCESS: false,
       MESSAGE: `Removing corrupted project ${domain} failed`,

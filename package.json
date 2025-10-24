@@ -20,8 +20,8 @@
     "site:deploy": "turbo run deploy --filter=\"./apps/*\"",
     "site:remove": "turbo run remove --filter=\"./apps/*\"",
     "site:preview": "turbo run preview --filter=\"./apps/*\"",
-    "site:generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run site:build",
-    "generate": "pnpm run site:generate",
+    "site:generate": "pnpm --filter @repo/app-generator start && pnpm install && pnpm run site:build",
+    "generate": "pnpm run build:packages && pnpm --filter @repo/app-generator start && pnpm install && pnpm run site:build",
     "project:build" : "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
     "dashboard": "pnpm --filter @repo/dashboard start"
   },
