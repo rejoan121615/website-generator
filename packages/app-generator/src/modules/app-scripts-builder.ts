@@ -60,9 +60,12 @@ export async function packageJsonFileBuilder(
     const jsonContent = JSON.parse(await fs.readFile(srcPath, "utf-8"));
     // replace name field
     jsonContent.name = domain;
-    jsonContent.scripts.build = "astro build";
+    jsonContent.scripts.build = "node ./scripts/build.js";
     jsonContent.scripts.deploy = "node ./cloudflare/deploy.js";
     jsonContent.scripts.remove = "node ./cloudflare/remove.js";
+
+    // add package 
+    jsonContent.dependencies["@repo/scripts"] = "workspace:*";
 
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
     console.log(`package.json created successfully ...`);

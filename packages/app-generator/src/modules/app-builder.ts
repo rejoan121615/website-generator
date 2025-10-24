@@ -9,6 +9,7 @@ import { getRootDir } from "../utilities/path-solver.js";
 import fs from "fs-extra";
 import path from "path";
 import { LogBuilder } from "@repo/log-helper";
+import { ProjectScriptsHandler } from "./project-scripts-handler.js";
 
 export async function astroProjectCreator(
   data: CsvRowDataType
@@ -73,6 +74,20 @@ export async function astroProjectCreator(
       });
     }
 
+    // create script to build, pnpm install, and run the project
+    const projectScriptsHandlerResult = await ProjectScriptsHandler({ domain, turboRepoRoot});
+
+    if (projectScriptsHandlerResult.SUCCESS) {
+      LogBuilder({
+        domain: data.domain,
+        logMessage: `Project scripts created successfully`,
+        logType: "info",
+        logFileName: "app-generator",
+      });
+    }
+
+
+    
     const processingTime = Date.now() - startTime;
     
     LogBuilder({

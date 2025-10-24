@@ -1,0 +1,36 @@
+{
+  "name": "@repo/scripts",
+  "author": "Mohd Rejoan",
+  "description": "Astro project script handler to output pnpm command logs",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc -p .",
+    "compile": "tsc -p . --watch",
+    "output": "nodemon ./dist/index.js"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@repo/shared-types": "workspace:*",
+    "@types/fs-extra": "^11.0.4",
+    "typescript": "5.9.2"
+  },
+  "dependencies": {
+    "@repo/log-helper": "workspace:*",
+    "@repo/report-helper": "workspace:*",
+    "@repo/shared-types": "workspace:*",
+    "dotenv": "^17.2.2",
+    "execa": "^9.6.0",
+    "fs-extra": "^11.3.2"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}

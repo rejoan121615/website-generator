@@ -20,7 +20,8 @@
     "fs-extra": "^11.3.1",
     "seedrandom": "^3.0.5",
     "sharp": "^0.34.4",
-    "@repo/log-helper": "workspace:*"
+    "@repo/log-helper": "workspace:*",
+    "@repo/scripts": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
