@@ -17,7 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^11.3.2",
-    "pino": "^10.0.0"
+    "pino": "^10.0.0",
+    "@repo/log-helper": "workspace:*"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

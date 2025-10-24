@@ -17,7 +17,7 @@ export async function LogBuilder({
   domain: "general" | string;
   logMessage: string;
   logType: "error" | "warn" | "info" | "verbose" | "debug" | "silly";
-  logFileName: "app-generator" | "cloudflare";
+  logFileName: "app-generator" | "cloudflare" | "report";
   error?: Error;
   context?: Record<string, any>;
   newLog?: boolean
