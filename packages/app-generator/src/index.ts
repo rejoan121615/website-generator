@@ -16,7 +16,7 @@ const outputDir = path.join(turboRepoRoot, "apps");
 
 // Log system startup
 LogBuilder({
-  domain: "general",
+  domain: "package (app-generator)",
   logMessage: "Website generator starting up",
   logType: "info",
   context: { 
@@ -26,29 +26,29 @@ LogBuilder({
     nodeVersion: process.version,
     platform: process.platform
   },
-  logFileName: "app-generator",
-  newLog: true
+  logFileName: "astro-generator",
+  newLog: true,
 });
 
 // create output dir if not exists
 fs.ensureDirSync(outputDir);
 
 LogBuilder({
-  domain: "general",
+  domain: "package (app-generator)",
   logMessage: `Output directory ensured: ${outputDir}`,
   logType: "debug",
   context: { function: "main-startup" },
-  logFileName: "app-generator",
+  logFileName: "astro-generator",
 });
 
 // check if the file exists
 if (fs.existsSync(csvFilePath)) {
   LogBuilder({
-    domain: "general",
+    domain: "package (app-generator)",
     logMessage: `CSV file found, starting processing: ${csvFilePath}`,
     logType: "info",
     context: { function: "main-csv-processor", csvFilePath },
-    logFileName: "app-generator",
+    logFileName: "astro-generator",
   });
 
   // create readable stream
@@ -77,7 +77,8 @@ if (fs.existsSync(csvFilePath)) {
         domainName: row.name,
         serviceType: row.service_name
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
+      newLog: true
     });
 
     try {
@@ -93,7 +94,7 @@ if (fs.existsSync(csvFilePath)) {
             processingResult: "success",
             totalProcessed: processedCount
           },
-          logFileName: "app-generator",
+          logFileName: "astro-generator",
         });
       } else {
         errorCount++;
@@ -107,7 +108,7 @@ if (fs.existsSync(csvFilePath)) {
             errorCount,
             failureReason: result.MESSAGE
           },
-          logFileName: "app-generator",
+          logFileName: "astro-generator",
         });
       }
     } catch (error) {
@@ -122,7 +123,7 @@ if (fs.existsSync(csvFilePath)) {
           errorCount
         },
         error: error instanceof Error ? error : undefined,
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
     }
   });
@@ -149,7 +150,7 @@ if (fs.existsSync(csvFilePath)) {
           processingTimeSec: `${(processingTime / 1000).toFixed(2)}s`
         }
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
   });
 
@@ -160,7 +161,7 @@ if (fs.existsSync(csvFilePath)) {
       logMessage: `Error while processing CSV file`,
       logType: "error",
       context: { function: "main-csv-processor", error: err },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
   });
 } else {

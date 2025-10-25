@@ -18,7 +18,7 @@ export async function ProjectScriptsHandler({
       domain,
       logMessage: `Creating project scripts for ${domain}`,
       logType: "info",
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     const buildScriptResult = await createBuildScript({ domain, scriptsDir });
@@ -28,7 +28,7 @@ export async function ProjectScriptsHandler({
         domain,
         logMessage: `Project scripts created successfully for ${domain}`,
         logType: "info",
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
     } else {
       LogBuilder({
@@ -36,7 +36,7 @@ export async function ProjectScriptsHandler({
         logMessage: `Failed to create project scripts for ${domain}`,
         logType: "error",
         error: buildScriptResult.ERROR instanceof Error ? buildScriptResult.ERROR : undefined,
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
     }
 
@@ -52,7 +52,7 @@ export async function ProjectScriptsHandler({
       logType: "error",
       error: errorObj,
       context: { function: "ProjectScriptsHandler" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     return {
@@ -88,7 +88,7 @@ import { runAstroBuild } from "@repo/scripts";
       domain,
       logMessage: `build.js script created successfully`,
       logType: "info",
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     return {
@@ -104,7 +104,7 @@ import { runAstroBuild } from "@repo/scripts";
       logType: "error",
       error,
       context: { function: "createBuildScript", scriptsDir },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     return {

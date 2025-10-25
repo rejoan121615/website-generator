@@ -29,7 +29,7 @@ export async function spintaxAndTokenHandler({
       outputPath,
       fileName
     },
-    logFileName: "app-generator",
+    logFileName: "astro-generator",
   });
   
   try {
@@ -39,7 +39,7 @@ export async function spintaxAndTokenHandler({
       logMessage: `Reading file content: ${fileName}`,
       logType: "silly",
       context: { function: "spintaxAndTokenHandler", step: "file-read" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     const fileContent = await fs.readFile(inputPath, "utf-8");
@@ -55,7 +55,7 @@ export async function spintaxAndTokenHandler({
         originalSizeBytes: originalSize,
         originalSizeKB: `${(originalSize / 1024).toFixed(2)}KB`
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     // Parse spintax in the file content
@@ -64,7 +64,7 @@ export async function spintaxAndTokenHandler({
       logMessage: `Processing spintax variations`,
       logType: "debug",
       context: { function: "spintaxAndTokenHandler", step: "spintax-processing" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     const contentAfterSpintax = parseSpintax({
@@ -80,7 +80,7 @@ export async function spintaxAndTokenHandler({
       logMessage: `Processing token replacements`,
       logType: "debug",
       context: { function: "spintaxAndTokenHandler", step: "token-processing" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     const contentAfterTokens = parseTokens({
@@ -95,7 +95,7 @@ export async function spintaxAndTokenHandler({
       logMessage: `Processing image optimizations`,
       logType: "debug",
       context: { function: "spintaxAndTokenHandler", step: "image-processing" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     const contentAfterImageProcess = imageProcessor({
@@ -119,7 +119,7 @@ export async function spintaxAndTokenHandler({
         processedSizeBytes: processedSize,
         processedSizeKB: `${(processedSize / 1024).toFixed(2)}KB`
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     await fs.writeFile(outputPath, contentAfterImageProcess, "utf-8");
@@ -138,7 +138,7 @@ export async function spintaxAndTokenHandler({
           sizeChangePercent: originalSize > 0 ? `${((processedSize - originalSize) / originalSize * 100).toFixed(2)}%` : "0%"
         }
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     return {
@@ -163,7 +163,7 @@ export async function spintaxAndTokenHandler({
         }
       },
       error: error instanceof Error ? error : undefined,
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     return {

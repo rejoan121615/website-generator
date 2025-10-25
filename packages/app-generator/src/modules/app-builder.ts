@@ -28,7 +28,7 @@ export async function astroProjectCreator(
       email: data.email,
       phone: data.phone
     },
-    logFileName: "app-generator",
+    logFileName: "astro-generator",
   });
   
   try {
@@ -39,7 +39,7 @@ export async function astroProjectCreator(
       logMessage: `Resolved turbo repo root: ${turboRepoRoot}`,
       logType: "debug",
       context: { function: "astroProjectCreator", turboRepoRoot },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     // create domain specific folder
@@ -48,7 +48,7 @@ export async function astroProjectCreator(
       logMessage: `Creating folder structure for ${domain}`,
       logType: "debug",
       context: { function: "astroProjectCreator", step: "folder-creation" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     const folderCreationResult = await folderCreator({
@@ -70,7 +70,7 @@ export async function astroProjectCreator(
         domain: data.domain,
         logMessage: `Cloudflare scripts created successfully`,
         logType: "info",
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
     }
 
@@ -82,7 +82,7 @@ export async function astroProjectCreator(
         domain: data.domain,
         logMessage: `Project scripts created successfully`,
         logType: "info",
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
     }
 
@@ -107,7 +107,7 @@ export async function astroProjectCreator(
           cloudflareScripts: cloudFlareScriptBuilderResult.SUCCESS
         }
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     return {
@@ -127,7 +127,7 @@ export async function astroProjectCreator(
       logType: "error",
       context: { function: "astroProjectCreator" },
       error: error instanceof Error ? error : undefined,
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     return {
       SUCCESS: false,
@@ -149,7 +149,7 @@ export async function astroProjectRemover(
     logMessage: `Starting removal of corrupted project: ${domain}`,
     logType: "warn",
     context: { function: "astroProjectRemover", reason: "cleanup" },
-    logFileName: "app-generator",
+    logFileName: "astro-generator",
   });
   
   try {
@@ -169,7 +169,7 @@ export async function astroProjectRemover(
           folderSize: folderStats.size,
           createdAt: folderStats.birthtime
         },
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
       
       await fs.remove(appFolderPath);
@@ -187,7 +187,7 @@ export async function astroProjectRemover(
           result: "success",
           processingTimeMs: processingTime
         },
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
       
       return {
@@ -201,7 +201,7 @@ export async function astroProjectRemover(
         logMessage: `Project folder not found for removal: ${appFolderPath}`,
         logType: "warn",
         context: { function: "astroProjectRemover", folderPath: appFolderPath },
-        logFileName: "app-generator",
+        logFileName: "astro-generator",
       });
       
       return {
@@ -225,7 +225,7 @@ export async function astroProjectRemover(
         processingTimeMs: processingTime
       },
       error: error instanceof Error ? error : undefined,
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     return {

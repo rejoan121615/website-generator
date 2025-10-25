@@ -14,10 +14,10 @@ export async function LogBuilder({
   logFileName,
   newLog = false
 }: {
-  domain: "general" | string;
+  domain: "package (app-generator)" | string;
   logMessage: string;
   logType: "error" | "warn" | "info" | "verbose" | "debug" | "silly";
-  logFileName: "app-generator" | "cloudflare" | "report" | "build";
+  logFileName: "astro-generator" | "cloudflare" | "report" | "build";
   error?: Error;
   context?: Record<string, any>;
   newLog?: boolean

@@ -29,7 +29,7 @@ export async function srcCodeBuilder(
       businessName: data.name,
       serviceType: data.service_name
     },
-    logFileName: "app-generator",
+    logFileName: "astro-generator",
   });
 
   const baseFrontendPath = path.join(turboRepoRoot, "packages", "baseFrontend");
@@ -44,7 +44,7 @@ export async function srcCodeBuilder(
       baseFrontendPath,
       appFolderPath
     },
-    logFileName: "app-generator",
+    logFileName: "astro-generator",
   });
 
   try {
@@ -54,7 +54,7 @@ export async function srcCodeBuilder(
       logMessage: `Ensuring destination directory exists: ${appFolderPath}`,
       logType: "debug",
       context: { function: "srcCodeBuilder", step: "directory-creation" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     await fs.ensureDir(appFolderPath);
@@ -65,7 +65,7 @@ export async function srcCodeBuilder(
       logMessage: `Scanning base frontend directory: ${baseFrontendPath}`,
       logType: "debug",
       context: { function: "srcCodeBuilder", step: "directory-scanning" },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     const allItems = await fs.readdir(baseFrontendPath, {
@@ -94,7 +94,7 @@ export async function srcCodeBuilder(
         filteredItems: items.length,
         excludedItems: allItems.length - items.length
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
 
     // file and folder filter to handle specific files differently
@@ -112,7 +112,7 @@ export async function srcCodeBuilder(
         step: "file-processing-start",
         totalItemsToProcess: items.length
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     for (const item of items) {
@@ -132,7 +132,7 @@ export async function srcCodeBuilder(
               step: "directory-creation",
               itemPath: item
             },
-            logFileName: "app-generator",
+            logFileName: "astro-generator",
           });
           
           await fs.ensureDir(destPath);
@@ -149,7 +149,7 @@ export async function srcCodeBuilder(
               fileSize: stat.size,
               fileType: path.extname(item)
             },
-            logFileName: "app-generator",
+            logFileName: "astro-generator",
           });
           
           if (item.endsWith("Seo.astro")) {
@@ -161,7 +161,7 @@ export async function srcCodeBuilder(
               logType: "error",
               context: { function: "srcCodeBuilder", srcPath, destPath },
               error: seoRes.ERROR,
-              logFileName: "app-generator"
+              logFileName: "astro-generator"
             });
           }
         } else if (item.endsWith(".astro")) {
@@ -178,7 +178,7 @@ export async function srcCodeBuilder(
               logMessage: `${spintaxRes.MESSAGE}`,
               logType: "error",
               context: { function: "srcCodeBuilder", srcPath, destPath },
-              logFileName: "app-generator"
+              logFileName: "astro-generator"
             });
           }
         } else if (item.endsWith("package.json")) {
@@ -190,7 +190,7 @@ export async function srcCodeBuilder(
               logMessage: `${packageJsonRes.MESSAGE}`,
               logType: "error",
               context: { function: "srcCodeBuilder", srcPath, destPath },
-              logFileName: "app-generator"
+              logFileName: "astro-generator"
             });
           }
         } else if (item.endsWith("astro.config.mjs")) {
@@ -201,7 +201,7 @@ export async function srcCodeBuilder(
               logMessage: `${astroConfigRes.MESSAGE}`,
               logType: "error",
               context: { function: "srcCodeBuilder", srcPath, destPath },
-              logFileName: "app-generator"
+              logFileName: "astro-generator"
             });
           }
         } else {
@@ -211,7 +211,7 @@ export async function srcCodeBuilder(
             logMessage: `Copying static file: ${item}`,
             logType: "silly",
             context: { function: "srcCodeBuilder", step: "static-file-copy", filePath: item },
-            logFileName: "app-generator",
+            logFileName: "astro-generator",
           });
           
           await fs.copyFile(srcPath, destPath);
@@ -232,7 +232,7 @@ export async function srcCodeBuilder(
             errorCount
           },
           error: itemError instanceof Error ? itemError : undefined,
-          logFileName: "app-generator",
+          logFileName: "astro-generator",
         });
       }
     }
@@ -256,7 +256,7 @@ export async function srcCodeBuilder(
           fileProcessingTimeSec: `${(fileProcessingTime / 1000).toFixed(2)}s`
         }
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     LogBuilder({
@@ -278,7 +278,7 @@ export async function srcCodeBuilder(
           successRate: processedFiles > 0 ? `${((processedFiles - errorCount) / processedFiles * 100).toFixed(2)}%` : "100%"
         }
       },
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     return { 
@@ -307,7 +307,7 @@ export async function srcCodeBuilder(
         }
       },
       error: error instanceof Error ? error : undefined,
-      logFileName: "app-generator",
+      logFileName: "astro-generator",
     });
     
     return { 
