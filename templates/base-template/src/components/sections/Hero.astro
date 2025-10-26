@@ -1,6 +1,7 @@
 ---
 import Section from "./Section.astro";
 import { Image } from "astro:assets";
+import { SpintaxImagePreview } from "@repo/spintax-preview"
 
 
 
@@ -28,9 +29,28 @@ const heroDescription =
   "Call us 24/7 for [[fast|reliable|efficient]] electrical service—whether you need a [[general electrician|licensed professional]] or urgent emergency assistance. Our [[experienced|skilled|certified]] team is ready to handle most electrical issues [[quickly|promptly]], safely, and efficiently, ensuring your home or business is back to normal in no time.";
 const callToAction = "[[Call|Contact|Reach out to]] {{phone}}";
 
-const heroImageSpintax = [[certifiedElectrician|circuitBreakerBoxMaintenance|circuitBreakerSafety|commercialElectricalService|electricalCircuitInstallation|electricalMaintenanceBox|electricalPanelUpgrade|electricalSafetyInspection|electricalSystemInspection|electricalTechnicianTesting|electricalWiringPanel|electricianWorkingPanel|industrialElectricalRepair|professionalCircuitRepair|professionalElectrician|residentialElectricalUpgrade|circuitBreakerBoxMaintenance]];
-// const heroImageSpintax = [[certifiedElectrician|circuitBreakerBoxMaintenance||]];
-
+// const heroImageSpintax = [[certifiedElectrician|circuitBreakerBoxMaintenance|circuitBreakerSafety|commercialElectricalService|electricalCircuitInstallation|electricalMaintenanceBox|electricalPanelUpgrade|electricalSafetyInspection|electricalSystemInspection|electricalTechnicianTesting|electricalWiringPanel|electricianWorkingPanel|industrialElectricalRepair|professionalCircuitRepair|professionalElectrician|residentialElectricalUpgrade|circuitBreakerBoxMaintenance]];
+const heroImageSpintax = SpintaxImagePreview({
+  spintaxItem: [
+    certifiedElectrician,
+    circuitBreakerBoxMaintenance,
+    circuitBreakerSafety,
+    commercialElectricalService,
+    electricalCircuitInstallation,
+    electricalMaintenanceBox,
+    electricalPanelUpgrade,
+    electricalSafetyInspection,
+    electricalSystemInspection,
+    electricalTechnicianTesting,
+    electricalWiringPanel,
+    electricianWorkingPanel,
+    industrialElectricalRepair,
+    professionalCircuitRepair,
+    professionalElectrician,
+    residentialElectricalUpgrade
+  ],
+  previewItemIndex: 0
+});
 
 ---
 

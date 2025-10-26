@@ -14,18 +14,18 @@
     "output": "nodemon ./dist/index.js"
   },
   "dependencies": {
+    "@repo/log-helper": "workspace:*",
+    "@repo/scripts": "workspace:*",
     "csv-parse": "^6.1.0",
     "dotenv": "^17.2.2",
     "execa": "^9.6.0",
     "fs-extra": "^11.3.1",
     "seedrandom": "^3.0.5",
-    "sharp": "^0.34.4",
-    "@repo/log-helper": "workspace:*",
-    "@repo/scripts": "workspace:*"
+    "sharp": "^0.34.4"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/shared-types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/fs-extra": "^11.0.4",
     "@types/seedrandom": "^3.0.8",
     "ts-node": "^10.9.2",
