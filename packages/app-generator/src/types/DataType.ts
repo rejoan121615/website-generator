@@ -1,4 +1,4 @@
-import { EventResType } from "@repo/shared-types";
+import { CsvRowDataType, EventResType } from "@repo/shared-types";
 
 export interface JsonLdAddressType {
   "@type": "PostalAddress";
@@ -30,4 +30,9 @@ export type TerminalOperationResultType = EventResType & {
 
 export type AstroProjectBuilderResultType = EventResType & {
   DATA: EventResType[] | string | null
+};
+
+
+export type CsvProcessorResultType = EventResType & {
+  DATA: CsvRowDataType[] | null;
 };

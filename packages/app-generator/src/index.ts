@@ -6,6 +6,7 @@ import { CsvRowDataType } from "@repo/shared-types";
 import { getRootDir } from "./utilities/path-solver.js";
 import { astroProjectCreator } from "./modules/app-builder.js";
 import { LogBuilder } from "@repo/log-helper";
+import { CsvProcessor } from "./modules/csv-processor.js";
 
 const turboRepoRoot = getRootDir("../../../../");
 
@@ -19,12 +20,12 @@ LogBuilder({
   domain: "package (app-generator)",
   logMessage: "Website generator starting up",
   logType: "info",
-  context: { 
+  context: {
     function: "main-startup",
     csvFilePath,
     outputDir,
     nodeVersion: process.version,
-    platform: process.platform
+    platform: process.platform,
   },
   logFileName: "astro-generator",
   newLog: true,
@@ -51,119 +52,65 @@ if (fs.existsSync(csvFilePath)) {
     logFileName: "astro-generator",
   });
 
-  // create readable stream
-  const csvStream = fs.createReadStream(csvFilePath);
-  let processedCount = 0;
-  let errorCount = 0;
-  const startTime = Date.now();
+  // process csv file data
+  (async () => {
+    const csvProcessRes = await CsvProcessor({ csvPath: csvFilePath });
 
-  const parser = csvStream.pipe(
-    parse({
-      columns: true, // use first row as header and generate objects
-      delimiter: ",",
-    })
-  );
+    // process csv data if file is valid
+    if (csvProcessRes.SUCCESS && csvProcessRes.DATA) {
+      for (const row of csvProcessRes.DATA) {
+        try {
+          const result = await astroProjectCreator(row);
 
-  parser.on("data", async (row: CsvRowDataType) => {
-    processedCount++;
-    
-    LogBuilder({
-      domain: row.domain,
-      logMessage: `Starting processing for domain: ${row.domain}`,
-      logType: "info",
-      context: { 
-        function: "main-csv-processor",
-        domainCount: processedCount,
-        domainName: row.name,
-        serviceType: row.service_name
-      },
-      logFileName: "astro-generator",
-      newLog: true
-    });
-
-    try {
-      const result = await astroProjectCreator(row);
-      
-      if (result.SUCCESS) {
-        LogBuilder({
-          domain: row.domain,
-          logMessage: `Successfully completed processing for domain: ${row.domain}`,
-          logType: "info",
-          context: { 
-            function: "main-csv-processor",
-            processingResult: "success",
-            totalProcessed: processedCount
-          },
-          logFileName: "astro-generator",
-        });
-      } else {
-        errorCount++;
-        LogBuilder({
-          domain: row.domain,
-          logMessage: `Failed to process domain: ${row.domain} - ${result.MESSAGE}`,
-          logType: "error",
-          context: { 
-            function: "main-csv-processor",
-            processingResult: "failed",
-            errorCount,
-            failureReason: result.MESSAGE
-          },
-          logFileName: "astro-generator",
-        });
+          if (result.SUCCESS) {
+            LogBuilder({
+              domain: row.domain,
+              logMessage: `Successfully completed processing for domain: ${row.domain}`,
+              logType: "info",
+              context: {
+                function: "main-csv-processor",
+                processingResult: "success",
+              },
+              logFileName: "astro-generator",
+            });
+          } else {
+            LogBuilder({
+              domain: row.domain,
+              logMessage: `Failed to process domain: ${row.domain} - ${result.MESSAGE}`,
+              logType: "error",
+              context: {
+                function: "main-csv-processor",
+                processingResult: "failed",
+                failureReason: result.MESSAGE,
+              },
+              logFileName: "astro-generator",
+            });
+          }
+        } catch (error) {
+          LogBuilder({
+            domain: row.domain,
+            logMessage: `Exception while processing domain: ${row.domain}`,
+            logType: "error",
+            context: {
+              function: "main-csv-processor",
+              processingResult: "exception",
+            },
+            error: error instanceof Error ? error : undefined,
+            logFileName: "astro-generator",
+          });
+        }
       }
-    } catch (error) {
-      errorCount++;
+    } else {
+      // csv file processing error
       LogBuilder({
-        domain: row.domain,
-        logMessage: `Exception while processing domain: ${row.domain}`,
+        domain: "package (app-generator)",
+        logMessage: `Please check csv file: ${csvFilePath} - ${csvProcessRes.MESSAGE}`,
         logType: "error",
-        context: { 
-          function: "main-csv-processor",
-          processingResult: "exception",
-          errorCount
-        },
-        error: error instanceof Error ? error : undefined,
+        context: { function: "main-csv-processor" },
         logFileName: "astro-generator",
       });
     }
-  });
-
-  parser.on("end", () => {
-    const processingTime = Date.now() - startTime;
-    const successCount = processedCount - errorCount;
-    const successRate = processedCount > 0 ? (successCount / processedCount * 100).toFixed(2) : 0;
-    
-    console.log(`CSV file successfully processed - ${processedCount} domains, ${successCount} successful, ${errorCount} errors`);
-    
-    LogBuilder({
-      domain: "general",
-      logMessage: `CSV file processing completed`,
-      logType: processedCount === successCount ? "info" : "warn",
-      context: { 
-        function: "main-csv-processor",
-        summary: {
-          totalDomains: processedCount,
-          successCount,
-          errorCount,
-          successRate: `${successRate}%`,
-          processingTimeMs: processingTime,
-          processingTimeSec: `${(processingTime / 1000).toFixed(2)}s`
-        }
-      },
-      logFileName: "astro-generator",
-    });
-  });
-
-  parser.on("error", (err) => {
-    console.error("Error while processing CSV:", err);
-    LogBuilder({
-      domain: "general",
-      logMessage: `Error while processing CSV file`,
-      logType: "error",
-      context: { function: "main-csv-processor", error: err },
-      logFileName: "astro-generator",
-    });
-  });
+  })();
 } else {
   console.error(`CSV file not found at path: ${csvFilePath}`);
   process.exit(1);
