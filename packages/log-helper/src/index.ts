@@ -2,7 +2,7 @@ import fs, { ensureDirSync, ensureFileSync } from "fs-extra";
 import path from "path";
 import { getRootDir } from "./utils/path-solver.js";
 import winston from "winston";
-import { CsvRowDataType } from '@repo/shared-types'
+import { CsvRowDataType } from "@repo/shared-types";
 
 const reportFolder = path.resolve(getRootDir("../../../../"), "logs");
 
@@ -15,7 +15,7 @@ export async function LogBuilder({
   newLog = false,
 }: {
   // domain: "General" | CsvRowDataType['domain'];
-  domain: "General" | CsvRowDataType['domain'];
+  domain: "General" | CsvRowDataType["domain"];
   logMessage: string;
   logType: "error" | "warn" | "info" | "verbose" | "debug" | "silly";
   logFileName: "astro-generator" | "cloudflare" | "report" | "build";
@@ -92,12 +92,15 @@ export async function LogBuilder({
     }
 
     if (logType === "error") {
-      console.log(`
-        -----------------------------------------------------------------------------
+      console.error(`
+----------------------------------------------------------------------------------
           Critical error found please check the log file ${logFileUrl}
-        -----------------------------------------------------------------------------
-        `)
-      process.exit(1);
+----------------------------------------------------------------------------------
+        `);
+
+      setTimeout(() => {
+        process.exit(1);
+      }, 4000);
     }
   } catch (error) {
     console.error("Error while logging message:", error);
