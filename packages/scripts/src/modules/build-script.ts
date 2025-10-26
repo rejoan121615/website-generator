@@ -41,7 +41,6 @@ export async function runAstroBuild({ domain }: { domain: string }): Promise<Eve
         domain,
         logMessage: `Project not found at path: ${projectPath}`,
         logType: "error",
-        context: { projectPath },
         logFileName: "build",
       });
 
@@ -64,7 +63,6 @@ export async function runAstroBuild({ domain }: { domain: string }): Promise<Eve
         domain,
         logMessage: `Astro build completed successfully for ${domain}`,
         logType: "info",
-        context: { exitCode: result.exitCode },
         logFileName: "build",
       });
 
@@ -91,7 +89,6 @@ export async function runAstroBuild({ domain }: { domain: string }): Promise<Eve
         domain,
         logMessage: `Astro build failed for ${domain}\n${errorDetails}`,
         logType: "error",
-        context: { exitCode: result.exitCode },
         logFileName: "build",
       });
 
@@ -109,9 +106,6 @@ export async function runAstroBuild({ domain }: { domain: string }): Promise<Eve
       logMessage: `Astro build failed for ${domain}: ${error.message}`,
       logType: "error",
       error: error instanceof Error ? error : undefined,
-      context: { 
-        errorMessage: error.message,
-      },
       logFileName: "build",
     });
 

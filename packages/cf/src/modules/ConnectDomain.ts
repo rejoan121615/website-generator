@@ -21,7 +21,6 @@ export async function ConnectDomain({
       domain: domainName || "general",
       logMessage: "CLOUDFLARE_API_TOKEN is not found in .env file",
       logType: "error",
-      context: { function: "ConnectDomain" },
       logFileName: "cloudflare",
     });
     return {
@@ -34,7 +33,6 @@ export async function ConnectDomain({
       domain: domainName || "general",
       logMessage: "CLOUDFLARE_ACCOUNT_ID is not found in .env file",
       logType: "error",
-      context: { function: "ConnectDomain" },
       logFileName: "cloudflare",
     });
     return {
@@ -47,7 +45,6 @@ export async function ConnectDomain({
       domain: "general",
       logMessage: "Please provide a valid domain name",
       logType: "error",
-      context: { function: "ConnectDomain" },
       logFileName: "cloudflare",
     });
     return {
@@ -64,7 +61,6 @@ export async function ConnectDomain({
       domain: domainName || "general",
       logMessage: "Unable to parse domain name for project creation",
       logType: "error",
-      context: { function: "ConnectDomain" },
       logFileName: "cloudflare",
     });
     return {
@@ -105,7 +101,6 @@ export async function ConnectDomain({
         domain: domainName,
         logMessage: `Domain ${domainName} not found in your Cloudflare account. Please add it as a zone first.`,
         logType: "error",
-        context: { function: "ConnectDomain" },
         logFileName: "cloudflare",
       });
       return {
@@ -148,7 +143,6 @@ export async function ConnectDomain({
         ? `Subdomain ${domainName} connected and DNS configured successfully`
         : `Domain ${domainName} connected and DNS records configured successfully`,
       logType: "info",
-      context: { function: "ConnectDomain", domainName, hasSubdomain },
       logFileName: "cloudflare",
     });
     return {
@@ -167,7 +161,6 @@ export async function ConnectDomain({
       domain: domainName,
       logMessage: `Failed to connect domain or configure DNS: ${errorMsg}`,
       logType: "error",
-      context: { function: "ConnectDomain" },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });

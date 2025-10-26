@@ -27,7 +27,6 @@ export async function DeployProject({
       domain: domainName,
       logMessage: "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is missing",
       logType: "verbose",
-      context: { function: "deploy" },
       logFileName: "cloudflare",
     });
     throw new Error(
@@ -43,7 +42,6 @@ export async function DeployProject({
       domain: domainName,
       logMessage: `Deployable project files not found at path: ${staticWebsiteFiles}`,
       logType: "verbose",
-      context: { function: "deploy" },
       logFileName: "cloudflare",
     });
     return {
@@ -61,7 +59,6 @@ export async function DeployProject({
       domain: domainName,
       logMessage: `Checking if cf project already exists: ${cfProjectName}`,
       logType: "info",
-      context: { function: "deploy", domainName, cfProjectName },
       logFileName: "cloudflare",
     });
     await cfClient.pages.projects.get(cfProjectName, {
@@ -73,7 +70,6 @@ export async function DeployProject({
       domain: domainName,
       logMessage: `Project already exists. Using the existing project...` ,
       logType: "info",
-      context: { function: "deploy", domainName, cfProjectName },
       logFileName: "cloudflare",
     });
 
@@ -87,7 +83,6 @@ export async function DeployProject({
           domain: domainName,
           logMessage: `Project not found, creating a new one...` ,
           logType: "warn",
-          context: { function: "deploy", domainName, cfProjectName },
           logFileName: "cloudflare",
         });
 
@@ -105,7 +100,6 @@ export async function DeployProject({
             domain: domainName,
             logMessage: `New project created successfully: ${cfProjectName}` ,
             logType: "info",
-            context: { function: "deploy", domainName, cfProjectName },
             logFileName: "cloudflare",
           });
 
@@ -116,7 +110,6 @@ export async function DeployProject({
             domain: domainName,
             logMessage: `Error creating new project: ${error}` ,
             logType: "error",
-            context: { function: "deploy", domainName, cfProjectName },
             logFileName: "cloudflare",
             error: error instanceof Error ? error : undefined,
           });

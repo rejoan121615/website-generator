@@ -24,7 +24,6 @@ export async function FetchProjects(): Promise<ProjectsResTYPE> {
       domain: "general",
       logMessage: `Successfully fetched projects` ,
       logType: "info",
-      context: { function: "FetchProjects", result },
       logFileName: "cloudflare",
     });
     return {
@@ -39,7 +38,6 @@ export async function FetchProjects(): Promise<ProjectsResTYPE> {
       domain: "general",
       logMessage: `Failed to fetch projects: ${apiError?.message || error}`,
       logType: "error",
-      context: { function: "FetchProjects" },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });

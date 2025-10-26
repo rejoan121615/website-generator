@@ -41,7 +41,6 @@ export async function CheckDomainStatus({
         domain: projectName || "general",
         logMessage: `Domain status fetched successfully for ${domainName}`,
         logType: "info",
-        context: { function: "CheckDomainStatus", domainName, status: domainStatus },
         logFileName: "cloudflare",
       });
       return {
@@ -55,7 +54,6 @@ export async function CheckDomainStatus({
       domain: projectName || "general",
       logMessage: `Domain not found: ${domainName}`,
       logType: "warn",
-      context: { function: "CheckDomainStatus", domainName },
       logFileName: "cloudflare",
     });
     return {
@@ -68,7 +66,6 @@ export async function CheckDomainStatus({
       domain: projectName || "general",
       logMessage: err ? `Failed to check domain status: ${err.message}` : `Failed to check domain status: ${error}`,
       logType: "error",
-      context: { function: "CheckDomainStatus", domainName },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });

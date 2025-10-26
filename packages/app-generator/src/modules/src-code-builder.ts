@@ -24,11 +24,6 @@ export async function srcCodeBuilder(
     domain: data.domain,
     logMessage: `Starting Astro source code building for ${data.domain}`,
     logType: "info",
-    context: { 
-      function: "srcCodeBuilder",
-      businessName: data.name,
-      serviceType: data.service_name
-    },
     logFileName: "astro-generator",
   });
 
@@ -39,11 +34,6 @@ export async function srcCodeBuilder(
     domain: data.domain,
     logMessage: `Resolved paths for source building`,
     logType: "debug",
-    context: { 
-      function: "srcCodeBuilder",
-      baseFrontendPath,
-      appFolderPath
-    },
     logFileName: "astro-generator",
   });
 
@@ -53,7 +43,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `Ensuring destination directory exists: ${appFolderPath}`,
       logType: "debug",
-      context: { function: "srcCodeBuilder", step: "directory-creation" },
       logFileName: "astro-generator",
     });
     
@@ -64,7 +53,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `Scanning base frontend directory: ${baseFrontendPath}`,
       logType: "debug",
-      context: { function: "srcCodeBuilder", step: "directory-scanning" },
       logFileName: "astro-generator",
     });
     
@@ -87,13 +75,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `File scanning completed`,
       logType: "info",
-      context: { 
-        function: "srcCodeBuilder",
-        step: "file-scanning-complete",
-        totalItemsFound: allItems.length,
-        filteredItems: items.length,
-        excludedItems: allItems.length - items.length
-      },
       logFileName: "astro-generator",
     });
 
@@ -107,11 +88,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `Starting file processing loop`,
       logType: "info",
-      context: { 
-        function: "srcCodeBuilder",
-        step: "file-processing-start",
-        totalItemsToProcess: items.length
-      },
       logFileName: "astro-generator",
     });
     
@@ -127,11 +103,6 @@ export async function srcCodeBuilder(
             domain: data.domain,
             logMessage: `Creating directory: ${item}`,
             logType: "silly",
-            context: { 
-              function: "srcCodeBuilder",
-              step: "directory-creation",
-              itemPath: item
-            },
             logFileName: "astro-generator",
           });
           
@@ -142,13 +113,6 @@ export async function srcCodeBuilder(
             domain: data.domain,
             logMessage: `Processing file: ${item}`,
             logType: "silly",
-            context: { 
-              function: "srcCodeBuilder",
-              step: "file-processing",
-              itemPath: item,
-              fileSize: stat.size,
-              fileType: path.extname(item)
-            },
             logFileName: "astro-generator",
           });
           
@@ -159,7 +123,6 @@ export async function srcCodeBuilder(
               domain: data.domain,
               logMessage: `${seoRes.MESSAGE}`,
               logType: "error",
-              context: { function: "srcCodeBuilder", srcPath, destPath },
               error: seoRes.ERROR,
               logFileName: "astro-generator"
             });
@@ -177,7 +140,6 @@ export async function srcCodeBuilder(
               domain: data.domain,
               logMessage: `${spintaxRes.MESSAGE}`,
               logType: "error",
-              context: { function: "srcCodeBuilder", srcPath, destPath },
               logFileName: "astro-generator"
             });
           }
@@ -189,7 +151,6 @@ export async function srcCodeBuilder(
               domain: data.domain,
               logMessage: `${packageJsonRes.MESSAGE}`,
               logType: "error",
-              context: { function: "srcCodeBuilder", srcPath, destPath },
               logFileName: "astro-generator"
             });
           }
@@ -200,7 +161,6 @@ export async function srcCodeBuilder(
               domain: data.domain,
               logMessage: `${astroConfigRes.MESSAGE}`,
               logType: "error",
-              context: { function: "srcCodeBuilder", srcPath, destPath },
               logFileName: "astro-generator"
             });
           }
@@ -210,7 +170,6 @@ export async function srcCodeBuilder(
             domain: data.domain,
             logMessage: `Copying static file: ${item}`,
             logType: "silly",
-            context: { function: "srcCodeBuilder", step: "static-file-copy", filePath: item },
             logFileName: "astro-generator",
           });
           
@@ -225,12 +184,6 @@ export async function srcCodeBuilder(
           domain: data.domain,
           logMessage: `Error processing item: ${item}`,
           logType: "error",
-          context: { 
-            function: "srcCodeBuilder",
-            step: "item-processing-error",
-            itemPath: item,
-            errorCount
-          },
           error: itemError instanceof Error ? itemError : undefined,
           logFileName: "astro-generator",
         });
@@ -244,18 +197,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `File processing loop completed`,
       logType: "info",
-      context: { 
-        function: "srcCodeBuilder",
-        step: "file-processing-complete",
-        statistics: {
-          totalItems: items.length,
-          processedFiles,
-          processedDirectories,
-          errorCount,
-          fileProcessingTimeMs: fileProcessingTime,
-          fileProcessingTimeSec: `${(fileProcessingTime / 1000).toFixed(2)}s`
-        }
-      },
       logFileName: "astro-generator",
     });
     
@@ -263,21 +204,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `Astro app created successfully in => apps/${data.domain}`,
       logType: "info",
-      context: { 
-        function: "srcCodeBuilder",
-        step: "completion-success",
-        performance: {
-          totalProcessingTimeMs: totalProcessingTime,
-          totalProcessingTimeSec: `${(totalProcessingTime / 1000).toFixed(2)}s`,
-          avgTimePerFile: processedFiles > 0 ? `${(fileProcessingTime / processedFiles).toFixed(2)}ms` : "0ms"
-        },
-        summary: {
-          processedFiles,
-          processedDirectories,
-          errorCount,
-          successRate: processedFiles > 0 ? `${((processedFiles - errorCount) / processedFiles * 100).toFixed(2)}%` : "100%"
-        }
-      },
       logFileName: "astro-generator",
     });
     
@@ -292,20 +218,6 @@ export async function srcCodeBuilder(
       domain: data.domain,
       logMessage: `Critical error during Astro app creation`,
       logType: "error",
-      context: { 
-        function: "srcCodeBuilder",
-        step: "critical-failure",
-        appFolderPath,
-        performance: {
-          failedAfterMs: totalProcessingTime,
-          failedAfterSec: `${(totalProcessingTime / 1000).toFixed(2)}s`
-        },
-        environment: {
-          nodeVersion: process.version,
-          platform: process.platform,
-          workingDirectory: process.cwd()
-        }
-      },
       error: error instanceof Error ? error : undefined,
       logFileName: "astro-generator",
     });

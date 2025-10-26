@@ -36,7 +36,6 @@ export async function folderCreator(data: {
       domain: domain,
       logMessage: `Failed to create folder for domain "${domain}"`,
       logType: "error",
-      context: { function: "folderCreator" },
       error: err instanceof Error ? err : undefined,
       logFileName: "astro-generator",
     });

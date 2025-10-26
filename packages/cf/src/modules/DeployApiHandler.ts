@@ -27,7 +27,6 @@ export async function DeployApihandler({
       domain: domainName,
       logMessage: `Started uploading source code to the project...` ,
       logType: "info",
-      context: { function: "DeployApihandler", domainName, cfProjectName },
       logFileName: "cloudflare",
     });
     console.log("Started uploading source code to the project...");
@@ -80,7 +79,6 @@ export async function DeployApihandler({
         domain: domainName,
         logMessage: `Deployment initiated successfully for project ${cfProjectName}` ,
         logType: "info",
-        context: { function: "DeployApihandler", domainName, cfProjectName },
         logFileName: "cloudflare",
       });
       // fetch project details
@@ -109,7 +107,6 @@ export async function DeployApihandler({
         domain: domainName,
         logMessage: `Project upload failed with exit code ${exitCode}` ,
         logType: "error",
-        context: { function: "DeployApiHandler", domainName, exitCode },
         logFileName: "cloudflare",
         error: stack,
       });
@@ -124,7 +121,6 @@ export async function DeployApihandler({
       domain: domainName,
       logMessage: `Error during deployment: ${error}` ,
       logType: "error",
-      context: { function: "DeployApiHandler", domainName },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });

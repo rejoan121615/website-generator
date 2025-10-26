@@ -51,7 +51,6 @@ export async function ProjectScriptsHandler({
       logMessage: `Failed to create project scripts for ${domain}`,
       logType: "error",
       error: errorObj,
-      context: { function: "ProjectScriptsHandler" },
       logFileName: "astro-generator",
     });
 
@@ -103,7 +102,6 @@ import { runAstroBuild } from "@repo/scripts";
       logMessage: `Failed to create build.js for ${domain}`,
       logType: "error",
       error,
-      context: { function: "createBuildScript", scriptsDir },
       logFileName: "astro-generator",
     });
 

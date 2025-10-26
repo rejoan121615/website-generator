@@ -22,7 +22,6 @@ export async function FetchDomains(): Promise<DomainResTYPE> {
       domain: "general",
       logMessage: `Successfully fetched domains` ,
       logType: "info",
-      context: { function: "FetchDomains", result },
       logFileName: "cloudflare",
     });
     return {
@@ -37,7 +36,6 @@ export async function FetchDomains(): Promise<DomainResTYPE> {
       domain: "general",
       logMessage: `Failed to fetch domains: ${apiError?.message || error}`,
       logType: "error",
-      context: { function: "FetchDomains" },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });

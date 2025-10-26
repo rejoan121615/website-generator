@@ -17,16 +17,9 @@ const outputDir = path.join(turboRepoRoot, "apps");
 
 // Log system startup
 LogBuilder({
-  domain: "package (app-generator)",
+  domain: "General",
   logMessage: "Website generator starting up",
   logType: "info",
-  context: {
-    function: "main-startup",
-    csvFilePath,
-    outputDir,
-    nodeVersion: process.version,
-    platform: process.platform,
-  },
   logFileName: "astro-generator",
   newLog: true,
 });
@@ -35,20 +28,18 @@ LogBuilder({
 fs.ensureDirSync(outputDir);
 
 LogBuilder({
-  domain: "package (app-generator)",
+  domain: "General",
   logMessage: `Output directory ensured: ${outputDir}`,
   logType: "debug",
-  context: { function: "main-startup" },
   logFileName: "astro-generator",
 });
 
 // check if the file exists
 if (fs.existsSync(csvFilePath)) {
   LogBuilder({
-    domain: "package (app-generator)",
+    domain: "General",
     logMessage: `CSV file found, starting processing: ${csvFilePath}`,
     logType: "info",
-    context: { function: "main-csv-processor", csvFilePath },
     logFileName: "astro-generator",
   });
 
@@ -67,10 +58,6 @@ if (fs.existsSync(csvFilePath)) {
               domain: row.domain,
               logMessage: `Successfully completed processing for domain: ${row.domain}`,
               logType: "info",
-              context: {
-                function: "main-csv-processor",
-                processingResult: "success",
-              },
               logFileName: "astro-generator",
             });
           } else {
@@ -78,11 +65,6 @@ if (fs.existsSync(csvFilePath)) {
               domain: row.domain,
               logMessage: `Failed to process domain: ${row.domain} - ${result.MESSAGE}`,
               logType: "error",
-              context: {
-                function: "main-csv-processor",
-                processingResult: "failed",
-                failureReason: result.MESSAGE,
-              },
               logFileName: "astro-generator",
             });
           }
@@ -91,10 +73,6 @@ if (fs.existsSync(csvFilePath)) {
             domain: row.domain,
             logMessage: `Exception while processing domain: ${row.domain}`,
             logType: "error",
-            context: {
-              function: "main-csv-processor",
-              processingResult: "exception",
-            },
             error: error instanceof Error ? error : undefined,
             logFileName: "astro-generator",
           });
@@ -103,10 +81,9 @@ if (fs.existsSync(csvFilePath)) {
     } else {
       // csv file processing error
       LogBuilder({
-        domain: "package (app-generator)",
+        domain: "General",
         logMessage: `Please check csv file: ${csvFilePath} - ${csvProcessRes.MESSAGE}`,
         logType: "error",
-        context: { function: "main-csv-processor" },
         logFileName: "astro-generator",
       });
     }

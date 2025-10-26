@@ -38,7 +38,6 @@ export async function ReportBuilder({
       domain: domain || "general",
       logMessage: `Report written successfully for domain: ${domain}`,
       logType: "info",
-      context: { function: "ReportBuilder", domain, CfProjectName, liveUrl, fileName },
       logFileName: "report",
     });
     return {
@@ -51,7 +50,6 @@ export async function ReportBuilder({
       domain: domain || "general",
       logMessage: `Error writing report for domain: ${domain}`,
       logType: "error",
-      context: { function: "ReportBuilder", domain, CfProjectName, liveUrl, fileName },
       logFileName: "report",
       error: error instanceof Error ? error : undefined,
     });
@@ -74,7 +72,6 @@ export async function ReportRemover({ domain }: { domain: string }) : Promise<Ev
       domain: domain || "general",
       logMessage: `Successfully removed report for domain: ${domain}`,
       logType: "info",
-      context: { function: "ReportRemover", domain },
       logFileName: "report",
     });
     return {
@@ -87,7 +84,6 @@ export async function ReportRemover({ domain }: { domain: string }) : Promise<Ev
       domain: domain || "general",
       logMessage: `Error removing report for domain: ${domain}`,
       logType: "error",
-      context: { function: "ReportRemover", domain },
       logFileName: "report",
       error: error instanceof Error ? error : undefined,
     });

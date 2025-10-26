@@ -29,7 +29,6 @@ export async function deleteProject({
     domain: projectName,
     logMessage: `Attempting to delete project: ${projectName}`,
     logType: "info",
-    context: { function: "deleteProject", domainName },
     logFileName: "cloudflare",
   });
 
@@ -63,7 +62,6 @@ export async function deleteProject({
               domain: projectName,
               logMessage: `Successfully removed domain: ${domain}`,
               logType: "info",
-              context: { function: "deleteProject", domain },
               logFileName: "cloudflare",
             });
             console.log(`Successfully removed domain: ${domain}`);
@@ -73,7 +71,6 @@ export async function deleteProject({
               domain: projectName,
               logMessage: `Failed to remove domain ${domain}: ${domainError}`,
               logType: "error",
-              context: { function: "deleteProject", domain },
               logFileName: "cloudflare",
               error: domainError instanceof Error ? domainError : undefined,
             });
@@ -87,7 +84,6 @@ export async function deleteProject({
         domain: projectName,
         logMessage: "Waiting for domain removals to complete...",
         logType: "info",
-        context: { function: "deleteProject" },
         logFileName: "cloudflare",
       });
       console.log("Waiting for domain removals to complete...");
@@ -103,7 +99,6 @@ export async function deleteProject({
       domain: projectName,
       logMessage: "Project deleted successfully",
       logType: "info",
-      context: { function: "deleteProject" },
       logFileName: "cloudflare",
     });
 
@@ -115,7 +110,6 @@ export async function deleteProject({
       domain: projectName,
       logMessage: `Report removal result: ${reportRemovalResult.SUCCESS ? "Success" : "Failed"}`,
       logType: reportRemovalResult.SUCCESS ? "info" : "warn",
-      context: { function: "deleteProject", reportRemovalResult },
       logFileName: "cloudflare",
     });
     if (!reportRemovalResult.SUCCESS) {
@@ -135,7 +129,6 @@ export async function deleteProject({
       domain: projectName,
       logMessage: "Failed to delete project",
       logType: "error",
-      context: { function: "deleteProject" },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });
@@ -165,7 +158,6 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
         domain: domain || "general",
         logMessage: `Zone for ${rootDomain} not found, skipping DNS record removal` ,
         logType: "warn",
-        context: { function: "removeDNSRecords", rootDomain },
         logFileName: "cloudflare",
       });
       return;
@@ -184,7 +176,6 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
         domain: domain || "general",
         logMessage: `No DNS records found for zone ${rootDomain}` ,
         logType: "warn",
-        context: { function: "removeDNSRecords", rootDomain },
         logFileName: "cloudflare",
       });
       return;
@@ -207,7 +198,6 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
         domain: domain || "general",
         logMessage: `Successfully removed DNS record: ${cNameRecord.name}` ,
         logType: "info",
-        context: { function: "removeDNSRecords", cNameRecord },
         logFileName: "cloudflare",
       });
       console.log(`Successfully removed DNS record: ${cNameRecord.name}`);
@@ -217,7 +207,6 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
         domain: domain || "general",
         logMessage: `No matching CNAME record found for ${domain}` ,
         logType: "warn",
-        context: { function: "removeDNSRecords", domain },
         logFileName: "cloudflare",
       });
     }
@@ -228,7 +217,6 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
       domain: domain || "general",
       logMessage: `Failed to remove DNS records for ${domain}: ${error}` ,
       logType: "error",
-      context: { function: "removeDNSRecords", domain },
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
     });
