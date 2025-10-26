@@ -66,6 +66,7 @@ export async function packageJsonFileBuilder(
 
     // add package 
     jsonContent.dependencies["@repo/scripts"] = "workspace:*";
+    jsonContent.dependencies["sharp"] = "^0.34.4";
 
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
     console.log(`package.json created successfully ...`);

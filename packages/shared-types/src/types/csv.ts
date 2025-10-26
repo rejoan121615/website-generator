@@ -1,4 +1,5 @@
 export type CsvRowDataType = {
+  template: string;
   domain: string;
   name: string;
   service_name: string;

@@ -32,7 +32,7 @@ export async function srcCodeBuilder(
     logFileName: "astro-generator",
   });
 
-  const baseFrontendPath = path.join(turboRepoRoot, "packages", "baseFrontend");
+  const baseFrontendPath = path.join(turboRepoRoot, "templates", data.template);
   const appFolderPath = path.join(turboRepoRoot, "apps", data.domain);
   
   LogBuilder({
