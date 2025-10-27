@@ -11,9 +11,11 @@ import axios from 'axios'
 import { WebsitesResTYPE } from '@repo/cf'
 import { CsvReplaceApiResponse, CsvMergeApiResponse } from '@/types/dashboard.type'
 import { WebsiteRowTYPE } from '@repo/shared-types'
+import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
 
 
-const Tools = () => {
+function CsvPage() {
+    const { enqueueSnackbar } = useSnackbar();
     const [search, setSearch] = useState("");
     const [websiteData, setWebsiteData] = useState<WebsiteRowTYPE[]>([]);
     const [loading, setLoading] = useState(true);
@@ -21,6 +23,11 @@ const Tools = () => {
     const [selectedRow, setSelectedRow] = useState<WebsiteRowTYPE | null>(null);
     const [csvUploadModalOpen, setCsvUploadModalOpen] = useState(false);
     const [pendingCsvFile, setPendingCsvFile] = useState<File | null>(null);
+
+    const snackbarClickVariant =
+      (message: string, variant: VariantType) => () => {
+        enqueueSnackbar(message, { variant });
+      };
 
     // Fetch data from API on component mount
     useEffect(() => {
@@ -40,9 +47,13 @@ const Tools = () => {
             })) as WebsiteRowTYPE[];
             
             setWebsiteData(formattedData);
+            snackbarClickVariant('CSV data loaded successfully', 'success')();
+          } else {
+            snackbarClickVariant('Failed to load CSV data', 'error')();
           }
         } catch (error) {
           console.error('Error fetching websites:', error);
+          snackbarClickVariant('Error fetching CSV data', 'error')();
         } finally {
           setLoading(false);
         }
@@ -117,7 +128,7 @@ const Tools = () => {
 
     const handleCSVReplace = async (newData: WebsiteRowTYPE[]) => {
       try {
-        console.log('🔄 Starting CSV replace operation...', newData);
+        snackbarClickVariant('Starting CSV replace operation...', 'info')();
         
         // Call replace API
         const response = await axios.post<CsvReplaceApiResponse>('/api/csv/replace', {
@@ -125,8 +136,6 @@ const Tools = () => {
         });
 
         if (response.data.SUCCESS) {
-          console.log('✅ CSV replace successful:', response.data);
-          
           // Update local state with new data
           const formattedData = newData.map((item, index) => ({
             ...item,
@@ -138,21 +147,29 @@ const Tools = () => {
           
           setWebsiteData(formattedData);
           
-          // Show success message (you can add a toast notification here)
-          console.log(`Successfully replaced data with ${response.data.DATA?.totalRecords} records`);
+          snackbarClickVariant(
+            `Successfully replaced data with ${response.data.DATA?.totalRecords} records`,
+            'success'
+          )();
           
         } else {
-          console.error('❌ CSV replace failed:', response.data.MESSAGE);
-          // Handle error (show error message to user)
+          snackbarClickVariant(
+            response.data.MESSAGE || 'CSV replace failed',
+            'error'
+          )();
         }
         
       } catch (error) {
-        console.error('💥 Error during CSV replace:', error);
+        console.error('Error during CSV replace:', error);
         
         if (axios.isAxiosError(error)) {
           const errorMessage = error.response?.data?.MESSAGE || error.message;
-          console.error('API Error:', errorMessage);
-          // Show error message to user
+          snackbarClickVariant(
+            `CSV replace failed: ${errorMessage}`,
+            'error'
+          )();
+        } else {
+          snackbarClickVariant('Error during CSV replace', 'error')();
         }
       } finally {
         setCsvUploadModalOpen(false);
@@ -160,7 +177,7 @@ const Tools = () => {
       }
     };    const handleCSVMerge = async (newData: WebsiteRowTYPE[]) => {
       try {
-        console.log('🔄 Starting CSV merge operation...', newData);
+        snackbarClickVariant('Starting CSV merge operation...', 'info')();
         
         // Call merge API
         const response = await axios.post<CsvMergeApiResponse>('/api/csv/merge', {
@@ -168,8 +185,6 @@ const Tools = () => {
         });
 
         if (response.data.SUCCESS) {
-          console.log('✅ CSV merge successful:', response.data);
-          
           // Refresh data from API to get the merged result
           const refreshResponse = await axios.get<WebsitesResTYPE>('/api/websites');
           
@@ -185,21 +200,29 @@ const Tools = () => {
             setWebsiteData(formattedData);
           }
           
-          // Show success message
-          console.log(`Successfully merged ${response.data.DATA?.newRecords} new records with ${response.data.DATA?.existingRecords} existing records`);
+          snackbarClickVariant(
+            `Successfully merged ${response.data.DATA?.newRecords} new records with ${response.data.DATA?.existingRecords} existing records`,
+            'success'
+          )();
           
         } else {
-          console.error('❌ CSV merge failed:', response.data.MESSAGE);
-          // Handle error (show error message to user)
+          snackbarClickVariant(
+            response.data.MESSAGE || 'CSV merge failed',
+            'error'
+          )();
         }
         
       } catch (error) {
-        console.error('💥 Error during CSV merge:', error);
+        console.error('Error during CSV merge:', error);
         
         if (axios.isAxiosError(error)) {
           const errorMessage = error.response?.data?.MESSAGE || error.message;
-          console.error('API Error:', errorMessage);
-          // Show error message to user
+          snackbarClickVariant(
+            `CSV merge failed: ${errorMessage}`,
+            'error'
+          )();
+        } else {
+          snackbarClickVariant('Error during CSV merge', 'error')();
         }
       } finally {
         setCsvUploadModalOpen(false);
@@ -271,4 +294,10 @@ const Tools = () => {
   )
 }
 
-export default Tools
+export default function CsvPageWrapper() {
+  return (
+    <SnackbarProvider>
+      <CsvPage />
+    </SnackbarProvider>
+  );
+}
