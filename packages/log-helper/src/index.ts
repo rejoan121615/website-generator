@@ -43,7 +43,7 @@ export async function LogBuilder({
           format: winston.format.printf(({ level, message }) => {
             const icon =
               level === "error" ? "✗" : level === "warn" ? "⚠" : "✓";
-            return `${icon} ${message}`;
+            return `${icon} ${domain} => ${message}`;
           }),
         }),
         // File - Simple text format with timestamp

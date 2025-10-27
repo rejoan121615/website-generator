@@ -36,7 +36,6 @@ export async function spintaxAndTokenHandler({
     });
     
     const fileContent = await fs.readFile(inputPath, "utf-8");
-    const originalSize = fileContent.length;
     
     LogBuilder({
       domain: csvData.domain,
@@ -45,6 +44,26 @@ export async function spintaxAndTokenHandler({
       logFileName: "astro-generator",
     });
 
+    // Remove spintax preview function and convert into regular image spintax
+    LogBuilder({
+      domain: csvData.domain,
+      logMessage: `Processing spintax variations`,
+      logType: "debug",
+      logFileName: "astro-generator",
+    });
+
+    const contentAfterRemovingPreview = parseSpintaxImagePreview({
+      fileContent,
+      csvData: csvData
+    });
+
+    // parse tokens in the file content
+    LogBuilder({
+      domain: csvData.domain,
+      logMessage: `Processing token replacements`,
+      logType: "debug",
+      logFileName: "astro-generator",
+    });
     // Parse spintax in the file content
     LogBuilder({
       domain: csvData.domain,
@@ -54,7 +73,7 @@ export async function spintaxAndTokenHandler({
     });
     
     const contentAfterSpintax = parseSpintax({
-      fileContent,
+      fileContent: contentAfterRemovingPreview,
       csvData: csvData,
       inputPath,
       outputPath,
@@ -146,7 +165,7 @@ function imageProcessor({
   outputPath: string;
 }): string {
   // Remove all image import statements
-  // This regex matches: import variableName from "./path/to/image.jpg";
+  // This regex matches: import variableName from "./path/to/image.jpg;"
 
   // store imported image list
   const importedImageListRegex =
@@ -236,6 +255,47 @@ async function imageOptimizationAndConversion({
 
   console.log("input image path ", inputImagePath);
   console.log("output image path ", outputImagePath);
+}
+
+
+// Function to parse SpintaxImagePreview function calls and convert to spintax syntax
+function parseSpintaxImagePreview({
+  csvData,
+  fileContent
+}: {
+  csvData: CsvRowDataType;
+  fileContent: string;
+}): string {
+  const { domain } = csvData;
+
+  
+// Regex to match SpintaxImagePreview function calls and extract the content
+  const spintaxImagePreviewRegex = /SpintaxImagePreview\((\{[\s\S]*?\})\)/g;
+
+  let processedContent = fileContent;
+
+  // Find and replace SpintaxImagePreview function calls
+  processedContent = processedContent.replace(
+    spintaxImagePreviewRegex,
+    (match: string, objectContent: string): string => {
+      // Return just the object content without the function wrapper
+      return objectContent;
+    }
+  );
+
+  // Remove SpintaxImagePreview import if it exists
+  processedContent = processedContent.replace(
+    /import\s*\{\s*SpintaxImagePreview\s*\}\s*from\s*["']@repo\/spintax-preview["'];\s*\n?/g,
+    ''
+  );
+
+  
+
+  return processedContent;
+  
+  
+
+  // return fileContent;
 }
 
 // Function to parse spintax strings with optional weights and nested support
