@@ -5,7 +5,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import axios from 'axios'
 import SectionTitle from '../../components/SectionTitle'
 import ToolsTopBar from '../../components/ToolsTopBar'
-import WebsiteDetailsModal from '../../components/WebsiteDetailsModal'
+import CsvDetailsModal from '../../components/CsvDetailsModal'
 import { CsvRowDataType } from '@repo/shared-types'
 
 
@@ -69,7 +69,8 @@ const Tools = () => {
             site_title: values[6] || '',
             meta_title: values[7] || '',
             meta_description: values[8] || '',
-            logo_url: values[9] || ''
+            logo_url: values[9] || '',
+            template: values[10] || ''
           };
         });
         
@@ -178,7 +179,7 @@ const Tools = () => {
         />
       </Paper>
       
-      <WebsiteDetailsModal 
+      <CsvDetailsModal 
         open={modalOpen}
         onClose={handleCloseModal}
         data={selectedRow}

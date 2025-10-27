@@ -82,10 +82,12 @@ export async function DeployApihandler({
         logFileName: "cloudflare",
       });
       // fetch project details
-      const { id, name, domains, subdomain, latest_deployment } =
+      const depApiRes =
         await cfClient.pages.projects.get(cfProjectName, {
           account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
         });
+
+        const { id, name, domains, subdomain, latest_deployment } = depApiRes;
 
       if (latest_deployment && latest_deployment.url) {
         ReportBuilder({
@@ -98,8 +100,8 @@ export async function DeployApihandler({
 
       return {
         SUCCESS: true,
-        MESSAGE: "Deployment initiated successfully",
-        DATA: { name, domains, subdomain, latest_deployment },
+        MESSAGE: "Project deployed successfully",
+        DATA: depApiRes,
       };
     } else {
       console.log("Project upload failed");

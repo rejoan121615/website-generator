@@ -98,9 +98,9 @@ export async function LogBuilder({
 ----------------------------------------------------------------------------------
         `);
 
-      setTimeout(() => {
-        process.exit(1);
-      }, 4000);
+      // setTimeout(() => {
+      //   process.exit(1);
+      // }, 4000);
     }
   } catch (error) {
     console.error("Error while logging message:", error);

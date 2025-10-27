@@ -149,13 +149,14 @@ export async function DeployDataUpdater({
 
   const projectData = await FetchProjects();
 
-  if (projectData.SUCCESS && projectData.DATA) {
-    const projectNameList = projectData.DATA.map(proj => proj.name);
-    
+  if (projectData.SUCCESS && projectData.DATA) { 
    return  WebsiteList.map((site) => {
       const { projectName } = GetProjectName(site.domain);
-      if (projectNameList.includes(projectName)) {
+      const selectedProject = projectData.DATA?.find((proj) => proj.name === projectName);
+
+      if (selectedProject) {
         site.deployed = "complete";
+        site.liveUrl = selectedProject.subdomain;
       }
       return site;
     });

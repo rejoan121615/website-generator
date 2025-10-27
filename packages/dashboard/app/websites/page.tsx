@@ -13,12 +13,22 @@ import { ButtonGroup, Chip } from "@mui/material";
 import { VariantType, useSnackbar, SnackbarProvider } from "notistack";
 import { DeleteProjectResTYPE, DeployResTYPE } from "@repo/cf";
 import { ServerEventResTYPE, WebsiteRowTYPE } from "@repo/shared-types";
+import WebsiteDetailsModal from "@/components/WebsiteDetailsModal";
 
 function WebsitesPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [websitesList, setWebsitesList] = useState<WebsiteRowTYPE[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<WebsiteRowTYPE | null>(null);
+
+
+  useEffect(() => {
+    console.log('Your websites list ', websitesList);
+
+  }, [websitesList])
+
 
   const snackbarClickVariant =
     (message: string, variant: VariantType) => () => {
@@ -164,7 +174,7 @@ function WebsitesPage() {
           setWebsitesList((prevState) => {
             return prevState.map((item) => {
               return item.domain === row.domain
-                ? { ...item, deployed: "complete" }
+                ? { ...item, deployed: "complete", liveUrl: data.DATA?.url }
                 : item;
             });
           });
@@ -226,6 +236,16 @@ function WebsitesPage() {
         )();
         console.log("error", error);
       });
+  };
+
+  const handleDetails = (row: WebsiteRowTYPE) => {
+    setSelectedRow(row);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedRow(null);
   };
 
   const columns: GridColDef<WebsiteRowTYPE>[] = [
@@ -344,6 +364,9 @@ function WebsitesPage() {
               Undeploy
             </Button>
           </ButtonGroup>
+          <Button variant="outlined" size="small" onClick={() => handleDetails(params.row)}>
+            Details
+          </Button>
         </Box>
       ),
     },
@@ -371,6 +394,11 @@ function WebsitesPage() {
         getRowId={(row) => `${row.domain}-${row.name}`}
         checkboxSelection
         disableRowSelectionOnClick
+      />
+      <WebsiteDetailsModal 
+        open={modalOpen}
+        onClose={handleCloseModal}
+        data={selectedRow}
       />
     </Box>
   );

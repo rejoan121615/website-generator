@@ -39,11 +39,7 @@ export async function POST(
   }
 
   return NextResponse.json(
-    {
-      SUCCESS: true,
-      MESSAGE: "Site deployed successfully",
-      DATA: deploymentResult.DATA,
-    },
+    deploymentResult,
     {
       status: 200,
     }

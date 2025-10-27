@@ -5,7 +5,7 @@ import TableControlBar from '@/components/TableControlBar'
 import { Box, Button, Paper } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import ToolsTopBar from '@/components/ToolsTopBar'
-import WebsiteDetailsModal from '@/components/WebsiteDetailsModal'
+import CsvDetailsModal from '@/components/CsvDetailsModal'
 import CSVUploadModal from '@/components/CSVUploadModal'
 import axios from 'axios'
 import { WebsitesResTYPE } from '@repo/cf'
@@ -253,7 +253,7 @@ const Tools = () => {
         />
       </Paper>
       
-      <WebsiteDetailsModal 
+      <CsvDetailsModal 
         open={modalOpen}
         onClose={handleCloseModal}
         data={selectedRow}
