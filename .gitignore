@@ -37,6 +37,7 @@ data/websites.csv
 pnpm-lock.yaml
 logs/
 reports/
+data/*.csv.backup*
 
 
 # Debug
