@@ -29,7 +29,6 @@ export async function DeployApihandler({
       logType: "info",
       logFileName: "cloudflare",
     });
-    console.log("Started uploading source code to the project...");
     // upload source code to the project
     const staticWebsitePath = path.join(
       projectRoot,
@@ -73,7 +72,6 @@ export async function DeployApihandler({
     const { exitCode, stack } = await subprocess;
 
     if (exitCode === 0) {
-      console.log("Deployment completed successfully!");
       subprocess.kill(); // kill the subprocess
       LogBuilder({
         domain: domainName,
@@ -104,7 +102,6 @@ export async function DeployApihandler({
         DATA: depApiRes,
       };
     } else {
-      console.log("Project upload failed");
       LogBuilder({
         domain: domainName,
         logMessage: `Project upload failed with exit code ${exitCode}` ,
@@ -118,7 +115,6 @@ export async function DeployApihandler({
       };
     }
   } catch (error) {
-    console.log("Error during deployment:", error);
     LogBuilder({
       domain: domainName,
       logMessage: `Error during deployment: ${error}` ,

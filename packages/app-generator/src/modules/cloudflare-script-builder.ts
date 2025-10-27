@@ -49,7 +49,6 @@ deploy({
 });
 `;
       await fs.writeFile(deployScriptPath, deployScriptContent);
-      console.log(`cloudflare/deploy.js created successfully ...`);
       return {
         SUCCESS: true,
         MESSAGE: `cloudflare/deploy.js created successfully for ${domain}`,
@@ -93,7 +92,6 @@ deleteProject({
 });
 `;
       await fs.writeFile(removeScriptPath, removeScriptContent);
-      console.log(`cloudflare/remove.js created successfully ...`);
       return {
         SUCCESS: true,
         MESSAGE: `cloudflare/remove.js created successfully for ${domain}`,

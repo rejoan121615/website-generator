@@ -35,7 +35,6 @@ export async function tsConfigFileBuilder(
     fs.createFileSync(tsConFilePath);
     fs.writeFileSync(tsConFilePath, JSON.stringify(tsConfigFileContent, null, 2));
 
-    console.log(`tsconfig.json created successfully ...`);
     return {
       SUCCESS: true,
       MESSAGE: `tsconfig.json created successfully for ${domain}`,
@@ -56,7 +55,6 @@ export async function packageJsonFileBuilder(
 ): Promise<EventResType> {
   try {
     // Sanitize domain to create a valid project name
-    console.log("Domain received for package.json processing: ", domain);
     const jsonContent = JSON.parse(await fs.readFile(srcPath, "utf-8"));
     // replace name field
     jsonContent.name = domain;
@@ -69,7 +67,6 @@ export async function packageJsonFileBuilder(
     jsonContent.dependencies["sharp"] = "^0.34.4";
 
     await fs.writeFile(destPath, JSON.stringify(jsonContent, null, 2), "utf-8");
-    console.log(`package.json created successfully ...`);
     return {
       SUCCESS: true,
       MESSAGE: `package.json created successfully for ${domain}`,
@@ -141,7 +138,6 @@ export async function astroConfigFileBuilder({
         MESSAGE: `astro.config.mjs created successfully for ${csvData.domain}`,
       };
     } else {
-      console.log("No config object found.");
       return {
         SUCCESS: false,
         MESSAGE: `No config object found in astro config for ${csvData.domain}`,

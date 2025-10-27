@@ -72,10 +72,6 @@ const WebsiteDetailsModal: React.FC<WebsiteDetailsModalProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log("WebsiteDetailsModal mounted", data);
-  }, []);
-
   return (
     <Dialog
       open={open}

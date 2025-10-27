@@ -81,8 +81,6 @@ export async function ConnectDomain({
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
     });
 
-    console.log("Domain connected to Pages project:", response);
-
     // Step 2: Get the zone ID for the domain (use root domain for subdomains)
 
     const zones = await client.zones.list({
@@ -111,8 +109,6 @@ export async function ConnectDomain({
 
     const zoneId = zones.result[0].id;
     // const pagesSubdomain = `${projectName}.pages.dev`;
-
-    console.log("has subdomain ", hasSubdomain);
     // Step 4: Create or update DNS record based on domain type
 
     if (hasSubdomain) {
@@ -135,8 +131,6 @@ export async function ConnectDomain({
       });
     }
 
-    console.log(`CNAME record created `);
-
     LogBuilder({
       domain: domainName,
       logMessage: hasSubdomain
@@ -153,7 +147,6 @@ export async function ConnectDomain({
       DATA: response || undefined,
     };
   } catch (error) {
-    console.log(`Error => ${error}`);
     const err = error instanceof APIError ? error : null;
     const errorMsg =
       err?.errors[0]?.message || "Failed to connect domain or configure DNS";

@@ -36,6 +36,15 @@ function DomainsPage() {
   );
   const [loading, setLoading] = useState(true);
 
+
+  function domainTableStateUpdater({ domain, status }: { domain: string, status: "Processing" | "Deploy First" | "Ready" | "Connected" | "Failed" }) {
+    setDomainTableData((prevData) =>
+      prevData.map((item) =>
+        item.domain === domain ? { ...item, readyToConnect: status } : item
+      )
+    ); 
+  }
+
   const snackbarClickVariant =
     (message: string, variant: VariantType) => () => {
       enqueueSnackbar(message, { variant });
@@ -53,12 +62,6 @@ function DomainsPage() {
             axios.get<ProjectsResTYPE>("/api/projects"),
           ]);
 
-        console.log("All data fetched:", {
-          websites: websitesResponse,
-          domains: domainsResponse,
-          projects: projectsResponse,
-        });
-
         // Process websites data
         if (websitesResponse.data.SUCCESS) {
           setWebsites(websitesResponse.data.DATA as WebsiteRowTYPE[]);
@@ -71,11 +74,6 @@ function DomainsPage() {
           websitesResponse.data.DATA
         ) {
           setDomains(domainsResponse.data.DATA || []);
-
-          console.log("your website data ", websites);
-          // const domainListFromWebsite: string[] = ((websitesResponse.data.DATA as WebsiteRowTYPE[]) || []).map((websiteData: WebsiteRowTYPE) => {
-          //   return websiteData.domain;
-          // });
 
           const nameListFromProjects: string[] = (
             (projectsResponse.data.DATA as ProjectDataTYPE[]) || []
@@ -177,10 +175,10 @@ function DomainsPage() {
         return (
           <ButtonGroup variant="text" aria-label="text button group">
             <Button
-              onClick={() => DeployDomainHandler(params.row.domain)}
+              onClick={() => ConnectDomainHandler(params.row.domain)}
               variant="contained"
               size="small"
-              disabled={params.row.readyToConnect !== "Ready" ? true : false}
+              disabled={(params.row.readyToConnect === "Processing") || (params.row.readyToConnect === "Deploy First")}
             >
               Connect
             </Button>
@@ -190,10 +188,13 @@ function DomainsPage() {
     },
   ];
 
-  const DeployDomainHandler = async (domain: string) => {
+  const ConnectDomainHandler = async (domain: string) => {
+
+    domainTableStateUpdater({ domain, status: "Processing" });
+
     try {
       const response = await axios.post<ConnectDomainResTYPE>(
-        "/api/domains/deploy",
+        "/api/domains/connect",
         {
           domain,
         }
@@ -201,26 +202,26 @@ function DomainsPage() {
 
       const { SUCCESS, MESSAGE, ERROR } = response.data;
 
-      // domains deploy response
-      console.log("domain deploy response ", response.data);
-
       if (SUCCESS) {
         snackbarClickVariant(
-          MESSAGE || "Domain deployment started",
+          MESSAGE || "Domain connection started",
           "success"
         )();
+        domainTableStateUpdater({ domain, status: "Connected"  });
       } else if (ERROR?.errors.length) {
         const isNotFound = ERROR.errors[0]?.code === 8000007;
         snackbarClickVariant(
           isNotFound
             ? "Please deploy your project first"
-            : "Domain deployment failed",
+            : response.data.MESSAGE || "Domain connection failed",
           "error"
         )();
+        domainTableStateUpdater({ domain, status: "Failed"  });
       }
     } catch (error) {
       console.error("Error deploying domain:", error);
       snackbarClickVariant("Error deploying domain", "error")();
+      domainTableStateUpdater({ domain, status: "Failed"  });
     }
   };
 

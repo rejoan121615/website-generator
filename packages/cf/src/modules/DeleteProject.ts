@@ -32,25 +32,26 @@ export async function deleteProject({
     logFileName: "cloudflare",
   });
 
-  console.log(`Attempting to delete project: ${projectName}`);
   try {
     // Step 1: Get project details to check for custom domains
     const projectDetails = await client.pages.projects.get(projectName, {
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
 
-    console.log('project details ', projectDetails);
-
     // Step 2: Remove custom domains and their DNS records if they exist
     if (projectDetails.domains && projectDetails.domains.length > 0) {
-      console.log(`Found ${projectDetails.domains.length} domains, removing them and their DNS records...`);
-      
+      LogBuilder({
+        domain: projectName,
+        logMessage: `Found ${projectDetails.domains.length} domains, removing them and their DNS records...`,
+        logType: "info",
+        logFileName: "cloudflare",
+      });
+
       for (const domain of projectDetails.domains) {
         // Skip the default .pages.dev subdomain
         if (!domain.endsWith('.pages.dev')) {
           try {
-            console.log(`Removing custom domain: ${domain}`);
-            
+          
             // Remove DNS records first
             await removeDNSRecords(client, domain);
             
@@ -64,7 +65,6 @@ export async function deleteProject({
               logType: "info",
               logFileName: "cloudflare",
             });
-            console.log(`Successfully removed domain: ${domain}`);
           } catch (domainError) {
             console.warn(`Failed to remove domain ${domain}:`, domainError);
             LogBuilder({
@@ -86,7 +86,6 @@ export async function deleteProject({
         logType: "info",
         logFileName: "cloudflare",
       });
-      console.log("Waiting for domain removals to complete...");
       await new Promise(resolve => setTimeout(resolve, 3000));
     }
 
@@ -101,8 +100,6 @@ export async function deleteProject({
       logType: "info",
       logFileName: "cloudflare",
     });
-
-    console.log(`Project '${projectName}' deleted successfully.`);
 
     // remove report
     const reportRemovalResult = await ReportRemover({ domain: projectName });
@@ -124,7 +121,6 @@ export async function deleteProject({
       DATA: { deleted: true },
     };
   } catch (error) {
-    console.log('error ', error);
     LogBuilder({
       domain: projectName,
       logMessage: "Failed to delete project",
@@ -190,7 +186,6 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
     );
 
     if (cNameRecord) {
-      console.log(`Removing DNS CNAME record: ${cNameRecord.name}`);
       await client.dns.records.delete(cNameRecord.id!, {
         zone_id: zoneId,
       });
@@ -200,9 +195,7 @@ async function removeDNSRecords(client: Cloudflare, domain: string) {
         logType: "info",
         logFileName: "cloudflare",
       });
-      console.log(`Successfully removed DNS record: ${cNameRecord.name}`);
     } else {
-      console.log(`No matching CNAME record found for ${domain}`);
       LogBuilder({
         domain: domain || "general",
         logMessage: `No matching CNAME record found for ${domain}` ,

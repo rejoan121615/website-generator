@@ -67,7 +67,6 @@ export async function ReportRemover({ domain }: { domain: string }) : Promise<Ev
 
   try {
     await fs.remove(reportDir);
-    console.log(`Successfully removed report for domain: ${domain}`);
     LogBuilder({
       domain: domain || "general",
       logMessage: `Successfully removed report for domain: ${domain}`,
@@ -79,7 +78,6 @@ export async function ReportRemover({ domain }: { domain: string }) : Promise<Ev
       MESSAGE: `Successfully removed report for domain: ${domain}`,
     };
   } catch (error) {
-    console.error("Error removing report:", error);
     LogBuilder({
       domain: domain || "general",
       logMessage: `Error removing report for domain: ${domain}`,

@@ -54,7 +54,6 @@ export async function DeployProject({
   const { projectName: cfProjectName, hasSubdomain } = GetProjectName(domainName);
 
   try {
-    console.log("Checking if cf project already exists...", cfProjectName);
     LogBuilder({
       domain: domainName,
       logMessage: `Checking if cf project already exists: ${cfProjectName}`,
@@ -65,7 +64,6 @@ export async function DeployProject({
       account_id: process.env.CLOUDFLARE_ACCOUNT_ID!,
     });
 
-    console.log("Project already exists. Using the existing project...");
     LogBuilder({
       domain: domainName,
       logMessage: `Project already exists. Using the existing project...` ,
@@ -78,7 +76,6 @@ export async function DeployProject({
     if (error instanceof Cloudflare.APIError) {
       const { status, errors } = error;
       if (status === 404) {
-        console.log("Project not found, creating a new one...");
         LogBuilder({
           domain: domainName,
           logMessage: `Project not found, creating a new one...` ,
@@ -95,7 +92,6 @@ export async function DeployProject({
             production_branch: branchName,
           });
 
-          console.log("New project created successfully...");
           LogBuilder({
             domain: domainName,
             logMessage: `New project created successfully: ${cfProjectName}` ,
@@ -105,7 +101,6 @@ export async function DeployProject({
 
           return await DeployApihandler({ domainName, cfProjectName });
         } catch (error) {
-          console.log("Error creating new project:", error);
           LogBuilder({
             domain: domainName,
             logMessage: `Error creating new project: ${error}` ,

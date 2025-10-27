@@ -81,7 +81,6 @@ import { runAstroBuild } from "@repo/scripts";
 `;
 
     await fs.writeFile(buildScriptPath, buildScriptContent);
-    console.log(`build.js created successfully ...`);
 
     LogBuilder({
       domain,

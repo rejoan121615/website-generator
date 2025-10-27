@@ -18,8 +18,6 @@ export async function srcCodeBuilder(
 ): Promise<EventResType> {
   const startTime = Date.now();
   
-  console.log("Creating Astro app ...", data.domain);
-
   LogBuilder({
     domain: data.domain,
     logMessage: `Starting Astro source code building for ${data.domain}`,

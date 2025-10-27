@@ -9,7 +9,6 @@ export function CheckDomainStatus({
 }): "active" | "inactive" {
     const matchingDomain = domainsList.find(
       (domainData) => {
-        console.log('checking domain ', domainData);
         return domainData.name === rootDomain;
       }
     );

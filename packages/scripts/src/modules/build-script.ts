@@ -4,9 +4,7 @@ import fs from 'fs-extra'
 import { EventResType } from '@repo/shared-types'
 import { LogBuilder } from '@repo/log-helper'
 
-export async function runAstroBuild({ domain }: { domain: string }): Promise<EventResType> {
-  console.log('executing build command from @repo/scripts');
-  
+export async function runAstroBuild({ domain }: { domain: string }): Promise<EventResType> { 
   LogBuilder({
     domain,
     logMessage: `Starting Astro build for ${domain}`,
@@ -30,9 +28,6 @@ export async function runAstroBuild({ domain }: { domain: string }): Promise<Eve
     // The script runs from apps/{domain} directory, so we need to go up 2 levels to get to workspace root
     const turboRepoRoot = path.resolve(process.cwd(), "../../");
     const projectPath = path.join(turboRepoRoot, "apps", domain);
-    
-    console.log(`Building project at: ${projectPath}`);
-
     // Check if project exists
     if (!fs.existsSync(projectPath)) {
       console.error(`Project not found: ${projectPath}`);

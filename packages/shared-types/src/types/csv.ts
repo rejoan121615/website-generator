@@ -31,6 +31,7 @@ export type WebsiteRowTYPE = CsvRowDataType & {
   deployed?: "unavailable" | "processing" | "complete" | "failed";
   log?: "---" | string;
   liveUrl?: string | null;
+  domainConnected?: boolean;
 };
 
 

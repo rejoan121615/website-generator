@@ -23,13 +23,6 @@ function WebsitesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<WebsiteRowTYPE | null>(null);
 
-
-  useEffect(() => {
-    console.log('Your websites list ', websitesList);
-
-  }, [websitesList])
-
-
   const snackbarClickVariant =
     (message: string, variant: VariantType) => () => {
       enqueueSnackbar(message, { variant });
@@ -111,8 +104,6 @@ function WebsitesPage() {
       }
     } catch (error) {
       snackbarClickVariant("Sending request failed", "error")();
-      console.log("error", error);
-      // handle error
     }
   };
 
@@ -145,7 +136,6 @@ function WebsitesPage() {
       }
     } catch (error) {
       snackbarClickVariant("Failed to remove project", "error")();
-      console.log("error", error);
     }
   };
 
@@ -193,8 +183,6 @@ function WebsitesPage() {
               : item;
           });
         });
-        // handle error
-        console.log("err", err);
       });
   };
 
@@ -234,7 +222,6 @@ function WebsitesPage() {
           `Failed to undeploy project: ${row.name}`,
           "error"
         )();
-        console.log("error", error);
       });
   };
 

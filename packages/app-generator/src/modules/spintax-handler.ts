@@ -253,8 +253,6 @@ async function imageOptimizationAndConversion({
     .webp({ quality: 80 })
     .toFile(outputImagePath);
 
-  console.log("input image path ", inputImagePath);
-  console.log("output image path ", outputImagePath);
 }
 
 

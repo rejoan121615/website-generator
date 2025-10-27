@@ -143,11 +143,7 @@ export async function astroProjectRemover(
       });
       
       await fs.remove(appFolderPath);
-      
-      const processingTime = Date.now() - startTime;
-      
-      console.log(`Corrupted project ${domain} removed successfully ...`);
-      
+                  
       LogBuilder({
         domain: data.domain,
         logMessage: `Corrupted project ${domain} removed successfully`,
