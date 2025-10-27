@@ -43,7 +43,7 @@ if (fs.existsSync(csvFilePath)) {
 
   // process csv file data
   (async () => {
-    const csvProcessRes = await CsvProcessor({ csvPath: csvFilePath });
+    const csvProcessRes = await CsvProcessor({ csvPath: csvFilePath }); // process csv file and return data 
 
     // process csv data if file is valid
     if (csvProcessRes.SUCCESS && csvProcessRes.DATA) {
@@ -80,7 +80,7 @@ if (fs.existsSync(csvFilePath)) {
       // csv file processing error
       LogBuilder({
         domain: "General",
-        logMessage: `Please check csv file: ${csvFilePath} - ${csvProcessRes.MESSAGE}`,
+        logMessage: csvProcessRes.MESSAGE,
         logType: "error",
         logFileName: "astro-generator",
       });
