@@ -270,16 +270,35 @@ function parseSpintaxImagePreview({
 
   
 // Regex to match SpintaxImagePreview function calls and extract the content
-  const spintaxImagePreviewRegex = /SpintaxImagePreview\((\{[\s\S]*?\})\)/g;
+  const spintaxImagePreviewRegex = /SpintaxImagePreview\(\s*\{[\s\S]*?\}\s*\)/g;
 
   let processedContent = fileContent;
 
   // Find and replace SpintaxImagePreview function calls
   processedContent = processedContent.replace(
     spintaxImagePreviewRegex,
-    (match: string, objectContent: string): string => {
-      // Return just the object content without the function wrapper
-      return objectContent;
+    (match: string): string => {
+      // Extract the spintaxItem array from the function call
+      const spintaxItemMatch = match.match(/spintaxItem\s*:\s*\[([\s\S]*?)\]/);
+      
+      if (spintaxItemMatch) {
+        // Get the array content
+        const arrayContent = spintaxItemMatch[1];
+        
+        // Split by comma and clean up each item (remove whitespace, newlines)
+        const items = arrayContent
+          .split(',')
+          .map(item => item.trim())
+          .filter(item => item.length > 0);
+        
+        // Convert to spintax format: [[item1|item2|item3]]
+        const spintaxString = `[[${items.join('|')}]]`;
+        
+        return spintaxString;
+      }
+      
+      // If no spintaxItem found, return empty string
+      return '';
     }
   );
 
@@ -289,13 +308,7 @@ function parseSpintaxImagePreview({
     ''
   );
 
-  
-
   return processedContent;
-  
-  
-
-  // return fileContent;
 }
 
 // Function to parse spintax strings with optional weights and nested support
