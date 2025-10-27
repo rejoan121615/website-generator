@@ -61,6 +61,44 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvParseA
       }, { status: 400 });
     }
 
+    // Define required headers in the exact order
+    const requiredHeaders = [
+      'template',
+      'domain',
+      'name',
+      'service_name',
+      'address',
+      'phone',
+      'email',
+      'site_title',
+      'meta_title',
+      'meta_description',
+      'logo_url'
+    ];
+
+    // Extract and validate headers from the first line
+    const firstLine = fileContent.split('\n')[0].trim();
+    const actualHeaders = firstLine.split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+
+    console.log("Required headers:", requiredHeaders);
+    console.log("Actual headers:", actualHeaders);
+
+    // Check if all required headers are present
+    const missingHeaders = requiredHeaders.filter(h => !actualHeaders.includes(h));
+    const extraHeaders = actualHeaders.filter(h => !requiredHeaders.includes(h));
+
+    if (missingHeaders.length > 0 || extraHeaders.length > 0) {
+      console.log("❌ Header validation failed");
+      console.log("Missing headers:", missingHeaders);
+      console.log("Extra headers:", extraHeaders);
+      
+      return NextResponse.json({
+        SUCCESS: false,
+        MESSAGE: "CSV file header doesn't match with websites.csv header."
+      }, { status: 400 });
+    }
+
+    console.log("✅ CSV headers validated successfully");
 
     // Parse CSV using csv-parse
     const records = parse(fileContent, {
