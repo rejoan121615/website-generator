@@ -178,7 +178,7 @@ function DomainsPage() {
               onClick={() => ConnectDomainHandler(params.row.domain)}
               variant="contained"
               size="small"
-              disabled={(params.row.readyToConnect === "Processing") || (params.row.readyToConnect === "Deploy First")}
+              disabled={(params.row.readyToConnect === "Processing") || (params.row.readyToConnect === "Deploy First") || (params.row.readyToConnect === "Connected")}
             >
               Connect
             </Button>
