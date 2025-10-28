@@ -7,10 +7,9 @@
     "generate": "pnpm --filter @repo/app-generator start && pnpm install",
     "generate:single": "pnpm --filter @repo/app-generator single",
     "deploy": "turbo run deploy --filter=\"./apps/*\"",
-    "deploy:single": "turbo run single --filter=\"./packages/app-generator\"",
-
-
+    "deploy:single": "pnpm --filter @repo/cf single",
     "preview": "turbo run preview --filter=\"./apps/*\"",
+    "preview:single": "pnpm --filter @repo/app-generator scripts:preview",
     "site:build": "turbo run build --filter=\"./apps/*\"",
     "site:remove": "turbo run remove --filter=\"./apps/*\"",
     "project:build" : "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",

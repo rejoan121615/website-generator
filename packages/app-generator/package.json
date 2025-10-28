@@ -12,7 +12,8 @@
     "build": "tsc -p .",
     "compile": "tsc -p . --watch",
     "output": "nodemon ./dist/index.js",
-    "single": "node ./dist/scripts/single-page-generator.js"
+    "single": "node ./dist/scripts/single-page-generator.js",
+    "scripts:preview": "node ./dist/scripts/single-project-preview.js"
   },
   "dependencies": {
     "@repo/log-helper": "workspace:*",
