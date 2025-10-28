@@ -12,9 +12,10 @@
     "build": "tsc -p .",
     "compile": "tsc -p . --watch",
     "output": "nodemon ./dist/index.js",
-    "single": "node ./dist/scripts/single-page-generator.js",
-    "scripts:preview": "node ./dist/scripts/single-project-preview.js",
-    "remove:all": "node ./dist/scripts/all-project-remove.js"
+    "generate:single": "node ./dist/scripts/single-project-generator.js",
+    "project:preview": "node ./dist/scripts/single-project-preview.js",
+    "remove:all": "node ./dist/scripts/all-project-remove.js",
+    "remove:single": "node ./dist/scripts/single-project-remove.js"
   },
   "dependencies": {
     "@repo/log-helper": "workspace:*",

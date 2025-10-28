@@ -2,9 +2,9 @@ import path from "path";
 import fs from "fs-extra";
 import { execa } from "execa";
 
-async function deploySingleProject() {
+async function previewSingleProject() {
   // Get command line arguments (skip first 2: node and script path)
-  console.log("Starting project deployment ...");
+  console.log("Starting project preview ...");
   const args = process.argv.slice(2);
   const hasDomainFlag = args.find((arg) => arg.trim() === "--domain");
   const hasDomain = args[1];
@@ -50,4 +50,4 @@ async function deploySingleProject() {
 }
 
 // Execute the function
-deploySingleProject();
+previewSingleProject();

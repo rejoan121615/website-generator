@@ -4,6 +4,6 @@
     "outDir": "dist",
     "rootDir": "src"
   },
-  "include": ["src/**/*", "src/scripts/single-page-generator.ts"],
+  "include": ["src/**/*", "src/scripts/single-project-generator.ts"],
   "exclude": ["dist"]
 }

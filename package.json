@@ -5,14 +5,15 @@
     "compile": "turbo run compile --filter=\"./packages/*\"",
     "build": "turbo run build --filter=\"./packages/*\"",
     "generate": "pnpm --filter @repo/app-generator start && pnpm install && turbo run build --filter=\"./apps/*\"",
-    "generate:single": "pnpm --filter @repo/app-generator single",
+    "generate:single": "pnpm --filter @repo/app-generator generate:single",
     "preview": "turbo run preview --filter=\"./apps/*\"",
-    "preview:single": "pnpm --filter @repo/app-generator scripts:preview",
+    "preview:single": "pnpm --filter @repo/app-generator project:preview",
     "deploy": "turbo run deploy --filter=\"./apps/*\"",
     "deploy:single": "pnpm --filter @repo/cf deploy:single",
     "undeploy": "turbo run remove --filter=\"./apps/*\"",
     "undeploy:single": "pnpm --filter @repo/cf undeploy:single",
     "delete" : "pnpm --filter @repo/app-generator remove:all",
+    "delete:single" : "pnpm --filter @repo/app-generator remove:single",
 
 
 
