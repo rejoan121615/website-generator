@@ -12,7 +12,8 @@
     "build": "tsc -p .",
     "compile": "tsc -p . --watch",
     "output": "nodemon ./dist/index.js",
-    "single": "node ./dist/scripts/deploy-single-site.js"
+    "deploy:single": "node ./dist/scripts/deploy-single-site.js",
+    "undeploy:single": "node ./dist/scripts/undeploy-single-site.js"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

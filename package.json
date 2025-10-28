@@ -9,9 +9,14 @@
     "preview": "turbo run preview --filter=\"./apps/*\"",
     "preview:single": "pnpm --filter @repo/app-generator scripts:preview",
     "deploy": "turbo run deploy --filter=\"./apps/*\"",
-    "deploy:single": "pnpm --filter @repo/cf single",
+    "deploy:single": "pnpm --filter @repo/cf deploy:single",
     "undeploy": "turbo run remove --filter=\"./apps/*\"",
-    "project:build" : "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
+    "undeploy:single": "pnpm --filter @repo/cf undeploy:single",
+
+
+
+    
+    "project:build": "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
     "dashboard": "pnpm --filter @repo/dashboard start"
   },
   "devDependencies": {

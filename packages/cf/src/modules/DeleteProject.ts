@@ -87,6 +87,13 @@ export async function deleteProject({
         logFileName: "cloudflare",
       });
       await new Promise(resolve => setTimeout(resolve, 3000));
+    } else {
+      LogBuilder({
+        domain: projectName,
+        logMessage: "Project not found on cloudflare or has no custom domains.",
+        logType: "info",
+        logFileName: "cloudflare",
+      });
     }
 
     // Step 3: Delete the project (this also deletes all deployments)
@@ -121,9 +128,10 @@ export async function deleteProject({
       DATA: { deleted: true },
     };
   } catch (error) {
+    const apiError = error as APIError;
     LogBuilder({
       domain: projectName,
-      logMessage: "Failed to delete project",
+      logMessage: apiError.errors[0]?.message || "Failed to delete project",
       logType: "error",
       logFileName: "cloudflare",
       error: error instanceof Error ? error : undefined,
@@ -132,7 +140,7 @@ export async function deleteProject({
 
     return {
       SUCCESS: false,
-      MESSAGE: "Failed to delete project",
+      MESSAGE: apiError.errors[0]?.message || "Failed to delete project",
       ERROR: error instanceof APIError ? error : undefined,
     };
   }
