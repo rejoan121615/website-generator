@@ -164,7 +164,7 @@ function WebsitesPage() {
           setWebsitesList((prevState) => {
             return prevState.map((item) => {
               return item.domain === row.domain
-                ? { ...item, deployed: "complete", liveUrl: data.DATA?.url }
+                ? { ...item, deployed: "complete", liveUrl: data.DATA?.subdomain }
                 : item;
             });
           });
