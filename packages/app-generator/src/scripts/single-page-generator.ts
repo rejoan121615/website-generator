@@ -6,7 +6,7 @@ import { CsvRowDataType } from "@repo/shared-types";
 import { execa } from "execa";
 import { astroProjectCreator } from "../modules/app-builder.js";
 
-async function printName() {
+async function generateSingleProject() {
   // Get command line arguments (skip first 2: node and script path)
   console.log("Starting single-page-generator...");
   const args = process.argv.slice(2);
@@ -98,4 +98,4 @@ async function printName() {
 }
 
 // Execute the function
-printName();
+generateSingleProject();

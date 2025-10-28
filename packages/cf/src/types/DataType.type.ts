@@ -2,7 +2,6 @@ import { APIError } from 'cloudflare'
 import { Zone } from 'cloudflare/resources/zones/zones.mjs';
 import { DomainCreateResponse } from 'cloudflare/src/resources/pages/projects/domains.js';
 import { Project } from 'cloudflare/resources/pages/projects/projects.mjs';
-import { Deployment } from 'cloudflare/resources/pages.mjs';
 import { CsvRowDataType, EventResType } from '@repo/shared-types'
 import { DomainGetResponse } from 'cloudflare/resources/pages/projects.mjs';
 
@@ -59,5 +58,5 @@ export type DeployApiResTYPE = EventResType & {
 
 
 export type DeployResTYPE = EventResType & {
-  DATA?: Deployment;
+  DATA?: Project;
 };

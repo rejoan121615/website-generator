@@ -7,7 +7,7 @@
     "generate": "pnpm --filter @repo/app-generator start && pnpm install",
     "generate:single": "pnpm --filter @repo/app-generator single",
     "deploy": "turbo run deploy --filter=\"./apps/*\"",
-
+    "deploy:single": "turbo run single --filter=\"./packages/app-generator\"",
 
 
     "preview": "turbo run preview --filter=\"./apps/*\"",
