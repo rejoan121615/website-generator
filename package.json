@@ -14,11 +14,8 @@
     "undeploy:single": "pnpm --filter @repo/cf undeploy:single",
     "delete" : "pnpm --filter @repo/app-generator remove:all",
     "delete:single" : "pnpm --filter @repo/app-generator remove:single",
-
-
-
-    "project:build": "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
-    "dashboard": "pnpm --filter @repo/dashboard start"
+    "dashboard": "pnpm --filter @repo/dashboard start",
+    "ready" : "pnpm install && pnpm run build"
   },
   "devDependencies": {
     "pnpm": "^10.16.1",
