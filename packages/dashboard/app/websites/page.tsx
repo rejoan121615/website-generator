@@ -51,7 +51,7 @@ function WebsitesPage() {
 
   const handleBuild = async (row: WebsiteRowTYPE) => {
     try {
-      const response = await fetch("/api/websites/build", {
+      const response = await fetch("/api/websites/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ data: row }),

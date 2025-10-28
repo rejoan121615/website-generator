@@ -264,7 +264,7 @@ dashboard/app/
 └── api/
     ├── websites/
     │   ├── route.ts            // GET /api/websites
-    │   ├── build/route.ts      // POST /api/websites/build (SSE)
+    │   ├── build/route.ts      // POST /api/websites/generate (SSE)
     │   ├── deploy/route.ts     // POST /api/websites/deploy (SSE)
     │   └── remove/route.ts     // POST /api/websites/remove (SSE)
     ├── domains/
