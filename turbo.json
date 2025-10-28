@@ -21,9 +21,6 @@
         "dist/**"
       ]
     },
-    "site:deploy" : {
-      
-    },
     "preview": {
       "cache": false
     },

@@ -4,14 +4,13 @@
   "scripts": {
     "compile": "turbo run compile --filter=\"./packages/*\"",
     "build": "turbo run build --filter=\"./packages/*\"",
-    "generate": "pnpm --filter @repo/app-generator start && pnpm install",
+    "generate": "pnpm --filter @repo/app-generator start && pnpm install && turbo run build --filter=\"./apps/*\"",
     "generate:single": "pnpm --filter @repo/app-generator single",
-    "deploy": "turbo run deploy --filter=\"./apps/*\"",
-    "deploy:single": "pnpm --filter @repo/cf single",
     "preview": "turbo run preview --filter=\"./apps/*\"",
     "preview:single": "pnpm --filter @repo/app-generator scripts:preview",
-    "site:build": "turbo run build --filter=\"./apps/*\"",
-    "site:remove": "turbo run remove --filter=\"./apps/*\"",
+    "deploy": "turbo run deploy --filter=\"./apps/*\"",
+    "deploy:single": "pnpm --filter @repo/cf single",
+    "undeploy": "turbo run remove --filter=\"./apps/*\"",
     "project:build" : "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
     "dashboard": "pnpm --filter @repo/dashboard start"
   },

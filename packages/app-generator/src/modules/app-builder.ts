@@ -76,10 +76,6 @@ export async function astroProjectCreator(
         logFileName: "astro-generator",
       });
     }
-
-
-    
-    const processingTime = Date.now() - startTime;
     
     LogBuilder({
       domain: data.domain,

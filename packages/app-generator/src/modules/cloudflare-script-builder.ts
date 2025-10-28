@@ -41,9 +41,9 @@ async function deployScriptBuilder(
       const deployScriptContent = `
 // Cloudflare deploy script
 
-import { deploy } from "@repo/cf";
+import { DeployProject } from "@repo/cf";
 
-deploy({
+DeployProject({
   projectName: "${domain}",
   branchName: "${process.env.DEPLOYMENT_BRANCH}"
 });

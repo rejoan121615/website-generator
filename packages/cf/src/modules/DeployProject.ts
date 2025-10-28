@@ -22,6 +22,7 @@ export async function DeployProject({
   domainName: string;
   branchName?: string;
 }): Promise<DeployResTYPE> {
+  console.log(`Starting deployment for domain: ${domainName}`);
   if (!process.env.CLOUDFLARE_API_TOKEN && !process.env.CLOUDFLARE_ACCOUNT_ID) {
     LogBuilder({
       domain: domainName,
