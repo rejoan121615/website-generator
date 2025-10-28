@@ -44,7 +44,7 @@ async function deployScriptBuilder(
 import { DeployProject } from "@repo/cf";
 
 DeployProject({
-  projectName: "${domain}",
+  domainName: "${domain}",
   branchName: "${process.env.DEPLOYMENT_BRANCH}"
 });
 `;
