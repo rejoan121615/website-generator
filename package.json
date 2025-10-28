@@ -12,10 +12,10 @@
     "deploy:single": "pnpm --filter @repo/cf deploy:single",
     "undeploy": "turbo run remove --filter=\"./apps/*\"",
     "undeploy:single": "pnpm --filter @repo/cf undeploy:single",
+    "delete" : "pnpm --filter @repo/app-generator remove:all",
 
 
 
-    
     "project:build": "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
     "dashboard": "pnpm --filter @repo/dashboard start"
   },

@@ -13,7 +13,8 @@
     "compile": "tsc -p . --watch",
     "output": "nodemon ./dist/index.js",
     "single": "node ./dist/scripts/single-page-generator.js",
-    "scripts:preview": "node ./dist/scripts/single-project-preview.js"
+    "scripts:preview": "node ./dist/scripts/single-project-preview.js",
+    "remove:all": "node ./dist/scripts/all-project-remove.js"
   },
   "dependencies": {
     "@repo/log-helper": "workspace:*",
