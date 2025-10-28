@@ -11,7 +11,8 @@
     "start": "node ./dist/index.js",
     "build": "tsc -p .",
     "compile": "tsc -p . --watch",
-    "output": "nodemon ./dist/index.js"
+    "output": "nodemon ./dist/index.js",
+    "single": "node ./dist/scripts/single-page-generator.js"
   },
   "dependencies": {
     "@repo/log-helper": "workspace:*",
@@ -32,7 +33,7 @@
     "typescript": "^5.9.2"
   },
   "exports": {
-    "./app-bundler": {
+    "./app-builder": {
       "import": "./dist/modules/app-builder.js",
       "types": "./dist/modules/app-builder.d.ts"
     }

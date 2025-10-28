@@ -5,10 +5,14 @@
     "compile": "turbo run compile --filter=\"./packages/*\"",
     "build": "turbo run build --filter=\"./packages/*\"",
     "generate": "pnpm --filter @repo/app-generator start && pnpm install",
+    "generate:single": "pnpm --filter @repo/app-generator single",
+    "deploy": "turbo run deploy --filter=\"./apps/*\"",
+
+
+
+    "preview": "turbo run preview --filter=\"./apps/*\"",
     "site:build": "turbo run build --filter=\"./apps/*\"",
-    "site:deploy": "turbo run deploy --filter=\"./apps/*\"",
     "site:remove": "turbo run remove --filter=\"./apps/*\"",
-    "site:preview": "turbo run preview --filter=\"./apps/*\"",
     "project:build" : "pnpm install && pnpm run build:packages && pnpm --filter @repo/dashboard make",
     "dashboard": "pnpm --filter @repo/dashboard start"
   },

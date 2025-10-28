@@ -1,4 +1,4 @@
-import { astroProjectRemover } from "@repo/app-generator/app-bundler";
+import { astroProjectRemover } from "@repo/app-generator/app-builder";
 import { NextResponse } from "next/server";
 import { EventResType } from '@repo/shared-types'
 
