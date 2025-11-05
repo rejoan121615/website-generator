@@ -1,4 +1,4 @@
-import { CsvRowDataType } from "@repo/shared-types";
+import { CsvRowDataType, CsvHeaderKey } from "@repo/shared-types";
 import { CsvError, parse } from "csv-parse";
 import fs from "fs-extra";
 import { CsvProcessorResultType } from "../types/DataType.js";
@@ -18,26 +18,13 @@ export async function CsvProcessor({
         .map((h) => h.trim().replace(/^["']|["']$/g, ""));
 
       // Define required headers based on CsvRowDataType
-      const requiredHeaders: (keyof CsvRowDataType)[] = [
-        "template",
-        "domain",
-        "name",
-        "service_name",
-        "address",
-        "phone",
-        "email",
-        "site_title",
-        "meta_title",
-        "meta_description",
-        "logo_url",
-      ];
 
       // Validate headers
-      const missingHeaders = requiredHeaders.filter(
+      const missingHeaders = CsvHeaderKey.filter(
         (h) => !actualHeaders.includes(h)
       );
       const extraHeaders = actualHeaders.filter(
-        (h) => !requiredHeaders.includes(h as keyof CsvRowDataType)
+        (h) => !CsvHeaderKey.includes(h as keyof CsvRowDataType)
       );
 
       if (missingHeaders.length > 0 || extraHeaders.length > 0) {
