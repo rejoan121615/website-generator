@@ -12,6 +12,20 @@ export type CsvRowDataType = {
   logo_url: string;
 };
 
+export const CsvHeaderKey : (keyof CsvRowDataType)[] = [
+  "template",
+  "domain",
+  "name",
+  "service_name",
+  "address",
+  "phone",
+  "email",
+  "site_title",
+  "meta_title",
+  "meta_description",
+  "logo_url"
+];
+
 export type CsvAddressType = {
   street: string;
   city: string;
@@ -25,7 +39,6 @@ export type EventResType = {
   ERROR?: Error | any;
 };
 
-
 export type WebsiteRowTYPE = CsvRowDataType & {
   build?: "unavailable" | "processing" | "complete" | "failed";
   deployed?: "unavailable" | "processing" | "complete" | "failed";
@@ -34,8 +47,7 @@ export type WebsiteRowTYPE = CsvRowDataType & {
   domainConnected?: boolean;
 };
 
-
 export type ServerEventResTYPE = {
   MESSAGE: string;
   CSV_DATA: WebsiteRowTYPE;
-}
+};

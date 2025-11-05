@@ -3,7 +3,7 @@ import fs from "fs-extra";
 import path from "path";
 import { stringify } from "csv-stringify/sync";
 import { ProjectRoot } from "@/lib/assists";
-import { CsvRowDataType } from "@repo/shared-types";
+import { CsvRowDataType, CsvHeaderKey } from "@repo/shared-types";
 import { CsvReplaceApiResponse } from "@/types/dashboard.type";
 
 
@@ -42,18 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvReplac
     // Convert new data to CSV format
     const csvContent = stringify(newData, {
       header: true,
-      columns: [
-        'domain',
-        'name', 
-        'service_name',
-        'address',
-        'phone',
-        'email',
-        'site_title',
-        'meta_title',
-        'meta_description',
-        'logo_url'
-      ]
+      columns: CsvHeaderKey
     });
 
     // Write new data to CSV file (replacing existing content)

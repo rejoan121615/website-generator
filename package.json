@@ -15,7 +15,7 @@
     "delete" : "pnpm --filter @repo/app-generator remove:all",
     "delete:single" : "pnpm --filter @repo/app-generator remove:single",
     "dashboard": "pnpm --filter @repo/dashboard start",
-    "ready" : "pnpm install && pnpm run build"
+    "ready" : "pnpm install && pnpm run dev:build"
   },
   "devDependencies": {
     "pnpm": "^10.16.1",

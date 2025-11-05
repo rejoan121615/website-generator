@@ -5,7 +5,7 @@ import { stringify } from "csv-stringify/sync";
 import { parse } from "csv-parse/sync";
 import { ProjectRoot } from "@/lib/assists";
 import { CsvMergeApiResponse } from "@/types/dashboard.type";
-import { CsvRowDataType } from "@repo/shared-types";
+import { CsvRowDataType, CsvHeaderKey } from "@repo/shared-types";
 
 
 
@@ -75,18 +75,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<CsvMergeA
     // Convert to CSV format
     const csvContent = stringify(mergedData, {
       header: true,
-      columns: [
-        'domain',
-        'name', 
-        'service_name',
-        'address',
-        'phone',
-        'email',
-        'site_title',
-        'meta_title',
-        'meta_description',
-        'logo_url'
-      ]
+      columns: CsvHeaderKey
     });
 
     // Write merged data to CSV file
