@@ -54,21 +54,21 @@ async function removeAllProjects() {
     const logsPath = path.join(turboRepoRoot, "logs");
 
     // Get all files/folders inside apps
-    const appsItems = await fs.readdir(appsPath);
+    const appsItems = await fs.readdir(appsPath, { encoding: "utf-8" });
     console.log(`✓ Found ${appsItems.length} items to delete in /apps`);
 
     for (const item of appsItems) {
-      const fullPath = path.join(appsPath, item);
+      const fullPath = path.join(appsPath, item.toString());
       await removeWithRetry(fullPath);
     }
 
     // Get all files/folders inside logs
     if (await fs.pathExists(logsPath)) {
-      const logsItems = await fs.readdir(logsPath);
+      const logsItems = await fs.readdir(logsPath, { encoding: "utf-8" });
       console.log(`✓ Found ${logsItems.length} items to delete in /logs`);
 
       for (const item of logsItems) {
-        const fullPath = path.join(logsPath, item);
+        const fullPath = path.join(logsPath, item.toString());
         await removeWithRetry(fullPath);
       }
     }
