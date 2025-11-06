@@ -60,7 +60,7 @@ export async function srcCodeBuilder(
     });
     
     const items = allItems.filter((item) => {
-      const segments = item.split(path.sep);
+      const segments = item.toString().split(path.sep);
       return (
         !segments.includes("node_modules") &&
         !segments.includes(".astro") &&
@@ -90,8 +90,8 @@ export async function srcCodeBuilder(
     });
     
     for (const item of items) {
-      const srcPath = path.join(baseFrontendPath, item);
-      const destPath = path.join(appFolderPath, item);
+      const srcPath = path.join(baseFrontendPath, item.toString());
+      const destPath = path.join(appFolderPath, item.toString());
 
       try {
         const stat = await fs.stat(srcPath);
@@ -114,7 +114,7 @@ export async function srcCodeBuilder(
             logFileName: "astro-generator",
           });
           
-          if (item.endsWith("Seo.astro")) {
+          if (item.toString().endsWith("Seo.astro")) {
           let seoRes = await SeoComponentHandler({ csvRowData: data, destPath, srcPath });
           if (!seoRes.SUCCESS) {
             LogBuilder({
@@ -125,7 +125,7 @@ export async function srcCodeBuilder(
               logFileName: "astro-generator"
             });
           }
-        } else if (item.endsWith(".astro")) {
+        } else if (item.toString().endsWith(".astro")) {
           // process astro file with spintax handler
           let spintaxRes = await spintaxAndTokenHandler({
             csvData: data,
@@ -141,7 +141,7 @@ export async function srcCodeBuilder(
               logFileName: "astro-generator"
             });
           }
-        } else if (item.endsWith("package.json")) {
+        } else if (item.toString().endsWith("package.json")) {
           // process package.json file
          let packageJsonRes = await packageJsonFileBuilder(data.domain, srcPath, destPath);
           if (!packageJsonRes.SUCCESS) {
@@ -152,7 +152,7 @@ export async function srcCodeBuilder(
               logFileName: "astro-generator"
             });
           }
-        } else if (item.endsWith("astro.config.mjs")) {
+        } else if (item.toString().endsWith("astro.config.mjs")) {
           let astroConfigRes = await astroConfigFileBuilder({ csvData: data, srcPath, destPath });
           if (!astroConfigRes.SUCCESS) {
             LogBuilder({
