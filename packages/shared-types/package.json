@@ -2,26 +2,27 @@
   "name": "@repo/shared-types",
   "version": "1.0.0",
   "private": true,
-  "description": "Shared TypeScript types for all packages in the monorepo",
+  "description": "Shared TypeScript types for all packages in the monorepo and handle csv type update with script",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p .",
+    "compile": "tsc -p . --watch",
+    "update:token": "node ./dist/modules/token-updater.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "typescript": "^5",
+    "@repo/typescript-config": "workspace:*"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     }
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsc -p .",
-    "compile": "tsc -p . --watch"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@repo/typescript-config": "workspace:*"
   }
 }
