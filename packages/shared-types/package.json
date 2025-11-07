@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc -p .",
     "compile": "tsc -p . --watch",
-    "update:token": "node ./dist/modules/token-updater.js"
+    "update:token": "pnpm run build && node ./dist/modules/token-updater.js"
   },
   "files": [
     "dist"
